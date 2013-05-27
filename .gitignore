@@ -5,3 +5,6 @@
 target/
 *.swp
 /RemoteSystemsTempFiles/
+.idea/
+.gwt/
+*.iml
