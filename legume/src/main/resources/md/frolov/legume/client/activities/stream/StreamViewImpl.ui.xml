@@ -6,7 +6,7 @@
 			font-weight: bold;
 		}
 	</ui:style>
-	<g:ScrollPanel>
+	<g:FlowPanel>
 		<g:Label> Stream View </g:Label>
-	</g:ScrollPanel>
-</ui:UiBinder> 
+	</g:FlowPanel>
+</ui:UiBinder>
