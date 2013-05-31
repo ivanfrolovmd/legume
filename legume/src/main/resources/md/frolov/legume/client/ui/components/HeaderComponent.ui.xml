@@ -1,11 +1,23 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
-             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+                xmlns:d="urn:import:com.google.gwt.user.datepicker.client">
+    <ui:style>
+        .dateBox{
+            width: 200px;
+        }
+    </ui:style>
     <g:AbsolutePanel>
         <g:HorizontalPanel>
             <g:Label>Legume</g:Label>
             <g:TextBox ui:field="searchQuery" width="700px">Search</g:TextBox>
             <g:Button ui:field="submitButton">Submit</g:Button>
             <g:Button ui:field="resetButton">Reset</g:Button>
+        </g:HorizontalPanel>
+        <g:HorizontalPanel>
+            <g:Label>from:</g:Label>
+            <d:DateBox ui:field="fromDate" styleName="{style.dateBox}"/>
+            <g:Label>, to:</g:Label>
+            <d:DateBox ui:field="toDate" styleName="{style.dateBox}"/>
         </g:HorizontalPanel>
     </g:AbsolutePanel>
 </ui:UiBinder>

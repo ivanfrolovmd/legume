@@ -27,7 +27,7 @@ public class ElasticSearchServiceImpl implements ElasticSearchService, Constants
     @Override
     public <T> void query(final Query query, final AsyncCallback<T> callback, final Class<T> clazz) {
         JsonpRequestBuilder requestBuilder = new JsonpRequestBuilder();
-        String url = configurationService.get(ELASTICSEARCH_SERVER) + query.getQueryString();
+        String url = configurationService.get(ELASTICSEARCH_SERVER) + query.toQueryString();
         requestBuilder.requestObject(url, new AsyncCallback<JavaScriptObject>()
         {
             @Override

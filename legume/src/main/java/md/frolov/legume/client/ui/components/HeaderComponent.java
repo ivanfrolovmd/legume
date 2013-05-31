@@ -8,6 +8,7 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.datepicker.client.DateBox;
 
 import md.frolov.legume.client.activities.stream.StreamPlace;
 import md.frolov.legume.client.elastic.query.SearchQuery;
@@ -26,6 +27,10 @@ public class HeaderComponent extends Composite
 
     @UiField
     TextBox searchQuery;
+    @UiField
+    DateBox fromDate;
+    @UiField
+    DateBox toDate;
 
     public HeaderComponent()
     {
@@ -34,7 +39,11 @@ public class HeaderComponent extends Composite
 
     @UiHandler("submitButton")
     public void onSubmitButtonClick(ClickEvent event) {
-        injector.placeController().goTo(new StreamPlace(new SearchQuery(searchQuery.getText())));
+        SearchQuery query = new SearchQuery();
+        query.setQuery(searchQuery.getText());
+        query.setFromDate(fromDate.getValue());
+        query.setToDate(toDate.getValue());
+        injector.placeController().goTo(new StreamPlace(query));
     }
 
     @UiHandler("resetButton")

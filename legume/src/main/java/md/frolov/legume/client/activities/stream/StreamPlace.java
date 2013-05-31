@@ -18,7 +18,9 @@ public class StreamPlace extends Place {
     public static class Tokenizer implements PlaceTokenizer<StreamPlace> {
         @Override
         public StreamPlace getPlace(String token) {
-            return new StreamPlace(new SearchQuery(token));
+            SearchQuery query = new SearchQuery();
+            query.setQuery(token);
+            return new StreamPlace(query);
         }
 
         @Override

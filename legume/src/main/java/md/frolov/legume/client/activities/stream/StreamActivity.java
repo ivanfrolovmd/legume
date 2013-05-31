@@ -38,7 +38,7 @@ public class StreamActivity extends AbstractActivity
         place = (StreamPlace) placeController.getWhere();
         this.eventBus = eventBus;
 
-        eventBus.fireEvent(new LogMessageEvent("Querying: "+place.getQuery().getQueryString()));
+        eventBus.fireEvent(new LogMessageEvent("Querying: "+place.getQuery().toQueryString()));
         final long started = System.currentTimeMillis();
         elasticSearchService.query(place.getQuery(), new AsyncCallback<SearchResponse>()
         {
