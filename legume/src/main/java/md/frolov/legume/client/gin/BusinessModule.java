@@ -6,6 +6,7 @@ import md.frolov.legume.client.elastic.ElasticSearchService;
 import md.frolov.legume.client.elastic.impl.ElasticSearchServiceImpl;
 import md.frolov.legume.client.service.ConfigurationService;
 import md.frolov.legume.client.service.impl.ConfigurationServiceImpl;
+import md.frolov.legume.client.util.ColorUtils;
 
 public class BusinessModule extends AbstractGinModule {
 
@@ -13,6 +14,8 @@ public class BusinessModule extends AbstractGinModule {
     protected void configure() {
         bind(ConfigurationService.class).to(ConfigurationServiceImpl.class);
         bind(ElasticSearchService.class).to(ElasticSearchServiceImpl.class);
+
+        bind(ColorUtils.class);
     }
 
 }
