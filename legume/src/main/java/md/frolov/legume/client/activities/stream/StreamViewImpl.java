@@ -24,6 +24,8 @@ public class StreamViewImpl extends Composite implements StreamView {
 
     @UiField
     FlowPanel container;
+    @UiField
+    FlowPanel nothingFound;
 
     interface StreamViewImplUiBinder extends UiBinder<Widget, StreamViewImpl> {
     }
@@ -37,7 +39,20 @@ public class StreamViewImpl extends Composite implements StreamView {
     {
         container.setVisible(false);
         container.clear();
+        nothingFound.setVisible(false);
 
+        if(hits.getTotal()==0) {
+            handleNothingFound();
+        } else {
+            handleFound(hits);
+        }
+    }
+
+    private void handleNothingFound(){
+        nothingFound.setVisible(true);
+    }
+
+    private void handleFound(SearchHits hits) {
         long started = System.currentTimeMillis();
         for (SearchHit hit : hits.getHits())
         {
