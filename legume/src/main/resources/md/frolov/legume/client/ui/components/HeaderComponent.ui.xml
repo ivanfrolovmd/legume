@@ -14,6 +14,20 @@
             <g:Button ui:field="resetButton">Reset</g:Button>
         </g:HorizontalPanel>
         <g:HorizontalPanel>
+            <g:ListBox ui:field="commonTimes">
+                <g:item value="-1">Predefined times</g:item>
+                <g:item value="900000">Last 15 minutes</g:item>
+                <g:item value="1800000">Last 30 minutes</g:item>
+                <g:item value="3600000">Last hour</g:item>
+                <g:item value="7200000">Last 2 hours</g:item>
+                <g:item value="14400000">Last 4 hours</g:item>
+                <g:item value="21600000">Last 6 hours</g:item>
+                <g:item value="43200000">Last 12 hours</g:item>
+                <g:item value="86400000">Last 24 hours</g:item>
+                <g:item value="172800000">Last 48 hours</g:item>
+                <g:item value="604800000">Last 7 days</g:item>
+                <g:item value="0">All time</g:item>
+            </g:ListBox>
             <g:Label>from:</g:Label>
             <d:DateBox ui:field="fromDate" styleName="{style.dateBox}"/>
             <g:Label>, to:</g:Label>

@@ -1,11 +1,16 @@
 package md.frolov.legume.client.ui.components;
 
+import java.util.Date;
+
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.datepicker.client.DateBox;
@@ -35,6 +40,8 @@ public class HeaderComponent extends Composite implements UpdateSearchQueryHandl
     DateBox fromDate;
     @UiField
     DateBox toDate;
+    @UiField
+    ListBox commonTimes;
 
     private EventBus eventBus = WidgetInjector.INSTANCE.eventBus();
 
@@ -47,11 +54,40 @@ public class HeaderComponent extends Composite implements UpdateSearchQueryHandl
 
     @UiHandler("submitButton")
     public void onSubmitButtonClick(ClickEvent event) {
+        submitSearch();
+    }
+
+    @UiHandler("searchQuery")
+    public void handleKeyPress(final KeyPressEvent event)
+    {
+        if(event.getCharCode()==13 || event.getCharCode() == 10){
+            submitSearch();
+        }
+    }
+
+    private void submitSearch()
+    {
         SearchQuery query = new SearchQuery();
         query.setQuery(searchQuery.getText());
         query.setFromDate(fromDate.getValue());
         query.setToDate(toDate.getValue());
         injector.placeController().goTo(new StreamPlace(query));
+    }
+
+    @UiHandler("commonTimes")
+    public void handleChange(final ChangeEvent event)
+    {
+        Long time = Long.valueOf(commonTimes.getValue(commonTimes.getSelectedIndex()));
+        if(time ==-1) {
+            return;
+        }
+        if(time == 0) {
+            fromDate.setValue(null);
+        } else {
+            fromDate.setValue(new Date(new Date().getTime()-time));
+        }
+        toDate.setValue(null);
+        submitSearch();
     }
 
     @UiHandler("resetButton")
