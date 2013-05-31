@@ -11,6 +11,7 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import md.frolov.legume.client.elastic.ElasticSearchService;
 import md.frolov.legume.client.elastic.model.SearchResponse;
 import md.frolov.legume.client.events.LogMessageEvent;
+import md.frolov.legume.client.events.UpdateSearchQuery;
 import md.frolov.legume.client.service.ConfigurationService;
 
 public class StreamActivity extends AbstractActivity
@@ -39,6 +40,7 @@ public class StreamActivity extends AbstractActivity
         this.eventBus = eventBus;
 
         eventBus.fireEvent(new LogMessageEvent("Querying: "+place.getQuery().toQueryString()));
+        eventBus.fireEvent(new UpdateSearchQuery(place.getQuery()));
         final long started = System.currentTimeMillis();
         elasticSearchService.query(place.getQuery(), new AsyncCallback<SearchResponse>()
         {

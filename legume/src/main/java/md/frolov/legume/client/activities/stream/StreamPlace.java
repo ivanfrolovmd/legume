@@ -18,14 +18,13 @@ public class StreamPlace extends Place {
     public static class Tokenizer implements PlaceTokenizer<StreamPlace> {
         @Override
         public StreamPlace getPlace(String token) {
-            SearchQuery query = new SearchQuery();
-            query.setQuery(token);
+            SearchQuery query = SearchQuery.fromHistoryToken(token);
             return new StreamPlace(query);
         }
 
         @Override
         public String getToken(StreamPlace place) {
-            return place.getQuery().getQuery();
+            return place.getQuery().toHistoryToken();
         }
 
     }

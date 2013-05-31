@@ -9,15 +9,19 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.datepicker.client.DateBox;
+import com.google.web.bindery.event.shared.EventBus;
 
 import md.frolov.legume.client.activities.stream.StreamPlace;
 import md.frolov.legume.client.elastic.query.SearchQuery;
+import md.frolov.legume.client.events.UpdateSearchQuery;
+import md.frolov.legume.client.events.UpdateSearchQueryHandler;
 import md.frolov.legume.client.gin.WidgetInjector;
 
 /** @author Ivan Frolov (ifrolov@tacitknowledge.com) */
-public class HeaderComponent extends Composite
+public class HeaderComponent extends Composite implements UpdateSearchQueryHandler
 {
     private WidgetInjector injector = WidgetInjector.INSTANCE;
+
 
     interface HeaderUiBinder extends UiBinder<Widget, HeaderComponent>
     {
@@ -32,9 +36,13 @@ public class HeaderComponent extends Composite
     @UiField
     DateBox toDate;
 
+    private EventBus eventBus = WidgetInjector.INSTANCE.eventBus();
+
     public HeaderComponent()
     {
         initWidget(binder.createAndBindUi(this));
+
+        eventBus.addHandler(UpdateSearchQuery.TYPE, this);
     }
 
     @UiHandler("submitButton")
@@ -49,5 +57,16 @@ public class HeaderComponent extends Composite
     @UiHandler("resetButton")
     public void onResetButtonClick(ClickEvent event) {
         searchQuery.setText("");
+        fromDate.setValue(null);
+        toDate.setValue(null);
+    }
+
+    @Override
+    public void onUpdateSearchQuery(final UpdateSearchQuery event)
+    {
+        SearchQuery query = event.getSearchQuery();
+        searchQuery.setText(query.getQuery());
+        fromDate.setValue(query.getFromDate());
+        toDate.setValue(query.getToDate());
     }
 }
