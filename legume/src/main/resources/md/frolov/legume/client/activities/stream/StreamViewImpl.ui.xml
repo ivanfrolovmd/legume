@@ -6,7 +6,5 @@
 			font-weight: bold;
 		}
 	</ui:style>
-	<g:FlowPanel>
-		<g:Label> Stream View </g:Label>
-	</g:FlowPanel>
+	<g:FlowPanel ui:field="container" />
 </ui:UiBinder>

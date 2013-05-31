@@ -9,7 +9,7 @@
     </ui:style>
     <g:DockLayoutPanel unit='EM'>
         <g:north size='4'>
-            <g:Label>Header</g:Label>
+            <l:HeaderComponent />
         </g:north>
 
         <g:west size='16'>
