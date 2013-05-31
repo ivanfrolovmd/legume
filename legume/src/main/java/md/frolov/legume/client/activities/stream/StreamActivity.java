@@ -4,13 +4,13 @@ import javax.inject.Inject;
 
 import com.google.gwt.activity.shared.AbstractActivity;
 import com.google.gwt.event.shared.EventBus;
-import com.google.gwt.user.client.Window;
+import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 
 import md.frolov.legume.client.elastic.ElasticSearchService;
-import md.frolov.legume.client.elastic.model.Query;
 import md.frolov.legume.client.elastic.model.SearchResponse;
+import md.frolov.legume.client.events.LogMessageEvent;
 import md.frolov.legume.client.service.ConfigurationService;
 
 public class StreamActivity extends AbstractActivity
@@ -24,26 +24,36 @@ public class StreamActivity extends AbstractActivity
     @Inject
     private ElasticSearchService elasticSearchService;
 
+    @Inject
+    private PlaceController placeController;
+
+    private EventBus eventBus;
+
+    private StreamPlace place;
+
     @Override
-    public void start(AcceptsOneWidget panel, EventBus eventBus)
+    public void start(final AcceptsOneWidget panel, final EventBus eventBus)
     {
         panel.setWidget(streamView);
+        place = (StreamPlace) placeController.getWhere();
+        this.eventBus = eventBus;
 
-        elasticSearchService.query(new Query("/_search?source={\"query\" : {\"match_all\" : {}}, \"from\" : 0, \"size\" : 10}")
-                , new AsyncCallback<SearchResponse>()
+        eventBus.fireEvent(new LogMessageEvent("Querying: "+place.getQuery().getQueryString()));
+        final long started = System.currentTimeMillis();
+        elasticSearchService.query(place.getQuery(), new AsyncCallback<SearchResponse>()
         {
             @Override
-            public void onFailure(Throwable caught)
+            public void onFailure(final Throwable caught)
             {
-                Window.alert("Failure " + caught);
+                eventBus.fireEvent(new LogMessageEvent("Request failed. Network time: "+(System.currentTimeMillis()-started)/1000.0));
             }
 
             @Override
-            public void onSuccess(SearchResponse result)
+            public void onSuccess(final SearchResponse result)
             {
-                Window.alert("success " + result.getHits().getHits().get(0).getLogEvent().getTimestamp());
+                eventBus.fireEvent(new LogMessageEvent("Search took: "+result.getTook()/1000.0+". Network time: "+(System.currentTimeMillis()-started)/1000.0));
+                streamView.handleLogMessages(result.getHits());
             }
-
         }, SearchResponse.class);
     }
 
