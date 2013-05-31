@@ -1,0 +1,19 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+    <ui:style>
+        .colorLabel {
+            color: white;
+        }
+    </ui:style>
+
+    <g:FlowPanel>
+        <g:HorizontalPanel> <!-- TODO probably table here will be huge. Research if divs would be better -->
+            <g:Button ui:field="more">&gt;</g:Button>
+            <g:Label ui:field="time"/>
+            <g:Label ui:field="type" styleName="{style.colorLabel}">.</g:Label>
+            <g:Label ui:field="source" styleName="{style.colorLabel}">.</g:Label>
+            <g:Label ui:field="message" /> <!-- TODO this should handle multilines as well -->
+        </g:HorizontalPanel>
+    </g:FlowPanel>
+</ui:UiBinder>
