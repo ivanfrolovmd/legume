@@ -21,6 +21,7 @@ import md.frolov.legume.client.util.ColorUtils;
 public class LogEventComponent extends Composite
 {
     private static final DateTimeFormat DTF = DateTimeFormat.getFormat("dd/MM HH:mm:ss.sss");
+    private static final int MAX_SUMMARY_WIDTH = 300;
 
     interface LogEventComponentUiBinder extends UiBinder<FlowPanel, LogEventComponent>
     {
@@ -60,8 +61,8 @@ public class LogEventComponent extends Composite
         this.logEvent = logEvent;
 
         time.setText(DTF.format(logEvent.getTimestamp()));
-        message.setText(logEvent.getMessage());
-        DOM.setStyleAttribute(message.getElement(), "whiteSpace", "pre");
+        String summaryText = abbreviate(logEvent.getMessage(), MAX_SUMMARY_WIDTH);
+        message.setText(summaryText);
 
         String typeColor = colorUtils.getColor(logEvent.getType());
         DOM.setStyleAttribute(type.getElement(), "backgroundColor", typeColor);
@@ -70,6 +71,18 @@ public class LogEventComponent extends Composite
         String sourceColor = colorUtils.getColor(logEvent.getSourceHost());
         DOM.setStyleAttribute(source.getElement(), "backgroundColor", sourceColor);
         source.setText(logEvent.getSourceHost());
+    }
+
+    private String abbreviate(String string, int maxWidth)
+    {
+        if (string.length() < maxWidth)
+        {
+            return string;
+        }
+        else
+        {
+            return string.substring(0, maxWidth) + "...";
+        }
     }
 
     @UiHandler("more")
