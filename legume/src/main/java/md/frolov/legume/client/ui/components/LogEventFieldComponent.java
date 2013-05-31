@@ -9,6 +9,10 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.web.bindery.event.shared.EventBus;
+
+import md.frolov.legume.client.events.AppendQueryFilter;
+import md.frolov.legume.client.gin.WidgetInjector;
 
 /** @author Ivan Frolov (ifrolov@tacitknowledge.com) */
 public class LogEventFieldComponent extends Composite
@@ -28,21 +32,40 @@ public class LogEventFieldComponent extends Composite
     @UiField
     Label key;
 
-    public LogEventFieldComponent(String key, Object value)
+    private final EventBus eventBus = WidgetInjector.INSTANCE.eventBus();
+    private final String queryKey;
+
+    public LogEventFieldComponent(String key, String queryKey, Object value)
     {
         initWidget(binder.createAndBindUi(this));
         this.key.setText(key);
         this.value.setText(value.toString()); //TODO format different types
+        this.queryKey = queryKey;
     }
 
     @UiHandler("includeButton")
     public void onIncludeClick(final ClickEvent event)
     {
+        appendFilter(true);
     }
+
 
     @UiHandler("excludeButton")
     public void onExcludeClick(final ClickEvent event)
     {
+        appendFilter(false);
     }
 
+    private void appendFilter(final boolean positive)
+    {
+        StringBuilder sb = new StringBuilder();
+        if(!positive) {
+            sb.append("NOT ");
+        }
+        sb.append(queryKey).append(":\"");
+        sb.append(value.getText());
+        sb.append('\"');
+
+        eventBus.fireEvent(new AppendQueryFilter(sb.toString()));
+    }
 }

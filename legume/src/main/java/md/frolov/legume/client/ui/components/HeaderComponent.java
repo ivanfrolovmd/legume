@@ -18,12 +18,14 @@ import com.google.web.bindery.event.shared.EventBus;
 
 import md.frolov.legume.client.activities.stream.StreamPlace;
 import md.frolov.legume.client.elastic.query.SearchQuery;
+import md.frolov.legume.client.events.AppendQueryFilter;
+import md.frolov.legume.client.events.AppendQueryFilterHandler;
 import md.frolov.legume.client.events.UpdateSearchQuery;
 import md.frolov.legume.client.events.UpdateSearchQueryHandler;
 import md.frolov.legume.client.gin.WidgetInjector;
 
 /** @author Ivan Frolov (ifrolov@tacitknowledge.com) */
-public class HeaderComponent extends Composite implements UpdateSearchQueryHandler
+public class HeaderComponent extends Composite implements UpdateSearchQueryHandler, AppendQueryFilterHandler
 {
     private WidgetInjector injector = WidgetInjector.INSTANCE;
 
@@ -50,6 +52,7 @@ public class HeaderComponent extends Composite implements UpdateSearchQueryHandl
         initWidget(binder.createAndBindUi(this));
 
         eventBus.addHandler(UpdateSearchQuery.TYPE, this);
+        eventBus.addHandler(AppendQueryFilter.TYPE, this);
     }
 
     @UiHandler("submitButton")
@@ -104,5 +107,17 @@ public class HeaderComponent extends Composite implements UpdateSearchQueryHandl
         searchQuery.setText(query.getQuery());
         fromDate.setValue(query.getFromDate());
         toDate.setValue(query.getToDate());
+    }
+
+    @Override
+    public void onAppendQueryFilter(final AppendQueryFilter event)
+    {
+        StringBuilder sb = new StringBuilder(searchQuery.getText());
+        if(sb.length()>0) {
+            sb.append(" AND ");
+        }
+        sb.append(event.getFilter());
+        searchQuery.setText(sb.toString());
+        submitSearch();
     }
 }
