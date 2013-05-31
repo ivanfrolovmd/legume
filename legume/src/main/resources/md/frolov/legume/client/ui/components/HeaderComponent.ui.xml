@@ -1,0 +1,11 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+    <g:AbsolutePanel>
+        <g:HorizontalPanel>
+            <g:Label>Legume</g:Label>
+            <g:TextBox ui:field="searchQuery" width="700px">Search</g:TextBox>
+            <g:Button ui:field="submitButton">Submit</g:Button>
+            <g:Button ui:field="resetButton">Reset</g:Button>
+        </g:HorizontalPanel>
+    </g:AbsolutePanel>
+</ui:UiBinder>
