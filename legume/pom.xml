@@ -39,6 +39,13 @@
 			<scope>provided</scope>
 		</dependency>
 
+        <!-- Guava -->
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava-gwt</artifactId>
+            <version>14.0.1</version>
+        </dependency>
+
 		<!-- DI -->
 		<dependency>
 			<groupId>com.google.gwt.inject</groupId>
