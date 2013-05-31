@@ -1,9 +1,9 @@
-package md.frolov.legume.client.elastic.model;
+package md.frolov.legume.client.elastic.query;
 
-public class Query {
+public class SearchQuery {
     public final String queryString;
 
-    public Query(final String queryString)
+    public SearchQuery(final String queryString)
     {
         this.queryString = queryString;
     }

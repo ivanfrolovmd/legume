@@ -2,7 +2,7 @@ package md.frolov.legume.client.elastic;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
-import md.frolov.legume.client.elastic.model.Query;
+import md.frolov.legume.client.elastic.query.Query;
 
 public interface ElasticSearchService {
 
