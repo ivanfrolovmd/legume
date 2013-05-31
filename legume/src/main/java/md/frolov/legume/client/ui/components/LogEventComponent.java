@@ -10,6 +10,7 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 
 import md.frolov.legume.client.elastic.model.LogEvent;
@@ -19,7 +20,7 @@ import md.frolov.legume.client.util.ColorUtils;
 /** @author Ivan Frolov (ifrolov@tacitknowledge.com) */
 public class LogEventComponent extends Composite
 {
-    private static final DateTimeFormat DTF = DateTimeFormat.getFormat("hh:MM:ss.sss");
+    private static final DateTimeFormat DTF = DateTimeFormat.getFormat("dd/MM HH:mm:ss.sss");
 
     interface LogEventComponentUiBinder extends UiBinder<FlowPanel, LogEventComponent>
     {
@@ -43,6 +44,14 @@ public class LogEventComponent extends Composite
     Label source;
     @UiField
     Label message;
+    @UiField
+    HorizontalPanel summary;
+    @UiField
+    Button less;
+    @UiField
+    FlowPanel details;
+    @UiField
+    FlowPanel detailsContainer;
 
     public LogEventComponent(String id, LogEvent logEvent)
     {
@@ -64,9 +73,18 @@ public class LogEventComponent extends Composite
     }
 
     @UiHandler("more")
-    public void handleClick(final ClickEvent event)
+    public void handleClickMore(final ClickEvent event)
     {
-
+        detailsContainer.add(new LogEventExtendedComponent(logEvent));
+        summary.setVisible(false);
+        details.setVisible(true);
     }
 
+    @UiHandler("less")
+    public void handleClickLess(final ClickEvent event)
+    {
+        summary.setVisible(true);
+        details.setVisible(false);
+        detailsContainer.clear();
+    }
 }

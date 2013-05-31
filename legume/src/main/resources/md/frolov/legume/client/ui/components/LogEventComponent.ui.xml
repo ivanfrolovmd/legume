@@ -5,15 +5,24 @@
         .colorLabel {
             color: white;
         }
+        .message {
+            white-space: pre;
+            overflow-y: hidden;
+            max-height: 4em;
+        }
     </ui:style>
 
     <g:FlowPanel>
-        <g:HorizontalPanel> <!-- TODO probably table here will be huge. Research if divs would be better -->
+        <g:HorizontalPanel ui:field="summary"> <!-- TODO probably table here will be huge. Research if divs would be better -->
             <g:Button ui:field="more">&gt;</g:Button>
             <g:Label ui:field="time"/>
             <g:Label ui:field="type" styleName="{style.colorLabel}">.</g:Label>
             <g:Label ui:field="source" styleName="{style.colorLabel}">.</g:Label>
-            <g:Label ui:field="message" /> <!-- TODO this should handle multilines as well -->
+            <g:Label ui:field="message" styleName="{style.message}"/>
         </g:HorizontalPanel>
+        <g:FlowPanel ui:field="details" visible="false">
+            <g:Button ui:field="less">&lt;</g:Button>
+            <g:FlowPanel ui:field="detailsContainer"/>
+        </g:FlowPanel>
     </g:FlowPanel>
 </ui:UiBinder>

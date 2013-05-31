@@ -1,0 +1,18 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+    <ui:style>
+        .valueLabel{
+            white-space: pre;
+        }
+        .keyLabel {
+            background-color: azure;
+        }
+    </ui:style>
+    <g:HorizontalPanel>
+        <!-- TODO use modifier keys (like Shift) to open in new window -->
+        <g:Button ui:field="includeButton">V</g:Button>
+        <g:Button ui:field="excludeButton">X</g:Button>
+        <g:Label ui:field="key" styleName="{style.keyLabel}"/>
+        <g:Label ui:field="value" styleName="{style.valueLabel}"/>
+    </g:HorizontalPanel>
+</ui:UiBinder>
