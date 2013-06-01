@@ -1,8 +1,10 @@
 package md.frolov.legume.client.activities.stream;
 
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.inject.Inject;
 
-import com.google.common.collect.Iterables;
 import com.google.gwt.activity.shared.AbstractActivity;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.place.shared.PlaceController;
@@ -12,13 +14,14 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import md.frolov.legume.client.elastic.ElasticSearchService;
 import md.frolov.legume.client.elastic.model.SearchResponse;
 import md.frolov.legume.client.elastic.query.SearchQuery;
-import md.frolov.legume.client.events.LogMessageEvent;
 import md.frolov.legume.client.events.SearchResultsReceivedEvent;
 import md.frolov.legume.client.events.UpdateSearchQuery;
 import md.frolov.legume.client.service.ConfigurationService;
 
 public class StreamActivity extends AbstractActivity implements StreamView.Presenter
 {
+    private static final Logger LOG = Logger.getLogger("StreamActivity");
+
     @Inject
     private StreamView streamView;
 
@@ -35,9 +38,12 @@ public class StreamActivity extends AbstractActivity implements StreamView.Prese
 
     private StreamPlace place;
 
+    /** reference query, requested initially */
     private SearchQuery activeSearchQuery;
-    private SearchQuery topQuery;
-    private SearchQuery bottomQuery;
+    /** query to scroll upwards */
+    private SearchQuery upwardsQuery;
+    /** query to scroll downwards */
+    private SearchQuery downwardsQuery;
 
     @Override
     public void start(final AcceptsOneWidget panel, final EventBus eventBus)
@@ -47,60 +53,70 @@ public class StreamActivity extends AbstractActivity implements StreamView.Prese
         place = (StreamPlace) placeController.getWhere();
         this.eventBus = eventBus;
 
-        activeSearchQuery = place.getQuery();
-        eventBus.fireEvent(new LogMessageEvent("Querying: "+place.getQuery().toQueryString()));
+        initQueries(place.getQuery());
         eventBus.fireEvent(new UpdateSearchQuery(activeSearchQuery));
-        final long started = System.currentTimeMillis();
-        elasticSearchService.query(activeSearchQuery, new AsyncCallback<SearchResponse>()
-        {
-            @Override
-            public void onFailure(final Throwable caught)
-            {
-                eventBus.fireEvent(new LogMessageEvent("Request failed. Network time: "+(System.currentTimeMillis()-started)/1000.0));
-            }
+        boolean upwards = isUpwardsDirection();
 
-            @Override
-            public void onSuccess(final SearchResponse result)
-            {
-                eventBus.fireEvent(new LogMessageEvent("Search took: "+result.getTook()/1000.0+". Network time: "+(System.currentTimeMillis()-started)/1000.0));
-                eventBus.fireEvent(new SearchResultsReceivedEvent(activeSearchQuery,result));
-                populateDirectionalQueries(result);
-            }
-        }, SearchResponse.class);
+        requestMoreResults(upwards);
     }
 
-    private void populateDirectionalQueries(SearchResponse result)
+    private void initQueries(SearchQuery requestedSearchQuery)
     {
-        bottomQuery = activeSearchQuery.clone();
-        bottomQuery.setFromDate(Iterables.getLast(result.getHits().getHits()).getLogEvent().getTimestamp());
-        bottomQuery.setToDate(null);
-        bottomQuery.setFrom(result.getHits().getHits().size());
+        activeSearchQuery = requestedSearchQuery;
 
-        topQuery = activeSearchQuery.clone();
-        topQuery.setToDate(Iterables.getFirst(result.getHits().getHits(),null).getLogEvent().getTimestamp());
-        topQuery.setFromDate(null);
-        topQuery.setFrom(0);
-        topQuery.reverseSortOrder();
+        Date fromDate = activeSearchQuery.getFromDate();
+        Date toDate = activeSearchQuery.getToDate();
+        Date focusDate = activeSearchQuery.getFocusDate();
+
+        if (fromDate == null && toDate == null && focusDate == null)
+        {
+            //setting search to "all time up to now, focus on now"
+            focusDate = new Date();
+            toDate = focusDate;
+        }
+        if (focusDate == null)
+        {
+            focusDate = fromDate != null ? fromDate : toDate;
+        }
+
+        activeSearchQuery.setFromDate(fromDate);
+        activeSearchQuery.setToDate(toDate);
+        activeSearchQuery.setFocusDate(focusDate);
+
+        downwardsQuery = activeSearchQuery.clone();
+        downwardsQuery.setFromDate(focusDate);
+        downwardsQuery.setToDate(null);
+
+        upwardsQuery = activeSearchQuery.clone();
+        upwardsQuery.setToDate(focusDate);
+        upwardsQuery.setFromDate(null);
+        upwardsQuery.reverseSortOrder();
+    }
+
+    private boolean isUpwardsDirection()
+    {
+        return activeSearchQuery.getFocusDate().equals(activeSearchQuery.getToDate());
     }
 
     @Override
-    public void requestMoreResults(final boolean top)
+    public void requestMoreResults(final boolean upwards)
     {
-        final SearchQuery query = top?topQuery:bottomQuery;
+        final SearchQuery query = upwards ? upwardsQuery : downwardsQuery;
+        LOG.fine("Querying: " + query.toQueryString());
         elasticSearchService.query(query, new AsyncCallback<SearchResponse>()
         {
             @Override
             public void onFailure(final Throwable caught)
             {
-                eventBus.fireEvent(new LogMessageEvent("Can't fetch more results"));
+                LOG.log(Level.SEVERE, "Can't fetch results", caught);
             }
 
             @Override
             public void onSuccess(final SearchResponse result)
             {
-                eventBus.fireEvent(new LogMessageEvent("Fetch more results"));
-                eventBus.fireEvent(new SearchResultsReceivedEvent(query, result, top));
-                query.setFrom(query.getFrom()+result.getHits().getHits().size());
+                LOG.fine("Got response");
+                eventBus.fireEvent(new SearchResultsReceivedEvent(query, result, upwards));
+                query.setFrom(query.getFrom() + result.getHits().getHits().size());
             }
         }, SearchResponse.class);
     }

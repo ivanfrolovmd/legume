@@ -29,7 +29,7 @@ import md.frolov.legume.client.util.IteratorIncrementalTask;
 public class StreamViewImpl extends Composite implements StreamView, SearchResultsReceivedEventHandler
 {
 
-    private static final int SCROLL_THRESHOLD = 100; //TODO configure scroll threshold
+    private static final int SCROLL_THRESHOLD = 3000; //TODO configure scroll threshold
 
     private static StreamViewImplUiBinder uiBinder = GWT.create(StreamViewImplUiBinder.class);
 

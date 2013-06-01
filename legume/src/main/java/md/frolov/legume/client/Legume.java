@@ -1,5 +1,7 @@
 package md.frolov.legume.client;
 
+import java.util.Date;
+
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 
@@ -18,9 +20,10 @@ public class Legume implements EntryPoint {
    */
   public void onModuleLoad() {
       injector.activityManager().setDisplay(injector.mainView());
-      injector.placeHistoryHandler().register(injector.placeController(), injector.eventBus(), new StreamPlace(SearchQuery.DEFAULT)); //TODO change to homeplace
-
       RootLayoutPanel.get().add(injector.mainView());
-      injector.placeHistoryHandler().handleCurrentHistory();
+
+      SearchQuery query = new SearchQuery("",null, new Date(), new Date());
+      injector.placeHistoryHandler().register(injector.placeController(), injector.eventBus(), new StreamPlace(query)); //TODO change to homeplace
+      injector.placeController().goTo(new StreamPlace(query));
   }
 }

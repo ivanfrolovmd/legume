@@ -14,17 +14,31 @@ import com.google.gwt.i18n.client.TimeZone;
 
 public class SearchQuery implements Query
 {
-    public static final SearchQuery DEFAULT = new SearchQuery();
+    public static final SearchQuery DEFAULT = new SearchQuery("",null, new Date(), null);
+    private static final int DEFAULT_QUERY_SIZE = 50; //TODO make configurable
 
     private static final DateTimeFormat DTF = DateTimeFormat.getFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
 
     private String query;
     private List<SortOrder> sortOrders = Lists.newArrayList(SortOrder.of("@timestamp", true)); //TODO hardcoded for now
     private long from = 0;
-    private int size = 50;
+    private int size = DEFAULT_QUERY_SIZE;
     private Date fromDate;
     private Date toDate;
     private Date focusDate;
+
+    /** Default constructor */
+    public SearchQuery(){
+
+    }
+
+    public SearchQuery(final String query, final Date fromDate, final Date toDate, final Date focusDate)
+    {
+        this.query = query;
+        this.fromDate = fromDate;
+        this.toDate = toDate;
+        this.focusDate = focusDate;
+    }
 
     public void setQuery(final String query)
     {
@@ -69,6 +83,16 @@ public class SearchQuery implements Query
     public void setToDate(final Date toDate)
     {
         this.toDate = toDate;
+    }
+
+    public Date getFocusDate()
+    {
+        return focusDate;
+    }
+
+    public void setFocusDate(final Date focusDate)
+    {
+        this.focusDate = focusDate;
     }
 
     @Override
@@ -182,6 +206,7 @@ public class SearchQuery implements Query
         clone.size = size;
         clone.fromDate = fromDate;
         clone.toDate = toDate;
+        clone.focusDate = focusDate;
 
         List<SortOrder> clonedSortOrders = Lists.newArrayList();
         for (SortOrder sortOrder : sortOrders)
