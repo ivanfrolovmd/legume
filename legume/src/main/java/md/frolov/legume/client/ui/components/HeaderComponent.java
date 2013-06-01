@@ -10,6 +10,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
@@ -20,12 +21,14 @@ import md.frolov.legume.client.activities.stream.StreamPlace;
 import md.frolov.legume.client.elastic.query.SearchQuery;
 import md.frolov.legume.client.events.AppendQueryFilter;
 import md.frolov.legume.client.events.AppendQueryFilterHandler;
+import md.frolov.legume.client.events.SearchResultsReceivedEvent;
+import md.frolov.legume.client.events.SearchResultsReceivedEventHandler;
 import md.frolov.legume.client.events.UpdateSearchQuery;
 import md.frolov.legume.client.events.UpdateSearchQueryHandler;
 import md.frolov.legume.client.gin.WidgetInjector;
 
 /** @author Ivan Frolov (ifrolov@tacitknowledge.com) */
-public class HeaderComponent extends Composite implements UpdateSearchQueryHandler, AppendQueryFilterHandler
+public class HeaderComponent extends Composite implements UpdateSearchQueryHandler, AppendQueryFilterHandler, SearchResultsReceivedEventHandler
 {
     private WidgetInjector injector = WidgetInjector.INSTANCE;
 
@@ -44,6 +47,8 @@ public class HeaderComponent extends Composite implements UpdateSearchQueryHandl
     DateBox toDate;
     @UiField
     ListBox commonTimes;
+    @UiField
+    Label hitsLabel;
 
     private EventBus eventBus = WidgetInjector.INSTANCE.eventBus();
 
@@ -53,6 +58,7 @@ public class HeaderComponent extends Composite implements UpdateSearchQueryHandl
 
         eventBus.addHandler(UpdateSearchQuery.TYPE, this);
         eventBus.addHandler(AppendQueryFilter.TYPE, this);
+        eventBus.addHandler(SearchResultsReceivedEvent.TYPE, this);
     }
 
     @UiHandler("submitButton")
@@ -119,5 +125,12 @@ public class HeaderComponent extends Composite implements UpdateSearchQueryHandl
         sb.append(event.getFilter());
         searchQuery.setText(sb.toString());
         submitSearch();
+    }
+
+    @Override
+    public void onSearchResultsReceived(final SearchResultsReceivedEvent event)
+    {
+        long totalHits = event.getSearchResponse().getHits().getTotal();
+        hitsLabel.setText("Hits: "+totalHits);
     }
 }

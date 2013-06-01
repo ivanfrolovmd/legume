@@ -6,10 +6,33 @@
             font-weight: bold;
         }
     </ui:style>
-    <g:FlowPanel>
-        <g:FlowPanel ui:field="container"/>
-        <g:FlowPanel ui:field="nothingFound" visible="false">
-            <g:Label>Nothing found</g:Label>
+    <g:ScrollPanel ui:field="scrollContainer">
+        <g:FlowPanel>
+            <g:FlowPanel ui:field="resultsPanel"> <!-- Panel with results -->
+                <g:FlowPanel ui:field="topLoading" visible="false">
+                    <g:Label>Loading...</g:Label>
+                </g:FlowPanel>
+                <g:HorizontalPanel ui:field="topNoMoreResults" visible="false">
+                    <g:Label>No more results</g:Label>
+                    <g:Button ui:field="topTryAgain">Try again</g:Button>
+                    <g:CheckBox visible="false">Fetch automatically</g:CheckBox> <!-- TODO implement auto refresh -->
+                </g:HorizontalPanel>
+
+                <g:FlowPanel ui:field="container"/>
+
+                <g:FlowPanel ui:field="bottomLoading" visible="false">
+                    <g:Label>Loading...</g:Label>
+                </g:FlowPanel>
+                <g:HorizontalPanel ui:field="bottomNoMoreResults" visible="false">
+                    <g:Label>No more results</g:Label>
+                    <g:Button ui:field="bottomTryAgain">Try again</g:Button>
+                    <g:CheckBox visible="false">Fetch automatically</g:CheckBox> <!-- TODO implement auto refresh -->
+                </g:HorizontalPanel>
+            </g:FlowPanel>
+
+            <g:FlowPanel ui:field="nothingFound" visible="false">
+                <g:Label>Nothing found</g:Label>
+            </g:FlowPanel>
         </g:FlowPanel>
-    </g:FlowPanel>
+    </g:ScrollPanel>
 </ui:UiBinder>

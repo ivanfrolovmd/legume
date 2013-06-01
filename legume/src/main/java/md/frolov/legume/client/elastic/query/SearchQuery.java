@@ -20,9 +20,11 @@ public class SearchQuery implements Query
 
     private String query;
     private List<SortOrder> sortOrders = Lists.newArrayList(SortOrder.of("@timestamp", true)); //TODO hardcoded for now
-    private int size = 20;
+    private long from = 0;
+    private int size = 50;
     private Date fromDate;
     private Date toDate;
+    private Date focusDate;
 
     public void setQuery(final String query)
     {
@@ -37,6 +39,16 @@ public class SearchQuery implements Query
     public void setSize(final int size)
     {
         this.size = size;
+    }
+
+    public long getFrom()
+    {
+        return from;
+    }
+
+    public void setFrom(final long from)
+    {
+        this.from = from;
     }
 
     public Date getFromDate()
@@ -65,7 +77,12 @@ public class SearchQuery implements Query
         StringBuilder sb = new StringBuilder();
         sb.append("/_search?");
         fillInSortOrder(sb);
+
         sb.append("size=").append(size).append('&');
+
+        if(from!=0) {
+            sb.append("from=").append(from).append('&');
+        }
 
         sb.append("q=");
         fillInQuery(sb);
@@ -156,5 +173,29 @@ public class SearchQuery implements Query
     public String getQuery()
     {
         return query;
+    }
+
+    public SearchQuery clone() {
+        SearchQuery clone = new SearchQuery();
+        clone.query = query;
+        clone.from = from;
+        clone.size = size;
+        clone.fromDate = fromDate;
+        clone.toDate = toDate;
+
+        List<SortOrder> clonedSortOrders = Lists.newArrayList();
+        for (SortOrder sortOrder : sortOrders)
+        {
+            clonedSortOrders.add(sortOrder.clone());
+        }
+
+        return clone;
+    }
+
+    public void reverseSortOrder() {
+        for (SortOrder sortOrder : sortOrders)
+        {
+            sortOrder.setAscending(!sortOrder.isAscending());
+        }
     }
 }

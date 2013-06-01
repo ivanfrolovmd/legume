@@ -21,7 +21,8 @@
         </g:south>
 
         <g:center>
-            <g:ScrollPanel ui:field="viewContainer"/>
+            <!-- ResizeLayoutPanel required to insert other layout panels, like ScrollPanel -->
+            <g:ResizeLayoutPanel ui:field="viewContainer"/>
         </g:center>
     </g:DockLayoutPanel>
 </ui:UiBinder>

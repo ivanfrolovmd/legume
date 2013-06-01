@@ -12,6 +12,7 @@
             <g:TextBox ui:field="searchQuery" width="700px">Search</g:TextBox>
             <g:Button ui:field="submitButton">Submit</g:Button>
             <g:Button ui:field="resetButton">Reset</g:Button>
+            <g:Label ui:field="hitsLabel"></g:Label>
         </g:HorizontalPanel>
         <g:HorizontalPanel>
             <g:ListBox ui:field="commonTimes">
