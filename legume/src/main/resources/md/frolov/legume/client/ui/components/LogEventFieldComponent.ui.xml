@@ -6,6 +6,9 @@
         }
         .keyLabel {
             background-color: azure;
+            white-space: nowrap;
+            width: 100px;
+            overflow: hidden;
         }
     </ui:style>
     <g:HorizontalPanel>

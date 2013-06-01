@@ -5,6 +5,19 @@
         .colorLabel {
             color: white;
         }
+        .time,.type,.source {
+            overflow: hidden;
+            white-space: nowrap;
+        }
+        .time {
+            width:120px;
+        }
+        .type {
+            width:50px;
+        }
+        .source {
+            width:50px;
+        }
         .message {
             white-space: pre;
             overflow-y: hidden;
@@ -15,9 +28,9 @@
     <g:FlowPanel>
         <g:HorizontalPanel ui:field="summary"> <!-- TODO probably table here will be huge. Research if divs would be better -->
             <g:Button ui:field="more">&gt;</g:Button>
-            <g:Label ui:field="time"/>
-            <g:Label ui:field="type" styleName="{style.colorLabel}">.</g:Label>
-            <g:Label ui:field="source" styleName="{style.colorLabel}">.</g:Label>
+            <g:Label ui:field="time" styleName="{style.time}"/>
+            <g:Label ui:field="type" styleName="{style.type} {style.colorLabel}">.</g:Label>
+            <g:Label ui:field="source" styleName="{style.source} {style.colorLabel}">.</g:Label>
             <g:Label ui:field="message" styleName="{style.message}"/>
         </g:HorizontalPanel>
         <g:FlowPanel ui:field="details" visible="false">
