@@ -1,21 +1,65 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+    <!-- TODO fix loayout here -->
     <ui:style>
-        .valueLabel{
+        .box {
+            border-bottom: 1px solid #e5e5e5;
+            position: relative;
+        }
+
+        .keyLabel, .controls {
+            position: absolute;
+            left: 0;
+            width: 100px; /* TODO change to relative values */
+            top: 0;
+            bottom: 0;
+        }
+
+        .keyLabel {
+            white-space: nowrap;
+            overflow: hidden;
+            color: #999;
+            background-color: #f5f5f5;
+        }
+
+        .valueLabel {
+            margin-left: 110px;
             white-space: pre;
         }
-        .keyLabel {
-            background-color: azure;
-            white-space: nowrap;
-            width: 100px;
-            overflow: hidden;
+
+        .keyLabel, .valueLabel {
+            padding: 2px 4px;
         }
+
+        .controls{
+            visibility: hidden;
+        }
+        .controls div {
+            display: inline-block;
+            margin: 0 4px;
+        }
+        .box:hover .controls {
+            visibility: visible;
+        }
+        .box:hover .keyLabel {
+            visibility: hidden;
+        }
+
+        .cta a, .cta a:active, .cta a:hover, .cta a:visited,
+        a.cta, a.cta:active, a.cta:hover, a.cta:visited {
+            font-size: smaller;
+            color: #999;
+            text-decoration: none;
+        }
+
     </ui:style>
-    <g:HorizontalPanel>
-        <!-- TODO use modifier keys (like Shift) to open in new window -->
-        <g:Hyperlink ui:field="includeFilter">V</g:Hyperlink>
-        <g:Hyperlink ui:field="excludeFilter">X</g:Hyperlink>
-        <g:Label ui:field="key" styleName="{style.keyLabel}"/>
-        <g:Label ui:field="value" styleName="{style.valueLabel}"/>
-    </g:HorizontalPanel>
+    <g:FlowPanel styleName="{style.box}">
+        <g:FlowPanel styleName="{style.controls}"> <!-- TODO implement picture controls -->
+            <g:Hyperlink ui:field="includeFilter" styleName="{style.cta}">include</g:Hyperlink>
+            <g:Hyperlink ui:field="excludeFilter" styleName="{style.cta}">exclude</g:Hyperlink>
+        </g:FlowPanel>
+        <g:Label ui:field="keyLabel" styleName="{style.keyLabel}"/>
+        <g:Label ui:field="valueLabel" styleName="{style.valueLabel}"/>
+    </g:FlowPanel>
 </ui:UiBinder>

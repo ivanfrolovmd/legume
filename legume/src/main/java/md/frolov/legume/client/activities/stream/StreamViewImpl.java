@@ -13,7 +13,6 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.EventBus;
@@ -48,9 +47,9 @@ public class StreamViewImpl extends Composite implements StreamView, SearchResul
     @UiField
     FlowPanel resultsPanel;
     @UiField
-    HorizontalPanel topNoMoreResults;
+    FlowPanel topNoMoreResults;
     @UiField
-    HorizontalPanel bottomNoMoreResults;
+    FlowPanel bottomNoMoreResults;
     @UiField
     Button bottomTryAgain;
     @UiField

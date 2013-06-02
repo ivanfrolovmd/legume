@@ -2,32 +2,46 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
              xmlns:g="urn:import:com.google.gwt.user.client.ui">
     <ui:style>
-        .important {
-            font-weight: bold;
+        .scrollContainer {
+            background: #E5E5E5;
+            padding: 10px 20px;
+        }
+        .container {
+        }
+
+        .island {
+            border: 1px solid #D8D8D8;
+            border-bottom-width: 2px;
+            background: white;
+            border-radius: 3px;
+
+            padding: 10px;
+            margin: 10px 0;
+
+            text-align: center;
+            color: #333;
         }
     </ui:style>
-    <g:ScrollPanel ui:field="scrollContainer">
+    <g:ScrollPanel ui:field="scrollContainer" styleName="{style.scrollContainer}">
         <g:FlowPanel>
             <g:FlowPanel ui:field="resultsPanel"> <!-- Panel with results -->
-                <g:FlowPanel ui:field="topLoading" visible="false">
+                <g:FlowPanel ui:field="topLoading" styleName="{style.island}" visible="false">
                     <g:Label>Loading...</g:Label>
                 </g:FlowPanel>
-                <g:HorizontalPanel ui:field="topNoMoreResults" visible="false">
-                    <g:Label>No more results</g:Label>
-                    <g:Button ui:field="topTryAgain">Try again</g:Button>
+                <g:FlowPanel ui:field="topNoMoreResults" styleName="{style.island}" visible="false">
+                    <g:Button ui:field="topTryAgain">More</g:Button>
                     <g:CheckBox visible="false">Fetch automatically</g:CheckBox> <!-- TODO implement auto refresh -->
-                </g:HorizontalPanel>
+                </g:FlowPanel>
 
-                <g:FlowPanel ui:field="container"/>
+                <g:FlowPanel ui:field="container" styleName="{style.container}"/>
 
-                <g:FlowPanel ui:field="bottomLoading" visible="false">
+                <g:FlowPanel ui:field="bottomLoading" styleName="{style.island}" visible="false">
                     <g:Label>Loading...</g:Label>
                 </g:FlowPanel>
-                <g:HorizontalPanel ui:field="bottomNoMoreResults" visible="false">
-                    <g:Label>No more results</g:Label>
-                    <g:Button ui:field="bottomTryAgain">Try again</g:Button>
+                <g:FlowPanel ui:field="bottomNoMoreResults" styleName="{style.island}" visible="false">
+                    <g:Button ui:field="bottomTryAgain">More</g:Button>
                     <g:CheckBox visible="false">Fetch automatically</g:CheckBox> <!-- TODO implement auto refresh -->
-                </g:HorizontalPanel>
+                </g:FlowPanel>
             </g:FlowPanel>
 
             <g:FlowPanel ui:field="nothingFound" visible="false">

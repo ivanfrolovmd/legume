@@ -1,41 +1,94 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
-    <ui:style>
+    <ui:style type="md.frolov.legume.client.ui.components.LogEventComponent.Css" field="style">
+        .box, .type {
+            /* border */
+            border: 1px solid #D8D8D8;
+            border-bottom-width: 2px;
+        }
+
+        .box {
+            background: white;
+            border-left-width: 0px;
+            border-top-right-radius: 3px;
+            border-bottom-right-radius: 3px;
+            margin: 2px 0 2px 4px;
+
+            position: relative;
+
+            color: #333;
+        }
+
+        .detailsSelected {
+            margin: 4px 0px 8px 10px;
+        }
+
+        .type { /* color label to the left */
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+
+            border-top-left-radius: 3px;
+            border-bottom-left-radius: 3px;
+            border-right-width: 0px;
+        }
+
+        .summaryBox {
+            padding: 2px 10px;
+        }
+
+        .detailsBox {
+            padding: 0 10px;
+            overflow-x: scroll;
+        }
+
         .colorLabel {
             color: white;
         }
-        .time,.type,.source {
+
+        .time, .type, .source {
             overflow: hidden;
             white-space: nowrap;
         }
+
         .time {
-            width:120px;
+            width: 120px;
+            color: #999;
         }
-        .type {
-            width:50px;
-        }
+
         .source {
-            width:50px;
+            width: 50px;
         }
+
         .message {
             white-space: pre;
             overflow-y: hidden;
             max-height: 4em;
         }
+
+        .relative {
+            position: relative;
+        }
     </ui:style>
 
-    <g:FlowPanel>
-        <g:HorizontalPanel ui:field="summary"> <!-- TODO probably table here will be huge. Research if divs would be better -->
-            <g:Button ui:field="more">&gt;</g:Button>
-            <g:Label ui:field="time" styleName="{style.time}"/>
-            <g:Label ui:field="type" styleName="{style.type} {style.colorLabel}">.</g:Label>
-            <g:Label ui:field="source" styleName="{style.source} {style.colorLabel}">.</g:Label>
-            <g:Label ui:field="message" styleName="{style.message}"/>
-        </g:HorizontalPanel>
-        <g:FlowPanel ui:field="details" visible="false">
-            <g:Button ui:field="less">&lt;</g:Button>
-            <g:FlowPanel ui:field="detailsContainer"/>
+    <g:FocusPanel ui:field="focusPanel">
+        <g:FlowPanel styleName="{style.relative}">
+            <g:FlowPanel ui:field="type" styleName="{style.type}"/>
+            <g:FlowPanel styleName="{style.box}">
+                <g:HorizontalPanel ui:field="summary" styleName="{style.summaryBox}">
+                    <g:Label ui:field="time" styleName="{style.time}"/>
+                    <g:Label ui:field="message" styleName="{style.message}"/>
+                </g:HorizontalPanel>
+                <g:HorizontalPanel visible="false"> <!-- TODO probably table here will be huge. Research if divs would be better -->
+                    <g:Label ui:field="source" styleName="{style.source} {style.colorLabel}">.</g:Label>
+                </g:HorizontalPanel>
+                <g:FlowPanel ui:field="details" styleName="{style.detailsBox}" visible="false">
+                    <g:FlowPanel ui:field="detailsContainer"/>
+                </g:FlowPanel>
+            </g:FlowPanel>
         </g:FlowPanel>
-    </g:FlowPanel>
+    </g:FocusPanel>
 </ui:UiBinder>

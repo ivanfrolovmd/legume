@@ -2,11 +2,15 @@
              xmlns:g='urn:import:com.google.gwt.user.client.ui'
                 xmlns:d="urn:import:com.google.gwt.user.datepicker.client">
     <ui:style>
+        .box {
+            background-color: #f1f1f1;
+            border-bottom: 1px solid #e5e5e5;
+        }
         .dateBox{
             width: 200px;
         }
     </ui:style>
-    <g:AbsolutePanel>
+    <g:AbsolutePanel styleName="{style.box}">
         <g:HorizontalPanel>
             <g:Label>Legume</g:Label>
             <g:TextBox ui:field="searchQuery" width="700px">Search</g:TextBox>
