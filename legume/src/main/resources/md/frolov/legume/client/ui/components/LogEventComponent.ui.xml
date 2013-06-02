@@ -52,6 +52,7 @@
         .time, .type, .source {
             overflow: hidden;
             white-space: nowrap;
+            font-family: OpenSansLight;
         }
 
         .time {

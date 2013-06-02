@@ -9,20 +9,22 @@ import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.ui.*;
+import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.ListBox;
+import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.datepicker.client.DateBox;
 import com.google.web.bindery.event.shared.EventBus;
 
 import md.frolov.legume.client.activities.stream.StreamPlace;
 import md.frolov.legume.client.elastic.query.SearchQuery;
-import md.frolov.legume.client.events.SearchResultsReceivedEvent;
-import md.frolov.legume.client.events.SearchResultsReceivedEventHandler;
 import md.frolov.legume.client.events.UpdateSearchQuery;
 import md.frolov.legume.client.events.UpdateSearchQueryHandler;
 import md.frolov.legume.client.gin.WidgetInjector;
 
 /** @author Ivan Frolov (ifrolov@tacitknowledge.com) */
-public class HeaderComponent extends Composite implements UpdateSearchQueryHandler, SearchResultsReceivedEventHandler
+public class HeaderComponent extends Composite implements UpdateSearchQueryHandler
 {
     private WidgetInjector injector = WidgetInjector.INSTANCE;
 
@@ -42,8 +44,6 @@ public class HeaderComponent extends Composite implements UpdateSearchQueryHandl
     @UiField
     ListBox commonTimes;
     @UiField
-    Label hitsLabel;
-    @UiField
     Anchor openInNewWindow;
 
     private EventBus eventBus = WidgetInjector.INSTANCE.eventBus();
@@ -53,7 +53,6 @@ public class HeaderComponent extends Composite implements UpdateSearchQueryHandl
         initWidget(binder.createAndBindUi(this));
 
         eventBus.addHandler(UpdateSearchQuery.TYPE, this);
-        eventBus.addHandler(SearchResultsReceivedEvent.TYPE, this);
     }
 
     @UiHandler("submitButton")
@@ -114,10 +113,4 @@ public class HeaderComponent extends Composite implements UpdateSearchQueryHandl
     }
 
 
-    @Override
-    public void onSearchResultsReceived(final SearchResultsReceivedEvent event)
-    {
-        long totalHits = event.getSearchResponse().getHits().getTotal();
-        hitsLabel.setText("Hits: "+totalHits);
-    }
 }
