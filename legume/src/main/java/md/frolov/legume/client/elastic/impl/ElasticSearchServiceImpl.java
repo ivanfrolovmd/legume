@@ -39,9 +39,13 @@ public class ElasticSearchServiceImpl implements ElasticSearchService, Constants
             @Override
             public void onSuccess(JavaScriptObject result)
             {
-                // TODO research performance implications. Compare to "JSO to Bean conversion" method
-                T response = AutoBeanCodex.decode(modelFactory, clazz, new JSONObject(result).toString()).as();
-                callback.onSuccess(response);
+                try{
+                    // TODO research performance implications. Compare to "JSO to Bean conversion" method
+                    T response = AutoBeanCodex.decode(modelFactory, clazz, new JSONObject(result).toString()).as();
+                    callback.onSuccess(response);
+                } catch (Exception e) {
+                    onFailure(e);
+                }
             }
         });
     }

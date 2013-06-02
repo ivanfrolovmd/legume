@@ -7,6 +7,7 @@ import com.google.gwt.place.shared.Prefix;
 import md.frolov.legume.client.elastic.query.SearchQuery;
 
 public class StreamPlace extends Place {
+    public final static String TOKEN_PREFIX = "stream";
     private final SearchQuery query;
 
     public StreamPlace(final SearchQuery query)
@@ -14,7 +15,7 @@ public class StreamPlace extends Place {
         this.query = query;
     }
 
-    @Prefix("stream")
+    @Prefix(TOKEN_PREFIX)
     public static class Tokenizer implements PlaceTokenizer<StreamPlace> {
         @Override
         public StreamPlace getPlace(String token) {

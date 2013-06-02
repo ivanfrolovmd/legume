@@ -1,17 +1,17 @@
 package md.frolov.legume.client.ui.components;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.place.shared.Place;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.Hyperlink;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.web.bindery.event.shared.EventBus;
 
-import md.frolov.legume.client.events.AppendQueryFilter;
+import md.frolov.legume.client.activities.stream.StreamPlace;
+import md.frolov.legume.client.elastic.model.LogEvent;
+import md.frolov.legume.client.elastic.query.SearchQuery;
 import md.frolov.legume.client.gin.WidgetInjector;
 
 /** @author Ivan Frolov (ifrolov@tacitknowledge.com) */
@@ -24,48 +24,55 @@ public class LogEventFieldComponent extends Composite
     private static LogEventFieldComponentUiBinder binder = GWT.create(LogEventFieldComponentUiBinder.class);
 
     @UiField
-    Button includeButton;
-    @UiField
-    Button excludeButton;
-    @UiField
     Label value;
     @UiField
     Label key;
+    @UiField
+    Hyperlink includeFilter;
+    @UiField
+    Hyperlink excludeFilter;
 
-    private final EventBus eventBus = WidgetInjector.INSTANCE.eventBus();
+    private final Place place;
     private final String queryKey;
 
-    public LogEventFieldComponent(String key, String queryKey, Object value)
+    public LogEventFieldComponent(String key, String queryKey, Object value, LogEvent logEvent)
     {
         initWidget(binder.createAndBindUi(this));
         this.key.setText(key);
         this.value.setText(value.toString()); //TODO format different types
         this.queryKey = queryKey;
+        place = WidgetInjector.INSTANCE.placeController().getWhere();
+
+        String filter = getFilter();
+        SearchQuery query = ((StreamPlace) place).getQuery().clone();
+        String originalQueryString = query.getQuery();
+        StreamPlace.Tokenizer tokenizer = new StreamPlace.Tokenizer();
+
+        query.setFocusDate(logEvent.getTimestamp());
+        query.setQuery(getQueryString(originalQueryString, filter));
+        includeFilter.setTargetHistoryToken("stream:"+tokenizer.getToken(new StreamPlace(query)));
+        query.setQuery(getQueryString(originalQueryString, "NOT " + filter));
+        excludeFilter.setTargetHistoryToken("stream:"+tokenizer.getToken(new StreamPlace(query)));
     }
 
-    @UiHandler("includeButton")
-    public void onIncludeClick(final ClickEvent event)
+    private String getQueryString(String originalQuery, String postfix)
     {
-        appendFilter(true);
+        if (originalQuery.length() != 0)
+        {
+            return originalQuery + " AND " + postfix;
+        }
+        else
+        {
+            return postfix;
+        }
     }
 
-
-    @UiHandler("excludeButton")
-    public void onExcludeClick(final ClickEvent event)
-    {
-        appendFilter(false);
-    }
-
-    private void appendFilter(final boolean positive)
+    private String getFilter()
     {
         StringBuilder sb = new StringBuilder();
-        if(!positive) {
-            sb.append("NOT ");
-        }
         sb.append(queryKey).append(":\"");
         sb.append(value.getText());
         sb.append('\"');
-
-        eventBus.fireEvent(new AppendQueryFilter(sb.toString()));
+        return sb.toString();
     }
 }

@@ -14,8 +14,8 @@ import com.google.gwt.i18n.client.TimeZone;
 
 public class SearchQuery implements Query
 {
-    public static final SearchQuery DEFAULT = new SearchQuery("",null, new Date(), null);
-    private static final int DEFAULT_QUERY_SIZE = 50; //TODO make configurable
+    public static final SearchQuery DEFAULT = new SearchQuery("", null, new Date(), null);
+    private static final int DEFAULT_QUERY_SIZE = 100; //TODO make configurable
 
     private static final DateTimeFormat DTF = DateTimeFormat.getFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
 
@@ -28,7 +28,8 @@ public class SearchQuery implements Query
     private Date focusDate;
 
     /** Default constructor */
-    public SearchQuery(){
+    public SearchQuery()
+    {
 
     }
 
@@ -104,7 +105,8 @@ public class SearchQuery implements Query
 
         sb.append("size=").append(size).append('&');
 
-        if(from!=0) {
+        if (from != 0)
+        {
             sb.append("from=").append(from).append('&');
         }
 
@@ -117,27 +119,39 @@ public class SearchQuery implements Query
     public String toHistoryToken()
     {
         return Joiner.on("/").useForNull("").join(new String[]{
-                query,
                 String.valueOf(fromDate == null ? 0 : fromDate.getTime()),
-                String.valueOf(toDate == null ? 0 : toDate.getTime())});
+                String.valueOf(toDate == null ? 0 : toDate.getTime()),
+                String.valueOf(focusDate == null ? 0 : focusDate.getTime()),
+                query
+        });
     }
 
     public static SearchQuery fromHistoryToken(String token)
     {
-        Iterator<String> parts = Splitter.on("/").split(token).iterator();
-        try{
+        Iterator<String> parts = Splitter.on("/").limit(4).split(token).iterator();
+        try
+        {
             SearchQuery query = new SearchQuery();
-            query.setQuery(parts.next());
             Long fromDate = Long.valueOf(parts.next());
-            if(fromDate!=0) {
+            if (fromDate != 0)
+            {
                 query.setFromDate(new Date(fromDate));
             }
             Long toDate = Long.valueOf(parts.next());
-            if(toDate!=0) {
+            if (toDate != 0)
+            {
                 query.setToDate(new Date(toDate));
             }
+            Long focusDate = Long.valueOf(parts.next());
+            if (focusDate != 0)
+            {
+                query.setFocusDate(new Date(focusDate));
+            }
+            query.setQuery(parts.next());
             return query;
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             return DEFAULT;
         }
     }
@@ -199,7 +213,8 @@ public class SearchQuery implements Query
         return query;
     }
 
-    public SearchQuery clone() {
+    public SearchQuery clone()
+    {
         SearchQuery clone = new SearchQuery();
         clone.query = query;
         clone.from = from;
@@ -217,7 +232,8 @@ public class SearchQuery implements Query
         return clone;
     }
 
-    public void reverseSortOrder() {
+    public void reverseSortOrder()
+    {
         for (SortOrder sortOrder : sortOrders)
         {
             sortOrder.setAscending(!sortOrder.isAscending());

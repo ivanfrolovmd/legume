@@ -20,16 +20,15 @@ import com.google.web.bindery.event.shared.EventBus;
 
 import md.frolov.legume.client.elastic.model.SearchHit;
 import md.frolov.legume.client.elastic.model.SearchHits;
-import md.frolov.legume.client.events.SearchResultsReceivedEvent;
-import md.frolov.legume.client.events.SearchResultsReceivedEventHandler;
+import md.frolov.legume.client.events.*;
 import md.frolov.legume.client.gin.WidgetInjector;
 import md.frolov.legume.client.ui.components.LogEventComponent;
 import md.frolov.legume.client.util.IteratorIncrementalTask;
 
-public class StreamViewImpl extends Composite implements StreamView, SearchResultsReceivedEventHandler
+public class StreamViewImpl extends Composite implements StreamView, SearchResultsReceivedEventHandler, SearchInProgressEventHandler, SearchFinishedEventHandler
 {
 
-    private static final int SCROLL_THRESHOLD = 3000; //TODO configure scroll threshold
+    private static final int SCROLL_THRESHOLD = 50; //TODO configure scroll threshold
 
     private static StreamViewImplUiBinder uiBinder = GWT.create(StreamViewImplUiBinder.class);
 
@@ -60,6 +59,7 @@ public class StreamViewImpl extends Composite implements StreamView, SearchResul
     private EventBus eventBus = WidgetInjector.INSTANCE.eventBus();
     private Presenter presenter;
     private boolean isRendering;
+    private boolean initial;
 
     interface StreamViewImplUiBinder extends UiBinder<Widget, StreamViewImpl>
     {
@@ -69,6 +69,8 @@ public class StreamViewImpl extends Composite implements StreamView, SearchResul
     {
         initWidget(uiBinder.createAndBindUi(this));
         eventBus.addHandler(SearchResultsReceivedEvent.TYPE, this);
+        eventBus.addHandler(SearchInProgressEvent.TYPE, this);
+        eventBus.addHandler(SearchFinishedEvent.TYPE, this);
     }
 
     @Override
@@ -77,30 +79,35 @@ public class StreamViewImpl extends Composite implements StreamView, SearchResul
         this.presenter = presenter;
         container.clear();
         ids.clear();
+        initial = true;
     }
 
     @Override
     public void onSearchResultsReceived(final SearchResultsReceivedEvent event)
     {
-        SearchHits hits = event.getSearchResponse().getHits();
+        final SearchHits hits = event.getSearchResponse().getHits();
 //        resultsPanel.setVisible(false);
         nothingFound.setVisible(false);
 
-        if (hits.getTotal() == 0)
-        {
-            handleNothingFound();
+        if(initial) {
+            initial = false;
+            requestMoreTop();
+            requestMoreBottom();
         }
-        else
+
+        Scheduler.get().scheduleEntry(new Scheduler.RepeatingCommand()
         {
-            if (hits.getHits().isEmpty())
+            @Override
+            public boolean execute()
             {
-                handleNoMoreResults(event.isTop());
+                if(!isRendering) {
+                    handleFound(event);
+                    return false; // stop repeating the command
+                } else {
+                    return true; //wait until the rendering is finished
+                }
             }
-            else
-            {
-                handleFound(hits, event.isTop());
-            }
-        }
+        });
     }
 
     private void handleNothingFound()
@@ -108,11 +115,17 @@ public class StreamViewImpl extends Composite implements StreamView, SearchResul
         nothingFound.setVisible(true);
     }
 
-    private void handleFound(final SearchHits hits, final boolean top)
+    private void handleFound(SearchResultsReceivedEvent event)
     {
         isRendering=true;
+
+        final SearchHits hits = event.getSearchResponse().getHits();
+        final boolean isFullFetch = hits.getHits().size() == event.getSearchQuery().getSize();
+        final boolean upwards = event.isTop();
+
         Scheduler.get().scheduleIncremental(new IteratorIncrementalTask<SearchHit>(hits.getHits()) {
             private FlowPanel panel;
+            private int cnt = 0;
 
             @Override
             public void beforeAll()
@@ -128,10 +141,11 @@ public class StreamViewImpl extends Composite implements StreamView, SearchResul
                 if (!ids.contains(id))
                 {
                     ids.add(id);
+                    cnt++;
 
                     //add log message
                     LogEventComponent logEventComponent = new LogEventComponent(hit.getId(), hit.getLogEvent());
-                    if (top)
+                    if (upwards)
                     {
                         panel.insert(logEventComponent, 0);
                     }
@@ -146,7 +160,7 @@ public class StreamViewImpl extends Composite implements StreamView, SearchResul
             public void afterAll()
             {
 //                 resultsPanel.setVisible(true);
-                if (top)
+                if (upwards)
                 {
                     int scrollToBottom = scrollContainer.getMaximumVerticalScrollPosition() - scrollContainer.getVerticalScrollPosition();
                     container.insert(panel, 0);
@@ -160,6 +174,14 @@ public class StreamViewImpl extends Composite implements StreamView, SearchResul
                     bottomLoading.setVisible(false);
                 }
                 isRendering = false;
+
+                if(cnt == 0) {
+                    if(isFullFetch) {
+                        requestMore(upwards);
+                    } else {
+                        handleNoMoreResults(upwards);
+                    }
+                }
             }
         });
     }
@@ -199,13 +221,21 @@ public class StreamViewImpl extends Composite implements StreamView, SearchResul
         }
     }
 
+    private void requestMore(boolean upwards) {
+        if(upwards) {
+            requestMoreTop();
+        } else {
+            requestMoreBottom();
+        }
+    }
+
     private void requestMoreTop()
     {
         if (topLoading.isVisible() || isRendering)
         {
             return;
         }
-        topLoading.setVisible(true);
+        eventBus.fireEvent(new LogMessageEvent("Request top"));
         topNoMoreResults.setVisible(false);
         presenter.requestMoreResults(true);
     }
@@ -216,7 +246,7 @@ public class StreamViewImpl extends Composite implements StreamView, SearchResul
         {
             return;
         }
-        bottomLoading.setVisible(true);
+        eventBus.fireEvent(new LogMessageEvent("Request bottom"));
         bottomNoMoreResults.setVisible(false);
         presenter.requestMoreResults(false);
     }
@@ -231,6 +261,26 @@ public class StreamViewImpl extends Composite implements StreamView, SearchResul
     public void onBottomTryAgain(final ClickEvent event)
     {
         requestMoreBottom();
+    }
+
+    @Override
+    public void onSearchFinished(final SearchFinishedEvent event)
+    {
+        if(event.isUpwards()) {
+            topLoading.setVisible(false);
+        } else {
+            bottomLoading.setVisible(false);
+        }
+    }
+
+    @Override
+    public void onSearchInProgress(final SearchInProgressEvent event)
+    {
+        if(event.isUpwards()) {
+            topLoading.setVisible(true);
+        } else {
+            bottomLoading.setVisible(true);
+        }
     }
 }
 

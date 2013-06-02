@@ -36,14 +36,14 @@ public class LogEventExtendedComponent extends Composite
 
     private void fillIn(final LogEvent logEvent)
     {
-        container.add(new LogEventFieldComponent("time", "@timestamp", logEvent.getTimestamp())); //TODO localize?
-        container.add(new LogEventFieldComponent("type", "@type", logEvent.getType()));
-        container.add(new LogEventFieldComponent("message", "@message", logEvent.getMessage()));
-        container.add(new LogEventFieldComponent("source", "@source", logEvent.getSource()));
-        container.add(new LogEventFieldComponent("source host", "@source_host", logEvent.getSourceHost()));
+        container.add(new LogEventFieldComponent("time", "@timestamp", logEvent.getTimestamp(), logEvent)); //TODO localize?
+        container.add(new LogEventFieldComponent("type", "@type", logEvent.getType(), logEvent));
+        container.add(new LogEventFieldComponent("message", "@message", logEvent.getMessage(), logEvent));
+        container.add(new LogEventFieldComponent("source", "@source", logEvent.getSource(), logEvent));
+        container.add(new LogEventFieldComponent("source host", "@source_host", logEvent.getSourceHost(), logEvent));
 
         String tags = Joiner.on(", ").join(logEvent.getTags());
-        container.add(new LogEventFieldComponent("tags", "@tags", tags));
+        container.add(new LogEventFieldComponent("tags", "@tags", tags, logEvent));
 
         Map<String, List<String>> fields = ImmutableSortedMap.copyOf(logEvent.getFields());
         for (Iterator<Map.Entry<String, List<String>>> iterator = fields.entrySet().iterator(); iterator.hasNext(); )
@@ -51,7 +51,7 @@ public class LogEventExtendedComponent extends Composite
             Map.Entry<String, List<String>> entry = iterator.next();
 
             String value = Joiner.on(", ").join(entry.getValue());
-            container.add(new LogEventFieldComponent(entry.getKey(), "@fields."+entry.getKey(), value));
+            container.add(new LogEventFieldComponent(entry.getKey(), "@fields."+entry.getKey(), value, logEvent));
         }
     }
 }

@@ -12,7 +12,8 @@ import md.frolov.legume.client.gin.WidgetInjector;
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
  */
-public class Legume implements EntryPoint {
+public class Legume implements EntryPoint
+{
   private WidgetInjector injector = WidgetInjector.INSTANCE;
 
   /**
@@ -24,6 +25,7 @@ public class Legume implements EntryPoint {
 
       SearchQuery query = new SearchQuery("",null, new Date(), new Date());
       injector.placeHistoryHandler().register(injector.placeController(), injector.eventBus(), new StreamPlace(query)); //TODO change to homeplace
-      injector.placeController().goTo(new StreamPlace(query));
+      injector.placeHistoryHandler().handleCurrentHistory();
   }
+
 }

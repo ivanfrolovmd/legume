@@ -1,5 +1,7 @@
 package md.frolov.legume.client.ui.components;
 
+import java.util.Date;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -40,7 +42,7 @@ public class LoggerComponent extends Composite implements LogMessageEventHandler
     @Override
     public void onLogMessage(final LogMessageEvent event)
     {
-        container.add(new Label(event.getMessage()));
+        container.add(new Label(new Date() + ". " +event.getMessage()));
         scrollPanel.scrollToBottom();
     }
 }

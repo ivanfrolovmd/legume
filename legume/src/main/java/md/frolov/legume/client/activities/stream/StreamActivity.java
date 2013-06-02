@@ -14,6 +14,8 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import md.frolov.legume.client.elastic.ElasticSearchService;
 import md.frolov.legume.client.elastic.model.SearchResponse;
 import md.frolov.legume.client.elastic.query.SearchQuery;
+import md.frolov.legume.client.events.SearchFinishedEvent;
+import md.frolov.legume.client.events.SearchInProgressEvent;
 import md.frolov.legume.client.events.SearchResultsReceivedEvent;
 import md.frolov.legume.client.events.UpdateSearchQuery;
 import md.frolov.legume.client.service.ConfigurationService;
@@ -55,9 +57,9 @@ public class StreamActivity extends AbstractActivity implements StreamView.Prese
 
         initQueries(place.getQuery());
         eventBus.fireEvent(new UpdateSearchQuery(activeSearchQuery));
-        boolean upwards = isUpwardsDirection();
+        boolean isUpwards = isUpwardsDirection();
 
-        requestMoreResults(upwards);
+        requestMoreResults(isUpwards);
     }
 
     private void initQueries(SearchQuery requestedSearchQuery)
@@ -103,12 +105,14 @@ public class StreamActivity extends AbstractActivity implements StreamView.Prese
     {
         final SearchQuery query = upwards ? upwardsQuery : downwardsQuery;
         LOG.fine("Querying: " + query.toQueryString());
+        eventBus.fireEvent(new SearchInProgressEvent(upwards));
         elasticSearchService.query(query, new AsyncCallback<SearchResponse>()
         {
             @Override
             public void onFailure(final Throwable caught)
             {
                 LOG.log(Level.SEVERE, "Can't fetch results", caught);
+                eventBus.fireEvent(new SearchFinishedEvent(upwards));
             }
 
             @Override
@@ -116,6 +120,7 @@ public class StreamActivity extends AbstractActivity implements StreamView.Prese
             {
                 LOG.fine("Got response");
                 eventBus.fireEvent(new SearchResultsReceivedEvent(query, result, upwards));
+                eventBus.fireEvent(new SearchFinishedEvent(upwards));
                 query.setFrom(query.getFrom() + result.getHits().getHits().size());
             }
         }, SearchResponse.class);

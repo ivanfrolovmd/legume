@@ -9,18 +9,12 @@ import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.ListBox;
-import com.google.gwt.user.client.ui.TextBox;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.*;
 import com.google.gwt.user.datepicker.client.DateBox;
 import com.google.web.bindery.event.shared.EventBus;
 
 import md.frolov.legume.client.activities.stream.StreamPlace;
 import md.frolov.legume.client.elastic.query.SearchQuery;
-import md.frolov.legume.client.events.AppendQueryFilter;
-import md.frolov.legume.client.events.AppendQueryFilterHandler;
 import md.frolov.legume.client.events.SearchResultsReceivedEvent;
 import md.frolov.legume.client.events.SearchResultsReceivedEventHandler;
 import md.frolov.legume.client.events.UpdateSearchQuery;
@@ -28,7 +22,7 @@ import md.frolov.legume.client.events.UpdateSearchQueryHandler;
 import md.frolov.legume.client.gin.WidgetInjector;
 
 /** @author Ivan Frolov (ifrolov@tacitknowledge.com) */
-public class HeaderComponent extends Composite implements UpdateSearchQueryHandler, AppendQueryFilterHandler, SearchResultsReceivedEventHandler
+public class HeaderComponent extends Composite implements UpdateSearchQueryHandler, SearchResultsReceivedEventHandler
 {
     private WidgetInjector injector = WidgetInjector.INSTANCE;
 
@@ -49,6 +43,8 @@ public class HeaderComponent extends Composite implements UpdateSearchQueryHandl
     ListBox commonTimes;
     @UiField
     Label hitsLabel;
+    @UiField
+    Anchor openInNewWindow;
 
     private EventBus eventBus = WidgetInjector.INSTANCE.eventBus();
 
@@ -57,7 +53,6 @@ public class HeaderComponent extends Composite implements UpdateSearchQueryHandl
         initWidget(binder.createAndBindUi(this));
 
         eventBus.addHandler(UpdateSearchQuery.TYPE, this);
-        eventBus.addHandler(AppendQueryFilter.TYPE, this);
         eventBus.addHandler(SearchResultsReceivedEvent.TYPE, this);
     }
 
@@ -84,7 +79,7 @@ public class HeaderComponent extends Composite implements UpdateSearchQueryHandl
     }
 
     @UiHandler("commonTimes")
-    public void handleChange(final ChangeEvent event)
+    public void onPredefinedTimeChange(final ChangeEvent event)
     {
         Long time = Long.valueOf(commonTimes.getValue(commonTimes.getSelectedIndex()));
         if(time ==-1) {
@@ -113,19 +108,11 @@ public class HeaderComponent extends Composite implements UpdateSearchQueryHandl
         searchQuery.setText(query.getQuery());
         fromDate.setValue(query.getFromDate());
         toDate.setValue(query.getToDate());
+
+        String token = new StreamPlace.Tokenizer().getToken(new StreamPlace(query));
+        openInNewWindow.setHref("#"+ StreamPlace.TOKEN_PREFIX+":"+token);
     }
 
-    @Override
-    public void onAppendQueryFilter(final AppendQueryFilter event)
-    {
-        StringBuilder sb = new StringBuilder(searchQuery.getText());
-        if(sb.length()>0) {
-            sb.append(" AND ");
-        }
-        sb.append(event.getFilter());
-        searchQuery.setText(sb.toString());
-        submitSearch();
-    }
 
     @Override
     public void onSearchResultsReceived(final SearchResultsReceivedEvent event)

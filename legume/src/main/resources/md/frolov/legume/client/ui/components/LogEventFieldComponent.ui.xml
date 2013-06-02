@@ -13,8 +13,8 @@
     </ui:style>
     <g:HorizontalPanel>
         <!-- TODO use modifier keys (like Shift) to open in new window -->
-        <g:Button ui:field="includeButton">V</g:Button>
-        <g:Button ui:field="excludeButton">X</g:Button>
+        <g:Hyperlink ui:field="includeFilter">V</g:Hyperlink>
+        <g:Hyperlink ui:field="excludeFilter">X</g:Hyperlink>
         <g:Label ui:field="key" styleName="{style.keyLabel}"/>
         <g:Label ui:field="value" styleName="{style.valueLabel}"/>
     </g:HorizontalPanel>
