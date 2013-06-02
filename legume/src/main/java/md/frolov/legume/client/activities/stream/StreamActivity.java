@@ -47,6 +47,8 @@ public class StreamActivity extends AbstractActivity implements StreamView.Prese
     /** query to scroll downwards */
     private SearchQuery downwardsQuery;
 
+    private boolean finished = false;
+
     @Override
     public void start(final AcceptsOneWidget panel, final EventBus eventBus)
     {
@@ -111,6 +113,10 @@ public class StreamActivity extends AbstractActivity implements StreamView.Prese
             @Override
             public void onFailure(final Throwable caught)
             {
+                if (finished)
+                {
+                    return;
+                }
                 LOG.log(Level.SEVERE, "Can't fetch results", caught);
                 eventBus.fireEvent(new SearchFinishedEvent(upwards));
             }
@@ -118,11 +124,28 @@ public class StreamActivity extends AbstractActivity implements StreamView.Prese
             @Override
             public void onSuccess(final SearchResponse result)
             {
+                if (finished)
+                {
+                    return;
+                }
+
                 LOG.fine("Got response");
                 eventBus.fireEvent(new SearchResultsReceivedEvent(query, result, upwards));
                 eventBus.fireEvent(new SearchFinishedEvent(upwards));
                 query.setFrom(query.getFrom() + result.getHits().getHits().size());
             }
         }, SearchResponse.class);
+    }
+
+    @Override
+    public void onStop()
+    {
+        finished = true;
+    }
+
+    @Override
+    public void onCancel()
+    {
+        finished = true;
     }
 }

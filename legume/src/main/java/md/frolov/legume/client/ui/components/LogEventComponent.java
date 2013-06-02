@@ -3,15 +3,17 @@ package md.frolov.legume.client.ui.components;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.Panel;
+import com.google.gwt.user.client.ui.Widget;
 
 import md.frolov.legume.client.elastic.model.LogEvent;
 import md.frolov.legume.client.gin.WidgetInjector;
@@ -23,8 +25,13 @@ public class LogEventComponent extends Composite
     private static final DateTimeFormat DTF = DateTimeFormat.getFormat("dd/MM HH:mm:ss.sss");
     private static final int MAX_SUMMARY_WIDTH = 300;
 
-    interface LogEventComponentUiBinder extends UiBinder<FlowPanel, LogEventComponent>
+    interface LogEventComponentUiBinder extends UiBinder<Widget, LogEventComponent>
     {
+    }
+
+    interface Css extends CssResource
+    {
+        String detailsSelected();
     }
 
     private static LogEventComponentUiBinder binder = GWT.create(LogEventComponentUiBinder.class);
@@ -36,23 +43,24 @@ public class LogEventComponent extends Composite
     private ColorUtils colorUtils = injector.colorUtils();
 
     @UiField
-    Button more;
-    @UiField
     Label time;
     @UiField
-    Label type;
+    FlowPanel type;
     @UiField
     Label source;
     @UiField
     Label message;
     @UiField
-    HorizontalPanel summary;
-    @UiField
-    Button less;
+    Panel summary;
     @UiField
     FlowPanel details;
     @UiField
     FlowPanel detailsContainer;
+    @UiField
+    FocusPanel focusPanel;
+
+    @UiField
+    Css style;
 
     public LogEventComponent(String id, LogEvent logEvent)
     {
@@ -66,7 +74,7 @@ public class LogEventComponent extends Composite
 
         String typeColor = colorUtils.getColor(logEvent.getType());
         DOM.setStyleAttribute(type.getElement(), "backgroundColor", typeColor);
-        type.setText(logEvent.getType());
+//        type.setText(logEvent.getType());
 
         String sourceColor = colorUtils.getColor(logEvent.getSourceHost());
         DOM.setStyleAttribute(source.getElement(), "backgroundColor", sourceColor);
@@ -85,19 +93,23 @@ public class LogEventComponent extends Composite
         }
     }
 
-    @UiHandler("more")
-    public void handleClickMore(final ClickEvent event)
+    @UiHandler("focusPanel")
+    public void toggleSummaryAndDetails(final ClickEvent event)
     {
-        detailsContainer.add(new LogEventExtendedComponent(logEvent));
-        summary.setVisible(false);
-        details.setVisible(true);
-    }
-
-    @UiHandler("less")
-    public void handleClickLess(final ClickEvent event)
-    {
-        summary.setVisible(true);
-        details.setVisible(false);
-        detailsContainer.clear();
+        if (summary.isVisible())
+        {
+            detailsContainer.add(new LogEventExtendedComponent(logEvent));
+            summary.setVisible(false);
+            details.setVisible(true);
+            focusPanel.addStyleName(style.detailsSelected());
+        }
+        else
+        {
+            summary.setVisible(true);
+            details.setVisible(false);
+            detailsContainer.clear();
+            focusPanel.removeStyleName(style.detailsSelected());
+        }
+        focusPanel.setFocus(false);
     }
 }

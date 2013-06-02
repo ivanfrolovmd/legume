@@ -9,15 +9,14 @@ import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
-import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.TimeZone;
+
+import md.frolov.legume.client.util.ConversionUtils;
 
 public class SearchQuery implements Query
 {
     public static final SearchQuery DEFAULT = new SearchQuery("", null, new Date(), null);
-    private static final int DEFAULT_QUERY_SIZE = 100; //TODO make configurable
-
-    private static final DateTimeFormat DTF = DateTimeFormat.getFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+    private static final int DEFAULT_QUERY_SIZE = 20; //TODO make configurable
 
     private String query;
     private List<SortOrder> sortOrders = Lists.newArrayList(SortOrder.of("@timestamp", true)); //TODO hardcoded for now
@@ -189,7 +188,7 @@ public class SearchQuery implements Query
         }
         else
         {
-            sb.append(DTF.format(fromDate, getTimeZone()));
+            sb.append(ConversionUtils.INSTANCE.dateToString(fromDate, getTimeZone()));
         }
         sb.append(" TO ");
         if (toDate == null)
@@ -198,14 +197,14 @@ public class SearchQuery implements Query
         }
         else
         {
-            sb.append(DTF.format(toDate, getTimeZone()));
+            sb.append(ConversionUtils.INSTANCE.dateToString(toDate, getTimeZone()));
         }
         sb.append("]");
     }
 
     private TimeZone getTimeZone()
     {
-        return TimeZone.createTimeZone(0); //TODO configure and adjust
+        return TimeZone.createTimeZone(0); //TODO configure and adjust. This is server timezone. Or UTC?
     }
 
     public String getQuery()
