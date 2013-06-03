@@ -1,3 +1,3 @@
 GlobalProperties = {
-	'elasticSearchServer': 'http://vagrant:9200'
+	'elasticSearchServer': 'http://localhost:9200'
 }
