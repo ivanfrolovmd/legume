@@ -46,6 +46,13 @@
             <version>14.0.1</version>
         </dependency>
 
+        <!-- GWT-bootstrap -->
+        <dependency>
+            <groupId>com.github.gwtbootstrap</groupId>
+            <artifactId>gwt-bootstrap</artifactId>
+            <version>2.2.1.0</version>
+        </dependency>
+
 		<!-- DI -->
 		<dependency>
 			<groupId>com.google.gwt.inject</groupId>
