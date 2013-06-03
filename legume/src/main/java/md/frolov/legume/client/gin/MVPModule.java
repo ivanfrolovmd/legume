@@ -3,11 +3,6 @@ package md.frolov.legume.client.gin;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import md.frolov.legume.client.activities.stream.StreamView;
-import md.frolov.legume.client.activities.stream.StreamViewImpl;
-import md.frolov.legume.client.mvp.AppActivityMapper;
-import md.frolov.legume.client.mvp.AppPlaceHistoryMapper;
-
 import com.google.gwt.activity.shared.ActivityManager;
 import com.google.gwt.activity.shared.ActivityMapper;
 import com.google.gwt.inject.client.AbstractGinModule;
@@ -18,12 +13,13 @@ import com.google.inject.Provides;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.SimpleEventBus;
 
+import md.frolov.legume.client.mvp.AppActivityMapper;
+import md.frolov.legume.client.mvp.AppPlaceHistoryMapper;
+
 public class MVPModule extends AbstractGinModule {
 
     @Override
     protected void configure() {
-        bind(StreamView.class).to(StreamViewImpl.class);
-
         bind(ActivityMapper.class).to(AppActivityMapper.class);
         bind(PlaceHistoryMapper.class).to(AppPlaceHistoryMapper.class);
 

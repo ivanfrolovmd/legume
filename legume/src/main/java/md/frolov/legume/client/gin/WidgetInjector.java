@@ -9,6 +9,7 @@ import com.google.gwt.place.shared.PlaceHistoryHandler;
 import com.google.web.bindery.event.shared.EventBus;
 
 import md.frolov.legume.client.Messages;
+import md.frolov.legume.client.service.ConfigurationService;
 import md.frolov.legume.client.ui.MainView;
 import md.frolov.legume.client.util.ColorUtils;
 
@@ -26,4 +27,6 @@ public interface WidgetInjector extends Ginjector {
     PlaceController placeController();
 
     ColorUtils colorUtils();
+
+    ConfigurationService configurationService();
 }
