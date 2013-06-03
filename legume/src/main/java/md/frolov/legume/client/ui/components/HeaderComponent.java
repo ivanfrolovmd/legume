@@ -2,6 +2,8 @@ package md.frolov.legume.client.ui.components;
 
 import java.util.Date;
 
+import com.github.gwtbootstrap.client.ui.Button;
+import com.github.gwtbootstrap.client.ui.TextBox;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -9,10 +11,8 @@ import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.ListBox;
-import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.datepicker.client.DateBox;
 import com.google.web.bindery.event.shared.EventBus;
@@ -44,7 +44,7 @@ public class HeaderComponent extends Composite implements UpdateSearchQueryHandl
     @UiField
     ListBox commonTimes;
     @UiField
-    Anchor openInNewWindow;
+    Button openInNewWindow;
 
     private EventBus eventBus = WidgetInjector.INSTANCE.eventBus();
 
@@ -109,7 +109,7 @@ public class HeaderComponent extends Composite implements UpdateSearchQueryHandl
         toDate.setValue(query.getToDate());
 
         String token = new StreamPlace.Tokenizer().getToken(new StreamPlace(query));
-        openInNewWindow.setHref("#"+ StreamPlace.TOKEN_PREFIX+":"+token);
+        openInNewWindow.setTargetHistoryToken(StreamPlace.TOKEN_PREFIX + ":" + token);
     }
 
 
