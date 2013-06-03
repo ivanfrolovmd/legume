@@ -4,7 +4,6 @@
              xmlns:g="urn:import:com.google.gwt.user.client.ui">
     <ui:style>
         .scrollContainer {
-            background: #E5E5E5;
             padding: 10px 20px;
         }
         .container {
@@ -22,13 +21,14 @@
             text-align: center;
             color: #333;
         }
+        .loadingBar {
+            margin: 10px 0;
+        }
     </ui:style>
     <g:ScrollPanel ui:field="scrollContainer" styleName="{style.scrollContainer}">
         <g:FlowPanel>
             <g:FlowPanel ui:field="resultsPanel"> <!-- Panel with results -->
-                <g:FlowPanel ui:field="topLoading" styleName="{style.island}" visible="false">
-                    <g:Label>Loading...</g:Label>
-                </g:FlowPanel>
+                <b:ProgressBar percent="100" type="ANIMATED" height="5px" addStyleNames="{style.loadingBar}" visible="false" ui:field="topLoading" />
                 <g:FlowPanel ui:field="topNoMoreResults" styleName="{style.island}" visible="false">
                     <b:Button ui:field="topTryAgain">More</b:Button>
                     <g:CheckBox visible="false">Fetch automatically</g:CheckBox> <!-- TODO implement auto refresh -->
@@ -36,9 +36,7 @@
 
                 <g:FlowPanel ui:field="container" styleName="{style.container}"/>
 
-                <g:FlowPanel ui:field="bottomLoading" styleName="{style.island}" visible="false">
-                    <g:Label>Loading...</g:Label>
-                </g:FlowPanel>
+                <b:ProgressBar percent="100" type="ANIMATED" height="5px" addStyleNames="{style.loadingBar}" visible="false" ui:field="bottomLoading" />
                 <g:FlowPanel ui:field="bottomNoMoreResults" styleName="{style.island}" visible="false">
                     <b:Button ui:field="bottomTryAgain">More</b:Button>
                     <g:CheckBox visible="false">Fetch automatically</g:CheckBox> <!-- TODO implement auto refresh -->

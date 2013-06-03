@@ -2,6 +2,7 @@ package md.frolov.legume.client.ui.components;
 
 import java.util.Date;
 
+import com.github.gwtbootstrap.client.ui.Button;
 import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
 import com.google.gwt.core.client.GWT;
@@ -10,7 +11,7 @@ import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.Hyperlink;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -23,7 +24,8 @@ import md.frolov.legume.client.util.ConversionUtils;
 /** @author Ivan Frolov (ifrolov@tacitknowledge.com) */
 public class LogEventFieldComponent extends Composite
 {
-    private static final RegExp SOLR_SPECIAL_CHARS = RegExp.compile("[-+&|!(){}\\[\\]^\"~*?:\\\\]","g");
+    private static final RegExp SOLR_SPECIAL_CHARS = RegExp.compile("[-+&|!(){}\\[\\]^\"~*?:\\\\]", "g");
+    private static final int MAX_TEXT_LENGTH = 100;
 
     interface LogEventFieldComponentUiBinder extends UiBinder<Widget, LogEventFieldComponent>
     {
@@ -36,9 +38,11 @@ public class LogEventFieldComponent extends Composite
     @UiField
     Label keyLabel;
     @UiField
-    Hyperlink includeFilter;
+    Button includeFilter;
     @UiField
-    Hyperlink excludeFilter;
+    Button excludeFilter;
+    @UiField
+    FlowPanel container;
 
     private final Place place;
     private final String queryKey;
@@ -47,34 +51,49 @@ public class LogEventFieldComponent extends Composite
     {
         initWidget(binder.createAndBindUi(this));
         keyLabel.setText(key);
-        valueLabel.setText(getStringValue(value));
+        String valueText = getStringValue(value);
+        valueLabel.setText(valueText);
         this.queryKey = queryKey;
         place = WidgetInjector.INSTANCE.placeController().getWhere();
 
-        String filter = getFilter();
-        SearchQuery query = ((StreamPlace) place).getQuery().clone();
-        String originalQueryString = query.getQuery();
-        StreamPlace.Tokenizer tokenizer = new StreamPlace.Tokenizer();
+        if (valueText != null && valueText.length() > 0 && valueText.length() < MAX_TEXT_LENGTH)
+        {
+            String filter = getFilter();
+            SearchQuery query = ((StreamPlace) place).getQuery().clone();
+            String originalQueryString = query.getQuery();
+            StreamPlace.Tokenizer tokenizer = new StreamPlace.Tokenizer();
 
-        query.setFocusDate(logEvent.getTimestamp());
-        query.setQuery(getQueryString(originalQueryString, filter));
-        includeFilter.setTargetHistoryToken("stream:" + tokenizer.getToken(new StreamPlace(query)));
-        query.setQuery(getQueryString(originalQueryString, "NOT " + filter));
-        excludeFilter.setTargetHistoryToken("stream:"+tokenizer.getToken(new StreamPlace(query)));
+            query.setFocusDate(logEvent.getTimestamp());
+            query.setQuery(getQueryString(originalQueryString, filter));
+            includeFilter.setTargetHistoryToken("stream:" + tokenizer.getToken(new StreamPlace(query)));
+            query.setQuery(getQueryString(originalQueryString, "NOT " + filter));
+            excludeFilter.setTargetHistoryToken("stream:" + tokenizer.getToken(new StreamPlace(query)));
+        }
+        else
+        {
+            includeFilter.setVisible(false);
+            excludeFilter.setVisible(false);
+        }
     }
 
-    private String getStringValue(Object value) {
+    private String getStringValue(Object value)
+    {
         String ret = null;
-        if(value instanceof Date) {
+        if (value instanceof Date)
+        {
             ret = ConversionUtils.INSTANCE.dateToString((Date) value);
-        } else
-        if(value instanceof Iterable) {
+        }
+        else if (value instanceof Iterable)
+        {
             ret = Joiner.on(", ").skipNulls().join(((Iterable) value).iterator());
-        } else if (value != null) {
+        }
+        else if (value != null)
+        {
             ret = value.toString();
         }
 
-        if(Strings.isNullOrEmpty(ret)){
+        if (Strings.isNullOrEmpty(ret))
+        {
             ret = "\u00A0"; //nbsp
         }
         return ret;
@@ -96,7 +115,7 @@ public class LogEventFieldComponent extends Composite
     {
         StringBuilder sb = new StringBuilder();
         sb.append(queryKey).append(":\"");
-        sb.append(SOLR_SPECIAL_CHARS.replace(valueLabel.getText(),"\\$&"));
+        sb.append(SOLR_SPECIAL_CHARS.replace(valueLabel.getText(), "\\$&"));
         sb.append('\"');
 
         return sb.toString();

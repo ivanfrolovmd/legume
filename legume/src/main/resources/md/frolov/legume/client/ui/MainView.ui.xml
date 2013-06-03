@@ -3,6 +3,11 @@
              xmlns:g="urn:import:com.google.gwt.user.client.ui"
              xmlns:b="urn:import:com.github.gwtbootstrap.client.ui"
              xmlns:l="urn:import:md.frolov.legume.client.ui.components">
+    <ui:style>
+        .viewContainer {
+            background: #E5E5E5;
+        }
+    </ui:style>
     <g:DockLayoutPanel unit='PX'>
         <g:north size='70'>
             <l:HeaderComponent />
@@ -17,7 +22,7 @@
 
         <g:center>
             <!-- ResizeLayoutPanel required to insert other layout panels, like ScrollPanel -->
-            <g:ResizeLayoutPanel ui:field="viewContainer"/>
+            <g:ResizeLayoutPanel ui:field="viewContainer" styleName="{style.viewContainer}"/>
         </g:center>
     </g:DockLayoutPanel>
 </ui:UiBinder>

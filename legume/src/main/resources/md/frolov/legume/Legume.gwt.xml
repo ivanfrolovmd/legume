@@ -9,6 +9,9 @@
 	<!-- <inherits name='com.google.gwt.junit.JUnit' /> -->
 
     <inherits name="com.github.gwtbootstrap.Bootstrap" />
+    <!--
+    <inherits name='com.github.gwtbootstrap.datepicker.Datepicker' />
+    -->
 
 	<!-- Other module inherits -->
 	<inherits name='com.google.gwt.inject.Inject' />

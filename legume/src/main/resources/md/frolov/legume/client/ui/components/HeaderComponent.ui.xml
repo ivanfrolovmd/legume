@@ -12,13 +12,14 @@
             margin: 17px 10px;
         }
         .logo {
-            font-family: OpenSansBold;
-            font-size: 34px;
-            margin: 2px 10px;
+            font-family: OpenSansLight;
+            font-size: 24px;
+            margin: 4px 30px 4px 10px;
         }
         .searchBox {
             font-size: 14px;
             width: 700px;
+            margin: 0 15px 0 0;
         }
 
         .dateBox{
@@ -28,14 +29,13 @@
     <g:AbsolutePanel styleName="{style.box}">
         <g:HorizontalPanel styleName="{style.horizontal}">
             <g:Label styleName="{style.logo}">Legume</g:Label>
-            <b:ControlGroup>
-                <b:Controls>
-                    <b:TextBox ui:field="searchQuery" styleName="{style.searchBox}">Search</b:TextBox>
-                    <b:Button ui:field="submitButton" type="PRIMARY" icon="SEARCH">Submit</b:Button>
-                    <b:Button ui:field="resetButton" >Reset</b:Button>
-                    <b:Button target="_blank" ui:field="openInNewWindow" icon="EXTERNAL_LINK"></b:Button>
-                </b:Controls>
-            </b:ControlGroup>
+            <b:TextBox ui:field="searchQuery" placeholder="Type your query here" addStyleNames="{style.searchBox}">Search</b:TextBox>
+            <b:ButtonGroup>
+                <b:Button ui:field="submitButton" type="PRIMARY" icon="SEARCH">Search</b:Button>
+                <b:Button ui:field="resetButton">Reset</b:Button>
+                <b:Button target="_blank" ui:field="openInNewWindow" icon="EXTERNAL_LINK"></b:Button>
+            </b:ButtonGroup>
+            <b:Button targetHistoryToken="config:" icon="COGS">Configure</b:Button>
         </g:HorizontalPanel>
         <g:HorizontalPanel visible="false"> <!-- TODO Make time control -->
             <g:ListBox ui:field="commonTimes">
