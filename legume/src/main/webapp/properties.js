@@ -1,3 +1,4 @@
 GlobalProperties = {
-	'elasticSearchServer': 'http://localhost:9200'
+	'elasticSearchServer': 'http://localhost:9200',
+    'elasticSearchTimeout': 30000
 }

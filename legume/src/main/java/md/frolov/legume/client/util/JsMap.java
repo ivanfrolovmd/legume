@@ -18,7 +18,7 @@ public class JsMap extends JavaScriptObject
     }
 
     private final native Object doGet(final String o) /*-{
-        return this[o];
+        return this[o].toString();
     }-*/;
 
     public final native String put(final String k, final String v) /*-{

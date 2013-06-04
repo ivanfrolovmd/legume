@@ -35,6 +35,12 @@ public class ConfigurationServiceImpl implements ConfigurationService
     }
 
     @Override
+    public int getInt(final String key)
+    {
+        return Integer.valueOf(get(key, "0"));
+    }
+
+    @Override
     public void put(final String key, final String value)
     {
         Cookies.setCookie(key, value); //TODO secure cookies?
@@ -61,7 +67,7 @@ public class ConfigurationServiceImpl implements ConfigurationService
     }
 
     private final native String getFromProperties(final String key) /*-{
-        return $wnd.window.GlobalProperties[key];
+        return $wnd.window.GlobalProperties[key].toString();
         //TODO check for null values
     }-*/;
 

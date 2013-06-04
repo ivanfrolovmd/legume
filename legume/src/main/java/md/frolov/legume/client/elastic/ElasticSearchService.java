@@ -8,4 +8,5 @@ public interface ElasticSearchService {
 
     <T> void query(final Query query, final AsyncCallback<T> callback, final Class<T> clazz);
 
+    void cancelAllRequests();
 }

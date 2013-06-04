@@ -140,12 +140,17 @@ public class StreamActivity extends AbstractActivity implements StreamView.Prese
     @Override
     public void onStop()
     {
-        finished = true;
+        stop();
     }
 
     @Override
     public void onCancel()
     {
+        stop();
+    }
+
+    private void stop() {
         finished = true;
+        elasticSearchService.cancelAllRequests();
     }
 }
