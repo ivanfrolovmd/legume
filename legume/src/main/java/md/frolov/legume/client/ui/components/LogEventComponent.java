@@ -47,8 +47,6 @@ public class LogEventComponent extends Composite
     @UiField
     FlowPanel type;
     @UiField
-    Label source;
-    @UiField
     Label message;
     @UiField
     Panel summary;
@@ -61,6 +59,8 @@ public class LogEventComponent extends Composite
 
     @UiField
     Css style;
+    @UiField
+    FlowPanel box;
 
     public LogEventComponent(String id, LogEvent logEvent)
     {
@@ -72,13 +72,8 @@ public class LogEventComponent extends Composite
         String summaryText = abbreviate(logEvent.getMessage(), MAX_SUMMARY_WIDTH);
         message.setText(summaryText);
 
-        String typeColor = colorUtils.getColor(logEvent.getType());
+        String typeColor = colorUtils.getHashColor(logEvent.getType(), 100, 40);
         DOM.setStyleAttribute(type.getElement(), "backgroundColor", typeColor);
-//        type.setText(logEvent.getType());
-
-        String sourceColor = colorUtils.getColor(logEvent.getSourceHost());
-        DOM.setStyleAttribute(source.getElement(), "backgroundColor", sourceColor);
-        source.setText(logEvent.getSourceHost());
     }
 
     private String abbreviate(String string, int maxWidth)

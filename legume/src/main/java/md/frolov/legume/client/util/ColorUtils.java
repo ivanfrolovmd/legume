@@ -1,16 +1,9 @@
 package md.frolov.legume.client.util;
 
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
-import com.google.common.util.concurrent.UncheckedExecutionException;
-import com.google.gwt.canvas.dom.client.CssColor;
 
 /** @author Ivan Frolov (ifrolov@tacitknowledge.com) */
 public class ColorUtils
@@ -18,9 +11,8 @@ public class ColorUtils
     private static final Logger LOG = Logger.getLogger("ColorUtils");
 
     public static final int NUMBER_OF_COLORS = 40;
-    private static final String BLACK = CssColor.make(0, 0, 0).value();
+    private static final String BLACK = "rbg(0,0,0)";
     private final List<String> colors;
-    private final LoadingCache<String, String> stringColorCache;
 
     public ColorUtils()
     {
@@ -28,40 +20,8 @@ public class ColorUtils
         colors = Lists.newArrayList();
         for (int i = 0; i < NUMBER_OF_COLORS; i++)
         {
-            colors.add(getHslColor(1.0 * i / NUMBER_OF_COLORS, 1, 0.4).value());
+            colors.add(getHslColor(1.0 * i / NUMBER_OF_COLORS, 1, 0.4));
         }
-
-        stringColorCache = CacheBuilder.newBuilder().maximumSize(100).build(new CacheLoader<String, String>()
-        {
-            @Override
-            public String load(final String key) throws Exception
-            {
-                if (key == null)
-                {
-                    return BLACK;
-                }
-
-                double hashCode = Math.abs(key.hashCode());
-                return getColor(hashCode % NUMBER_OF_COLORS / NUMBER_OF_COLORS);
-            }
-        });
-    }
-
-    /**
-     * Return CssColor based on gamma function.
-     *
-     * @param gamma double value 0 to 1.
-     * @return hash CssColor
-     */
-    public String getColor(double gamma)
-    {
-        if (gamma < 0 || gamma > 1)
-        {
-            throw new IllegalArgumentException("Gamma must be within 0 and 1");
-        }
-
-        int ix = (int) (gamma * NUMBER_OF_COLORS);
-        return Iterables.get(colors, ix, BLACK);
     }
 
     /**
@@ -70,64 +30,33 @@ public class ColorUtils
      * @param string arbitrary string.
      * @return hash CssColor
      */
-    public String getColor(String string)
+    public String getHashColor(String string, int saturation, int light)
     {
-        try
-        {
-            return stringColorCache.getUnchecked(string);
-        }
-        catch (UncheckedExecutionException e)
-        {
-            LOG.log(Level.WARNING, "Can't fetch color", e);
-            return BLACK;
-        }
+        int hue = Math.abs(string.hashCode())%360;
+        return getHslColor(hue, saturation, light);
     }
 
-    private CssColor getHslColor(double h, double s, double l)
+    /**
+     * Returns color in HSL space.
+     * @param h hue: 0 to 1.
+     * @param s saturation: 0 to 1.
+     * @param l light: 0 to 1.
+     * @return String in format like: hsl(300,50,80). This can be used in CSS.
+     */
+    public String getHslColor(double h, double s, double l)
     {
-        double r;
-        double g;
-        double b;
-
-        if (s == 0)
-        {
-            r = g = b = l; // achromatic
-        }
-        else
-        {
-
-            double q = l < 0.5 ? l * (1 + s) : l + s - l * s;
-            double p = 2. * l - q;
-            r = hue2rgb(p, q, h + 1. / 3);
-            g = hue2rgb(p, q, h);
-            b = hue2rgb(p, q, h - 1. / 3);
-        }
-
-        return CssColor.make((int) (r * 255), (int) (g * 255), (int) (b * 255));
+        return getHslColor((int)(h*360),(int)(s*100),(int)(l*100));
     }
 
-    private static double hue2rgb(double p, double q, double t)
+    /**
+     * Returns color in HSL (Hue Saturation Light) space.
+     * @param h hue in degrees: 0 to 360. May be out of bounds
+     * @param s saturation in percent: 0 to 100. Greater value means more saturated
+     * @param l light in percent: 0 to 100.
+     * @return String in format like: hsl(300,50,80)
+     */
+    public String getHslColor(int h, int s, int l)
     {
-        if (t < 0)
-        {
-            t += 1;
-        }
-        if (t > 1)
-        {
-            t -= 1;
-        }
-        if (t < 1. / 6)
-        {
-            return p + (q - p) * 6 * t;
-        }
-        if (t < 1. / 2)
-        {
-            return q;
-        }
-        if (t < 2. / 3)
-        {
-            return p + (q - p) * (2. / 3 - t) * 6;
-        }
-        return p;
+        return "hsl("+h+","+s+"%,"+l+"%)";
     }
 }

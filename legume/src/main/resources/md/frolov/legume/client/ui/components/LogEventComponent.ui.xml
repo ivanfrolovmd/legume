@@ -9,7 +9,6 @@
         }
 
         .box {
-            background: white;
             border-left-width: 0px;
             border-top-right-radius: 3px;
             border-bottom-right-radius: 3px;
@@ -24,7 +23,8 @@
             margin: 4px 0px 8px 10px;
         }
 
-        .type { /* color label to the left */
+        .type {
+            /* color label to the left */
             position: absolute;
             left: 0;
             top: 0;
@@ -41,7 +41,6 @@
         }
 
         .detailsBox {
-            margin: 0 10px;
             overflow-x: scroll;
         }
 
@@ -73,18 +72,20 @@
         .relative {
             position: relative;
         }
+
+        @external .bgHighlight; /* @external disables obfuscation */
+        .bgHighlight {
+            background: white;
+        }
     </ui:style>
 
     <g:FocusPanel ui:field="focusPanel">
         <g:FlowPanel styleName="{style.relative}">
             <g:FlowPanel ui:field="type" styleName="{style.type}"/>
-            <g:FlowPanel styleName="{style.box}">
+            <g:FlowPanel addStyleNames="{style.box}" stylePrimaryName="{style.bgHighlight}" ui:field="box">
                 <g:HorizontalPanel ui:field="summary" styleName="{style.summaryBox}">
                     <g:Label ui:field="time" styleName="{style.time}"/>
                     <g:Label ui:field="message" styleName="{style.message}"/>
-                </g:HorizontalPanel>
-                <g:HorizontalPanel visible="false"> <!-- TODO probably table here will be huge. Research if divs would be better -->
-                    <g:Label ui:field="source" styleName="{style.source} {style.colorLabel}">.</g:Label>
                 </g:HorizontalPanel>
                 <g:FlowPanel ui:field="details" styleName="{style.detailsBox}" visible="false">
                     <g:FlowPanel ui:field="detailsContainer"/>
