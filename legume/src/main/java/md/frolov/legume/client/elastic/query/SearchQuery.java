@@ -11,15 +11,17 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.gwt.i18n.client.TimeZone;
 
+import md.frolov.legume.client.Constants;
+import md.frolov.legume.client.gin.WidgetInjector;
 import md.frolov.legume.client.util.ConversionUtils;
 
 public class SearchQuery implements Query
 {
     public static final SearchQuery DEFAULT = new SearchQuery("", null, new Date(), null);
-    private static final int DEFAULT_QUERY_SIZE = 20; //TODO make configurable
+    private static final int DEFAULT_QUERY_SIZE = WidgetInjector.INSTANCE.configurationService().getInt(Constants.PAGE_SIZE);
 
     private String query;
-    private List<SortOrder> sortOrders = Lists.newArrayList(SortOrder.of("@timestamp", true)); //TODO hardcoded for now
+    private List<SortOrder> sortOrders = Lists.newArrayList(SortOrder.of("@timestamp", true)); //TODO hardcoded for now. Make order configurable.
     private long from = 0;
     private int size = DEFAULT_QUERY_SIZE;
     private Date fromDate;
