@@ -16,14 +16,6 @@
             top: 0;
             bottom: 0;
         }
-        .controls {
-            position: absolute;
-            left: 105px;
-            width: 52px;
-            top: 0;
-            bottom: 0;
-            background-color: #f5f5f5;
-        }
 
         .keyLabel {
             font-family: OpenSansLight;
@@ -34,27 +26,51 @@
         }
 
         .valueLabel {
-            margin-left: 156px;
             white-space: pre;
+            display: inline-block;
+        }
+
+        .valueContainer {
+            white-space: nowrap;
         }
 
         .keyLabel, .valueLabel {
             padding: 2px 4px;
         }
 
-        .cta {
-            width: 2px;
+        @external .caret;
+            /* hide drop down caret */
+        .dropdown span.caret {
+            display: none;
+        }
+
+        .dropdown {
+            margin-left: 108px;
+            vertical-align: top;
+        }
+
+        .dropdown a {
+            color: #666;
+        }
+
+        .absolute {
+            position: absolute;
         }
     </ui:style>
-    <g:FlowPanel styleName="{style.box}" ui:field="container">
-        <g:Label ui:field="keyLabel" styleName="{style.keyLabel}"/>
-        <g:FlowPanel styleName="{style.controls}">
-            <b:ButtonGroup>
-                <b:Button size="MINI" type="LINK" icon="OK" ui:field="includeFilter" addStyleNames="{style.cta}"/>
-                <b:Button size="MINI" type="LINK" icon="REMOVE" ui:field="excludeFilter" addStyleNames="{style.cta}"/>
-                <b:Button size="MINI" type="LINK" icon="COPY" ui:field="copyToClipboard" addStyleNames="{style.cta}"/>
-            </b:ButtonGroup>
+    <g:FlowPanel>
+        <g:FlowPanel styleName="{style.box}" ui:field="container">
+            <g:Label ui:field="keyLabel" styleName="{style.keyLabel}"/>
+            <g:FlowPanel styleName="{style.valueContainer}">
+                <!-- TODO think off better wording -->
+                <b:DropdownButton type="LINK" icon="FILTER" size="MINI" addStyleNames="{style.dropdown}" ui:field="actionsDropdown">
+                    <b:NavLink icon="OK" ui:field="includeFilter">Restrict to this</b:NavLink>
+                    <b:NavLink icon="OK_CIRCLE" ui:field="includeOnlyFilter">Search only this</b:NavLink>
+                    <b:NavLink icon="REMOVE" ui:field="excludeFilter">Exclude this</b:NavLink>
+                    <b:NavLink icon="REMOVE_CIRCLE" ui:field="excludeOnlyFilter">Search all except this</b:NavLink>
+                    <b:NavLink icon="COPY" ui:field="copyToClipboard">Copy to clipboard</b:NavLink>
+                </b:DropdownButton>
+                <g:Label ui:field="valueLabel" styleName="{style.valueLabel}"/>
+            </g:FlowPanel>
         </g:FlowPanel>
-        <g:Label ui:field="valueLabel" styleName="{style.valueLabel}"/>
     </g:FlowPanel>
 </ui:UiBinder>

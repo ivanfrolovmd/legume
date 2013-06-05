@@ -2,14 +2,18 @@ package md.frolov.legume.client.ui.components;
 
 import java.util.Date;
 
-import com.github.gwtbootstrap.client.ui.Button;
+import com.github.gwtbootstrap.client.ui.DropdownButton;
+import com.github.gwtbootstrap.client.ui.Modal;
+import com.github.gwtbootstrap.client.ui.NavLink;
+import com.github.gwtbootstrap.client.ui.TextArea;
 import com.google.common.base.Joiner;
-import com.google.common.base.Strings;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.place.shared.Place;
 import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
@@ -38,14 +42,25 @@ public class LogEventFieldComponent extends Composite
     @UiField
     Label keyLabel;
     @UiField
-    Button includeFilter;
+    NavLink includeFilter;
     @UiField
-    Button excludeFilter;
+    NavLink includeOnlyFilter;
+    @UiField
+    NavLink excludeFilter;
+    @UiField
+    NavLink excludeOnlyFilter;
     @UiField
     FlowPanel container;
+    @UiField
+    DropdownButton actionsDropdown;
+    @UiField
+    NavLink copyToClipboard;
 
     private final Place place;
     private final String queryKey;
+    private final Date timestamp;
+
+    private boolean actionLinksAreSet = false;
 
     public LogEventFieldComponent(String key, String queryKey, Object value, LogEvent logEvent)
     {
@@ -55,25 +70,69 @@ public class LogEventFieldComponent extends Composite
         valueLabel.setText(valueText);
         this.queryKey = queryKey;
         place = WidgetInjector.INSTANCE.placeController().getWhere();
+        timestamp = logEvent.getTimestamp();
+    }
 
+    @UiHandler("actionsDropdown")
+    public void onActionsDropdownClick(final ClickEvent event)
+    {
+        if(actionLinksAreSet) {
+            return;
+        }
+        actionLinksAreSet = true;
+        initLinks();
+    }
+
+    private void initLinks() {
+        String valueText = valueLabel.getText();
         if (valueText != null && valueText.length() > 0 && valueText.length() < MAX_TEXT_LENGTH)
         {
             String filter = getFilter();
             SearchQuery query = ((StreamPlace) place).getQuery().clone();
+            query.setFocusDate(timestamp);
             String originalQueryString = query.getQuery();
             StreamPlace.Tokenizer tokenizer = new StreamPlace.Tokenizer();
 
-            query.setFocusDate(logEvent.getTimestamp());
             query.setQuery(getQueryString(originalQueryString, filter));
-            includeFilter.setTargetHistoryToken("stream:" + tokenizer.getToken(new StreamPlace(query)));
+            includeFilter.setTargetHistoryToken(StreamPlace.TOKEN_PREFIX+":" + tokenizer.getToken(new StreamPlace(query)));
             query.setQuery(getQueryString(originalQueryString, "NOT " + filter));
-            excludeFilter.setTargetHistoryToken("stream:" + tokenizer.getToken(new StreamPlace(query)));
+            excludeFilter.setTargetHistoryToken(StreamPlace.TOKEN_PREFIX+":" + tokenizer.getToken(new StreamPlace(query)));
+
+            SearchQuery exclusiveQuery = query.clone();
+            exclusiveQuery.setQuery(filter);
+            includeOnlyFilter.setTargetHistoryToken(StreamPlace.TOKEN_PREFIX+":"+tokenizer.getToken(new StreamPlace(exclusiveQuery)));
+            exclusiveQuery.setQuery(("NOT "+filter));
+            excludeOnlyFilter.setTargetHistoryToken(StreamPlace.TOKEN_PREFIX+":"+ tokenizer.getToken(new StreamPlace(exclusiveQuery)));
         }
         else
         {
             includeFilter.setVisible(false);
             excludeFilter.setVisible(false);
+            includeOnlyFilter.setVisible(false);
+            excludeOnlyFilter.setVisible(false);
         }
+    }
+
+    @UiHandler("copyToClipboard")
+    public void handleCopyToClipboard(final ClickEvent event)
+    {
+        event.stopPropagation();
+
+        //TODO move to declarative layout
+        Modal modal = new Modal(false, true);
+        modal.setWidth("600px");
+        modal.setTitle("Copy to clipboard");
+
+        String text = valueLabel.getText();
+        TextArea textArea = new TextArea();
+        textArea.setWidth("550px");
+        textArea.setHeight("300px");
+        textArea.setText(text);
+        modal.add(textArea);
+
+        modal.show();
+        textArea.setSelectionRange(0, text.length());
+        textArea.setFocus(true);
     }
 
     private String getStringValue(Object value)
@@ -92,9 +151,9 @@ public class LogEventFieldComponent extends Composite
             ret = value.toString();
         }
 
-        if (Strings.isNullOrEmpty(ret))
+        if (ret == null)
         {
-            ret = "\u00A0"; //nbsp
+            ret = "";
         }
         return ret;
     }
