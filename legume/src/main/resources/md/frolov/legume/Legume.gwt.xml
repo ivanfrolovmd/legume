@@ -9,9 +9,11 @@
 	<!-- <inherits name='com.google.gwt.junit.JUnit' /> -->
 
     <inherits name="com.github.gwtbootstrap.Bootstrap" />
-    <!--
     <inherits name='com.github.gwtbootstrap.datepicker.Datepicker' />
-    -->
+
+    <inherits name="com.googlecode.gflot.GFlot"/>
+    <set-property name="gflot.load.jquery" value="EXTERNAL" /> <!-- JQuery is introduced in Bootstrap -->
+    <!-- TODO see more properties in GFlot.gwt.xml to customize which plugins are required -->
 
 	<!-- Other module inherits -->
 	<inherits name='com.google.gwt.inject.Inject' />
@@ -22,7 +24,7 @@
     <inherits name="com.google.common.collect.Collect"/>
     <inherits name="com.google.common.cache.Cache"/>
 	<inherits name='com.google.gwt.logging.Logging' />
-	<set-property name="gwt.logging.popupHandler" value="DISABLED" />
+    <set-property name="gwt.logging.popupHandler" value="DISABLED" />
 
     <stylesheet src="../Legume.css" />
 

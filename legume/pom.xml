@@ -53,6 +53,13 @@
             <version>2.2.1.0</version>
         </dependency>
 
+        <!-- GFlot to draw charts -->
+        <dependency>
+            <groupId>com.googlecode.gflot</groupId>
+            <artifactId>gflot</artifactId>
+            <version>3.1.0</version>
+        </dependency>
+
 		<!-- DI -->
 		<dependency>
 			<groupId>com.google.gwt.inject</groupId>
