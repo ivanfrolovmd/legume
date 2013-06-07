@@ -18,7 +18,7 @@ import com.google.gwt.user.datepicker.client.DateBox;
 import com.google.web.bindery.event.shared.EventBus;
 
 import md.frolov.legume.client.activities.stream.StreamPlace;
-import md.frolov.legume.client.elastic.query.SearchQuery;
+import md.frolov.legume.client.elastic.query.Search;
 import md.frolov.legume.client.events.UpdateSearchQuery;
 import md.frolov.legume.client.events.UpdateSearchQueryHandler;
 import md.frolov.legume.client.gin.WidgetInjector;
@@ -70,7 +70,7 @@ public class HeaderComponent extends Composite implements UpdateSearchQueryHandl
 
     private void submitSearch()
     {
-        SearchQuery query = new SearchQuery();
+        Search query = new Search();
         query.setQuery(searchQuery.getText());
         query.setFromDate(fromDate.getValue());
         query.setToDate(toDate.getValue());
@@ -103,7 +103,7 @@ public class HeaderComponent extends Composite implements UpdateSearchQueryHandl
     @Override
     public void onUpdateSearchQuery(final UpdateSearchQuery event)
     {
-        SearchQuery query = event.getSearchQuery();
+        Search query = event.getSearchQuery();
         searchQuery.setText(query.getQuery());
         fromDate.setValue(query.getFromDate());
         toDate.setValue(query.getToDate());

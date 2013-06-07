@@ -20,8 +20,8 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
 import md.frolov.legume.client.activities.stream.StreamPlace;
-import md.frolov.legume.client.elastic.model.LogEvent;
-import md.frolov.legume.client.elastic.query.SearchQuery;
+import md.frolov.legume.client.elastic.model.response.LogEvent;
+import md.frolov.legume.client.elastic.query.Search;
 import md.frolov.legume.client.gin.WidgetInjector;
 import md.frolov.legume.client.util.ConversionUtils;
 
@@ -88,7 +88,7 @@ public class LogEventFieldComponent extends Composite
         if (valueText != null && valueText.length() > 0 && valueText.length() < MAX_TEXT_LENGTH)
         {
             String filter = getFilter();
-            SearchQuery query = ((StreamPlace) place).getQuery().clone();
+            Search query = ((StreamPlace) place).getQuery().clone();
             query.setFocusDate(timestamp);
             String originalQueryString = query.getQuery();
             StreamPlace.Tokenizer tokenizer = new StreamPlace.Tokenizer();
@@ -98,7 +98,7 @@ public class LogEventFieldComponent extends Composite
             query.setQuery(getQueryString(originalQueryString, "NOT " + filter));
             excludeFilter.setTargetHistoryToken(StreamPlace.TOKEN_PREFIX+":" + tokenizer.getToken(new StreamPlace(query)));
 
-            SearchQuery exclusiveQuery = query.clone();
+            Search exclusiveQuery = query.clone();
             exclusiveQuery.setQuery(filter);
             includeOnlyFilter.setTargetHistoryToken(StreamPlace.TOKEN_PREFIX+":"+tokenizer.getToken(new StreamPlace(exclusiveQuery)));
             exclusiveQuery.setQuery(("NOT "+filter));

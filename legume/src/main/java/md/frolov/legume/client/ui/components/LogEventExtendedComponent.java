@@ -13,7 +13,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-import md.frolov.legume.client.elastic.model.LogEvent;
+import md.frolov.legume.client.elastic.model.response.LogEvent;
 
 /** @author Ivan Frolov (ifrolov@tacitknowledge.com) */
 public class LogEventExtendedComponent extends Composite
@@ -36,7 +36,7 @@ public class LogEventExtendedComponent extends Composite
 
     private void fillIn(final LogEvent logEvent)
     {
-        container.add(new LogEventFieldComponent("time", "@timestamp", logEvent.getTimestamp(), logEvent)); //TODO localize?
+        container.add(new LogEventFieldComponent("time", "@timestamp", logEvent.getTimestamp(), logEvent)); //TODO localize, timezone
         container.add(new LogEventFieldComponent("type", "@type", logEvent.getType(), logEvent));
         container.add(new LogEventFieldComponent("message", "@message", logEvent.getMessage(), logEvent));
         container.add(new LogEventFieldComponent("source", "@source", logEvent.getSource(), logEvent));

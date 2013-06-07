@@ -1,4 +1,6 @@
-package md.frolov.legume.client.elastic.model;
+package md.frolov.legume.client.elastic.model.response;
+
+import java.util.Map;
 
 import com.google.web.bindery.autobean.shared.AutoBean.PropertyName;
 
@@ -12,4 +14,7 @@ public interface SearchResponse {
     Shards getShards();
 
     SearchHits getHits();
+
+    Map<String, Facet> getFacets();
+
 }

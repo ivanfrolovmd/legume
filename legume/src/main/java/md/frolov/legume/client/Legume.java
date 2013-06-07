@@ -9,7 +9,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 
 import md.frolov.legume.client.activities.stream.StreamPlace;
-import md.frolov.legume.client.elastic.query.SearchQuery;
+import md.frolov.legume.client.elastic.query.Search;
 import md.frolov.legume.client.events.LogMessageEvent;
 import md.frolov.legume.client.gin.WidgetInjector;
 
@@ -26,7 +26,7 @@ public class Legume implements EntryPoint
         injector.activityManager().setDisplay(injector.mainView());
         RootLayoutPanel.get().add(injector.mainView());
 
-        SearchQuery query = new SearchQuery("", null, new Date(), new Date());
+        Search query = new Search("", null, new Date(), new Date());
         injector.placeHistoryHandler().register(injector.placeController(), injector.eventBus(), new StreamPlace(query)); //TODO change to homeplace
         injector.placeHistoryHandler().handleCurrentHistory();
 

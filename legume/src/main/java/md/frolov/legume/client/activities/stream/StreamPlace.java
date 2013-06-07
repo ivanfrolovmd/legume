@@ -4,13 +4,13 @@ import com.google.gwt.place.shared.Place;
 import com.google.gwt.place.shared.PlaceTokenizer;
 import com.google.gwt.place.shared.Prefix;
 
-import md.frolov.legume.client.elastic.query.SearchQuery;
+import md.frolov.legume.client.elastic.query.Search;
 
 public class StreamPlace extends Place {
     public final static String TOKEN_PREFIX = "stream";
-    private final SearchQuery query;
+    private final Search query;
 
-    public StreamPlace(final SearchQuery query)
+    public StreamPlace(final Search query)
     {
         this.query = query;
     }
@@ -19,7 +19,7 @@ public class StreamPlace extends Place {
     public static class Tokenizer implements PlaceTokenizer<StreamPlace> {
         @Override
         public StreamPlace getPlace(String token) {
-            SearchQuery query = SearchQuery.fromHistoryToken(token);
+            Search query = Search.fromHistoryToken(token);
             return new StreamPlace(query);
         }
 
@@ -30,7 +30,7 @@ public class StreamPlace extends Place {
 
     }
 
-    public SearchQuery getQuery()
+    public Search getQuery()
     {
         return query;
     }

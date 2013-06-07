@@ -1,4 +1,4 @@
-package md.frolov.legume.client.elastic.model;
+package md.frolov.legume.client.elastic.model.response;
 
 import com.google.web.bindery.autobean.shared.AutoBean.PropertyName;
 

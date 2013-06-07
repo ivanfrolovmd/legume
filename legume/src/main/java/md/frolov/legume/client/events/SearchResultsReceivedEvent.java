@@ -2,21 +2,21 @@ package md.frolov.legume.client.events;
 
 import com.google.gwt.event.shared.GwtEvent;
 
-import md.frolov.legume.client.elastic.model.SearchResponse;
-import md.frolov.legume.client.elastic.query.SearchQuery;
+import md.frolov.legume.client.elastic.model.response.SearchResponse;
+import md.frolov.legume.client.elastic.query.Search;
 
 /** @author Ivan Frolov (ifrolov@tacitknowledge.com) */
 public class SearchResultsReceivedEvent extends GwtEvent<SearchResultsReceivedEventHandler>
 {
-    private final SearchQuery searchQuery;
+    private final Search searchQuery;
     private final SearchResponse searchResponse;
     private final boolean top;
 
-    public SearchResultsReceivedEvent(final SearchQuery searchQuery, final SearchResponse searchResponse){
+    public SearchResultsReceivedEvent(final Search searchQuery, final SearchResponse searchResponse){
         this(searchQuery, searchResponse, false);
     }
 
-    public SearchResultsReceivedEvent(final SearchQuery searchQuery, final SearchResponse searchResponse, boolean top)
+    public SearchResultsReceivedEvent(final Search searchQuery, final SearchResponse searchResponse, boolean top)
     {
         this.searchResponse = searchResponse;
         this.searchQuery = searchQuery;
@@ -28,7 +28,7 @@ public class SearchResultsReceivedEvent extends GwtEvent<SearchResultsReceivedEv
         return searchResponse;
     }
 
-    public SearchQuery getSearchQuery()
+    public Search getSearchQuery()
     {
         return searchQuery;
     }

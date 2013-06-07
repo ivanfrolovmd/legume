@@ -1,4 +1,4 @@
-package md.frolov.legume.client.elastic.model;
+package md.frolov.legume.client.elastic.model.response;
 
 public interface HealthStatus {
     String getCluster_name();

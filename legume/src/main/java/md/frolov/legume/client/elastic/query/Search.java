@@ -1,40 +1,44 @@
 package md.frolov.legume.client.elastic.query;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
-import java.util.List;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
 import com.google.gwt.i18n.client.TimeZone;
 
 import md.frolov.legume.client.Constants;
+import md.frolov.legume.client.elastic.model.ModelFactory;
+import md.frolov.legume.client.elastic.model.request.ElasticSearchRequest;
+import md.frolov.legume.client.elastic.model.request.QueryString;
+import md.frolov.legume.client.elastic.model.request.SearchQuery;
+import md.frolov.legume.client.elastic.model.request.SortOrder;
 import md.frolov.legume.client.gin.WidgetInjector;
 import md.frolov.legume.client.util.ConversionUtils;
 
-public class SearchQuery implements Query
+public class Search implements Query
 {
-    public static final SearchQuery DEFAULT = new SearchQuery("", null, new Date(), null);
+    public static final Search DEFAULT = new Search("", null, new Date(), null);
     private static final int DEFAULT_QUERY_SIZE = WidgetInjector.INSTANCE.configurationService().getInt(Constants.PAGE_SIZE);
 
     private String query;
-    private List<SortOrder> sortOrders = Lists.newArrayList(SortOrder.of("@timestamp", true)); //TODO hardcoded for now. Make order configurable.
-    private long from = 0;
-    private int size = DEFAULT_QUERY_SIZE;
+    private Long from = 0l;
+    private Integer size = DEFAULT_QUERY_SIZE;
     private Date fromDate;
     private Date toDate;
     private Date focusDate;
+    private boolean sortByTimestampAsc = true;
+    private boolean fetchFacets = true;
 
     /** Default constructor */
-    public SearchQuery()
+    public Search()
     {
 
     }
 
-    public SearchQuery(final String query, final Date fromDate, final Date toDate, final Date focusDate)
+    public Search(final String query, final Date fromDate, final Date toDate, final Date focusDate)
     {
         this.query = query;
         this.fromDate = fromDate;
@@ -98,23 +102,33 @@ public class SearchQuery implements Query
     }
 
     @Override
-    public String toQueryString()
+    public String getUri()
     {
+        return "/_search";
+    }
+
+    @Override
+    public ElasticSearchRequest getPayload()
+    {
+        ElasticSearchRequest esRequest = ModelFactory.INSTANCE.elasticSearchRequest().as();
+        esRequest.setFrom(from);
+        esRequest.setSize(size);
+
+        QueryString queryString = ModelFactory.INSTANCE.queryString().as();
+        SearchQuery searchQuery = ModelFactory.INSTANCE.searchQuery().as();
+        searchQuery.setQueryString(queryString);
+
+        //TODO refactor this to use query filters in DTOs
         StringBuilder sb = new StringBuilder();
-        sb.append("/_search?");
-        fillInSortOrder(sb);
-
-        sb.append("size=").append(size).append('&');
-
-        if (from != 0)
-        {
-            sb.append("from=").append(from).append('&');
-        }
-
-        sb.append("q=");
         fillInQuery(sb);
         fillInDates(sb);
-        return sb.toString();
+        queryString.setQuery(sb.toString());
+
+        esRequest.setSort(Collections.singletonMap("@timestamp", sortByTimestampAsc? SortOrder.asc: SortOrder.desc));
+
+        esRequest.setQuery(searchQuery);
+
+        return esRequest;
     }
 
     public String toHistoryToken()
@@ -127,12 +141,12 @@ public class SearchQuery implements Query
         });
     }
 
-    public static SearchQuery fromHistoryToken(String token)
+    public static Search fromHistoryToken(String token)
     {
         Iterator<String> parts = Splitter.on("/").limit(4).split(token).iterator();
         try
         {
-            SearchQuery query = new SearchQuery();
+            Search query = new Search();
             Long fromDate = Long.valueOf(parts.next());
             if (fromDate != 0)
             {
@@ -154,16 +168,6 @@ public class SearchQuery implements Query
         catch (Exception e)
         {
             return DEFAULT;
-        }
-    }
-
-    private void fillInSortOrder(final StringBuilder sb)
-    {
-        if (!Iterables.isEmpty(sortOrders))
-        {
-            sb.append("sort=");
-            sb.append(Joiner.on(',').join(sortOrders));
-            sb.append('&');
         }
     }
 
@@ -214,30 +218,22 @@ public class SearchQuery implements Query
         return query;
     }
 
-    public SearchQuery clone()
+    public Search clone()
     {
-        SearchQuery clone = new SearchQuery();
+        Search clone = new Search();
         clone.query = query;
         clone.from = from;
         clone.size = size;
         clone.fromDate = fromDate;
         clone.toDate = toDate;
         clone.focusDate = focusDate;
-
-        List<SortOrder> clonedSortOrders = Lists.newArrayList();
-        for (SortOrder sortOrder : sortOrders)
-        {
-            clonedSortOrders.add(sortOrder.clone());
-        }
+        clone.sortByTimestampAsc = sortByTimestampAsc;
 
         return clone;
     }
 
     public void reverseSortOrder()
     {
-        for (SortOrder sortOrder : sortOrders)
-        {
-            sortOrder.setAscending(!sortOrder.isAscending());
-        }
+        sortByTimestampAsc = !sortByTimestampAsc;
     }
 }

@@ -2,19 +2,19 @@ package md.frolov.legume.client.events;
 
 import com.google.gwt.event.shared.GwtEvent;
 
-import md.frolov.legume.client.elastic.query.SearchQuery;
+import md.frolov.legume.client.elastic.query.Search;
 
 /** @author Ivan Frolov (ifrolov@tacitknowledge.com) */
 public class UpdateSearchQuery extends GwtEvent<UpdateSearchQueryHandler>
 {
-    private final SearchQuery searchQuery;
+    private final Search searchQuery;
 
-    public UpdateSearchQuery(final SearchQuery searchQuery)
+    public UpdateSearchQuery(final Search searchQuery)
     {
         this.searchQuery = searchQuery;
     }
 
-    public SearchQuery getSearchQuery()
+    public Search getSearchQuery()
     {
         return searchQuery;
     }
