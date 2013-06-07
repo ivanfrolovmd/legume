@@ -1,0 +1,51 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:p="urn:import:com.googlecode.gflot.client"
+             xmlns:b="urn:import:com.github.gwtbootstrap.client.ui"
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+    <ui:style>
+        .container {
+            background-color: #fff;
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        .plot {
+            margin: 2px auto;
+        }
+
+        .centeredWrapper {
+            display: table;
+            height: 100px;
+            width: 100%;
+        }
+        .centered {
+            display: table-cell;
+            vertical-align: middle;
+        }
+        .centered>div {
+            margin: 0 auto;
+            text-align: center;
+        }
+        @external .bar;
+        .grey .bar {
+            background-color: #ccc;
+        }
+    </ui:style>
+    <g:ResizeLayoutPanel styleName="{style.container}" ui:field="resizePanel">
+        <g:FlowPanel>
+            <p:SimplePlot ui:field="plot" width="800px" height="95px" styleName="{style.plot}" visible="false"/>
+            <g:FlowPanel ui:field="loading" styleName="{style.centeredWrapper}">
+                <g:FlowPanel styleName="{style.centered}">
+                    <b:ProgressBar percent="100" type="ANIMATED" width="200px" addStyleNames="{style.grey}"/>
+                </g:FlowPanel>
+            </g:FlowPanel>
+            <g:FlowPanel visible="false" ui:field="error" styleName="{style.centeredWrapper}">
+                <g:FlowPanel styleName="{style.centered}">
+                    <b:ButtonGroup width="100%">
+                        <b:Button type="DEFAULT" icon="REFRESH">Try again</b:Button>
+                        <b:Button type="DEFAULT" icon="ZOOM_IN" title="Zoom in to reduce fetch size">Zoom in</b:Button>
+                    </b:ButtonGroup>
+                </g:FlowPanel>
+            </g:FlowPanel>
+        </g:FlowPanel>
+    </g:ResizeLayoutPanel>
+</ui:UiBinder>
