@@ -74,6 +74,7 @@ public class LogEventComponent extends Composite
 
         String typeColor = colorUtils.getHashColor(logEvent.getType(), 100, 40);
         DOM.setStyleAttribute(type.getElement(), "backgroundColor", typeColor);
+        addColorClasses(logEvent);
     }
 
     private String abbreviate(String string, int maxWidth)
@@ -86,6 +87,28 @@ public class LogEventComponent extends Composite
         {
             return string.substring(0, maxWidth) + "...";
         }
+    }
+
+    private void addColorClasses(LogEvent logEvent) {
+        addColorClass("type", logEvent.getType());
+        addColorClass("source", logEvent.getSourceHost());
+        //TODO add tags
+        //TODO add fields
+    }
+
+    private void addColorClass(final String key, final String value)
+    {
+        if(value != null && value.length()<30 && value.length()>0) {
+            String cssName = escape(key)+"-"+escape(value);
+            box.addStyleDependentName(cssName);
+        }
+    }
+
+    private String escape(String str) {
+        if(str!=null) {
+            return str.toLowerCase().replaceAll("\\W","");
+        }
+        return str;
     }
 
     @UiHandler("focusPanel")
