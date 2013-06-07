@@ -15,6 +15,7 @@
             margin: 2px 0 2px 4px;
 
             position: relative;
+            overflow-x: hidden;
 
             color: #333;
         }
@@ -66,7 +67,7 @@
         .message {
             white-space: pre;
             overflow-y: hidden;
-            max-height: 4em;
+            max-height: 60px;
         }
 
         .relative {

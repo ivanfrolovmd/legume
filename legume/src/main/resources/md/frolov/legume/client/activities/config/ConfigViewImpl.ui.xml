@@ -6,6 +6,7 @@
             margin: 10px;
         }
     </ui:style>
+    <!-- it's better to list config values with descriptions explicitly here -->
     <g:FlowPanel ui:field="container" styleName="{style.container}">
         <b:Button targetHistoryToken="" icon="HOME">Home</b:Button>
         <b:Form type="HORIZONTAL" ui:field="form">
