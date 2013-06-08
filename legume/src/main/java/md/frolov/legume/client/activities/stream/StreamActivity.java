@@ -8,20 +8,16 @@ import javax.inject.Inject;
 import com.google.gwt.activity.shared.AbstractActivity;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.place.shared.PlaceController;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 
 import md.frolov.legume.client.elastic.ElasticSearchService;
 import md.frolov.legume.client.elastic.model.response.SearchResponse;
-import md.frolov.legume.client.elastic.query.HistogramRequest;
 import md.frolov.legume.client.elastic.query.Search;
-import md.frolov.legume.client.events.HistogramUpdatedEvent;
 import md.frolov.legume.client.events.SearchFinishedEvent;
 import md.frolov.legume.client.events.SearchInProgressEvent;
 import md.frolov.legume.client.events.SearchResultsReceivedEvent;
 import md.frolov.legume.client.events.UpdateSearchQuery;
-import md.frolov.legume.client.gin.WidgetInjector;
 import md.frolov.legume.client.service.ConfigurationService;
 
 public class StreamActivity extends AbstractActivity implements StreamView.Presenter
@@ -66,7 +62,6 @@ public class StreamActivity extends AbstractActivity implements StreamView.Prese
         boolean isUpwards = isUpwardsDirection();
 
         requestMoreResults(isUpwards);
-        requestHistogram();
     }
 
     private void initQueries(Search requestedSearchQuery)
@@ -156,36 +151,5 @@ public class StreamActivity extends AbstractActivity implements StreamView.Prese
     private void stop() {
         finished = true;
         elasticSearchService.cancelAllRequests();
-    }
-
-    void requestHistogram() {
-        HistogramRequest request = new HistogramRequest();
-        Date fromDate = activeSearchQuery.getFromDate();
-        Date toDate = activeSearchQuery.getToDate();
-        if(toDate==null) {
-            toDate = new Date();
-        }
-        if(fromDate == null) {
-            fromDate = new Date(toDate.getTime()-1000*60*60*24);
-        }
-        request.setFromDate(fromDate);
-        request.setToDate(toDate);
-        request.setStepCount(300);
-        request.setQuery(activeSearchQuery.getQuery());
-
-        WidgetInjector.INSTANCE.elasticSearchService().query(request, new AsyncCallback<SearchResponse>()
-        {
-            @Override
-            public void onFailure(final Throwable caught)
-            {
-                Window.alert("failed");
-            }
-
-            @Override
-            public void onSuccess(final SearchResponse result)
-            {
-                eventBus.fireEvent(new HistogramUpdatedEvent(result));
-            }
-        }, SearchResponse.class);
     }
 }

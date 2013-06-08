@@ -2,6 +2,7 @@ package md.frolov.legume.client.ui.components;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -14,8 +15,10 @@ import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.web.bindery.event.shared.EventBus;
 
 import md.frolov.legume.client.elastic.model.response.LogEvent;
+import md.frolov.legume.client.events.LogMessageHoverEvent;
 import md.frolov.legume.client.gin.WidgetInjector;
 import md.frolov.legume.client.util.ColorUtils;
 
@@ -41,6 +44,7 @@ public class LogEventComponent extends Composite
 
     private WidgetInjector injector = WidgetInjector.INSTANCE;
     private ColorUtils colorUtils = injector.colorUtils();
+    private EventBus eventBus = injector.eventBus();
 
     @UiField
     Label time;
@@ -129,5 +133,11 @@ public class LogEventComponent extends Composite
             focusPanel.removeStyleName(style.detailsSelected());
         }
         focusPanel.setFocus(false);
+    }
+
+    @UiHandler("focusPanel")
+    public void handleMouseOver(final MouseOverEvent event)
+    {
+        eventBus.fireEvent(new LogMessageHoverEvent(logEvent.getTimestamp()));
     }
 }
