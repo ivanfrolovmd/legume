@@ -1,5 +1,6 @@
 package md.frolov.legume.client.elastic.model.response;
 
+import java.util.Date;
 import java.util.List;
 
 import com.google.web.bindery.autobean.shared.AutoBean;
@@ -12,9 +13,16 @@ public interface Facet
 
     List<Range> getRanges();
 
+    List<Entry> getEntries();
+
     interface Range{
         long getFrom();
         long getTo();
+        long getCount();
+    }
+
+    interface Entry{
+        Date getTime();
         long getCount();
     }
 }

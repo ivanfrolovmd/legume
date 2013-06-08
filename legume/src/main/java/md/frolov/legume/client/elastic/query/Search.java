@@ -12,13 +12,13 @@ import com.google.gwt.i18n.client.TimeZone;
 import md.frolov.legume.client.Constants;
 import md.frolov.legume.client.elastic.model.ModelFactory;
 import md.frolov.legume.client.elastic.model.request.ElasticSearchRequest;
+import md.frolov.legume.client.elastic.model.request.FilteredQuery;
 import md.frolov.legume.client.elastic.model.request.QueryString;
-import md.frolov.legume.client.elastic.model.request.SearchQuery;
 import md.frolov.legume.client.elastic.model.request.SortOrder;
 import md.frolov.legume.client.gin.WidgetInjector;
 import md.frolov.legume.client.util.ConversionUtils;
 
-public class Search implements Query
+public class Search implements RequestQuery
 {
     public static final Search DEFAULT = new Search("", null, new Date(), null);
     private static final int DEFAULT_QUERY_SIZE = WidgetInjector.INSTANCE.configurationService().getInt(Constants.PAGE_SIZE);
@@ -114,19 +114,24 @@ public class Search implements Query
         esRequest.setFrom(from);
         esRequest.setSize(size);
 
+        FilteredQuery filteredQuery = ModelFactory.INSTANCE.filteredQuery().as();
+        FilteredQuery.FilteredQueryDef filteredQueryDef = ModelFactory.INSTANCE.filteredQueryDef().as();
+        filteredQuery.setFiltered(filteredQueryDef);
+
         QueryString queryString = ModelFactory.INSTANCE.queryString().as();
-        SearchQuery searchQuery = ModelFactory.INSTANCE.searchQuery().as();
-        searchQuery.setQueryString(queryString);
+        QueryString.QueryStringDef queryStringDef = ModelFactory.INSTANCE.queryStringDef().as();
+        queryString.setQueryString(queryStringDef);
 
         //TODO refactor this to use query filters in DTOs
         StringBuilder sb = new StringBuilder();
-        fillInQuery(sb);
-        fillInDates(sb);
-        queryString.setQuery(sb.toString());
+        fillInQuery(sb); //Move this to filter. we don't need scoring
+        fillInDates(sb); //TODO move to filter
+        queryStringDef.setQuery(sb.toString());
 
         esRequest.setSort(Collections.singletonMap("@timestamp", sortByTimestampAsc? SortOrder.asc: SortOrder.desc));
 
-        esRequest.setQuery(searchQuery);
+        filteredQueryDef.setQuery(queryString);
+        esRequest.setQuery(filteredQuery);
 
         return esRequest;
     }

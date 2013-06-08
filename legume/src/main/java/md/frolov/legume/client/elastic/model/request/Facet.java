@@ -1,8 +1,12 @@
 package md.frolov.legume.client.elastic.model.request;
 
+import com.google.web.bindery.autobean.shared.AutoBean;
+
 /** @author Ivan Frolov (ifrolov@tacitknowledge.com) */
 public interface Facet
 {
-    SearchQuery getFilter();
-    void setFilter(SearchQuery filter);
+    @AutoBean.PropertyName("facet_filter")
+    Filter getFilter();
+    @AutoBean.PropertyName("facet_filter")
+    void setFilter(Filter filter);
 }

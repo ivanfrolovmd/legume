@@ -6,21 +6,22 @@ import java.util.List;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
+import com.google.gwt.i18n.client.TimeZone;
 
 import md.frolov.legume.client.elastic.model.ModelFactory;
-import md.frolov.legume.client.elastic.model.request.ElasticSearchRequest;
-import md.frolov.legume.client.elastic.model.request.Facet;
-import md.frolov.legume.client.elastic.model.request.QueryString;
-import md.frolov.legume.client.elastic.model.request.RangeFacet;
-import md.frolov.legume.client.elastic.model.request.SearchQuery;
+import md.frolov.legume.client.elastic.model.request.*;
+import md.frolov.legume.client.util.ConversionUtils;
 
 /** @author Ivan Frolov (ifrolov@tacitknowledge.com) */
-public class HistogramRequest implements Query
+public class HistogramRequest implements RequestQuery
 {
+
     private Date fromDate;
     private Date toDate;
-    private long step;
-    private int stepCount;
+
+    //step length in ms
+    private HistogramInterval interval;
+
     private String query;
 
     public Date getFromDate()
@@ -43,28 +44,14 @@ public class HistogramRequest implements Query
         this.toDate = toDate;
     }
 
-    /** @return resolution step in ms */
-    public long getStep()
+    public void setInterval(final HistogramInterval interval)
     {
-        return step;
+        this.interval = interval;
     }
 
-    /** @param step resolution step in ms */
-    public void setStep(final long step)
+    public HistogramInterval getInterval()
     {
-        this.step = step;
-    }
-
-    /** @return number of iterations/ranges */
-    public int getStepCount()
-    {
-        return stepCount;
-    }
-
-    /** @param stepCount number of iterations/ranges */
-    public void setStepCount(final int stepCount)
-    {
-        this.stepCount = stepCount;
+        return interval;
     }
 
     public String getQuery()
@@ -86,63 +73,59 @@ public class HistogramRequest implements Query
     @Override
     public ElasticSearchRequest getPayload()
     {
-        Preconditions.checkNotNull(fromDate, "Date margin cannot be null");
-        Preconditions.checkNotNull(toDate, "Date margin cannot be null");
-
-        Preconditions.checkArgument(step>0 || stepCount > 0, "Step must be greater than zero");
+        Preconditions.checkNotNull(interval);
 
         ElasticSearchRequest esRequest = ModelFactory.INSTANCE.elasticSearchRequest().as();
 
-        RangeFacet facet = ModelFactory.INSTANCE.rangeFacet().as();
-        facet.setRange(Collections.<String, List<RangeFacet.RangeDef>>singletonMap("@timestamp", getRanges()));
+        DateHistogramFacet facet = ModelFactory.INSTANCE.dateHistogramFacet().as();
+        DateHistogramFacet.DateHistogramFacetDef def = ModelFactory.INSTANCE.dateHistogramFacetDef().as();
+        facet.setDateHistogram(def);
+        def.setField("@timestamp");
+        def.setInterval(getIntervalStr());
 
-        esRequest.setQuery(getSearchQuery());
+        AndFilter and = ModelFactory.INSTANCE.andFilter().as();
+        List<Filter> filters = Lists.newArrayList();
+        appendQueryFilter(filters);
+        appendDateRangeFilter(filters);
+        and.setAnd(filters);
 
-        esRequest.setFacets(Collections.<String, Facet>singletonMap("range", facet));
+        facet.setFilter(and);
+
+        esRequest.setFacets(Collections.<String, Facet>singletonMap("histo", facet));
         esRequest.setSize(0);
 
         return esRequest;
     }
 
-    private SearchQuery getSearchQuery() {
+    private void appendQueryFilter(List<Filter> filters){
         if(query!=null && query.length()>0) {
-            SearchQuery searchQuery = ModelFactory.INSTANCE.searchQuery().as();
+            QueryFilter queryFilter = ModelFactory.INSTANCE.queryFilter().as();
+
             QueryString queryString = ModelFactory.INSTANCE.queryString().as();
-            queryString.setQuery(query);
-            searchQuery.setQueryString(queryString);
-            return searchQuery;
-        } else {
-            return null;
+            QueryString.QueryStringDef queryStringDef = ModelFactory.INSTANCE.queryStringDef().as();
+            queryString.setQueryString(queryStringDef);
+
+            queryStringDef.setQuery(query);
+            queryFilter.setQuery(queryString);
+            filters.add(queryFilter);
         }
     }
 
-    private List<RangeFacet.RangeDef> getRanges()
+    private void appendDateRangeFilter(List<Filter> filters)
     {
-        List<RangeFacet.RangeDef> ranges = Lists.newArrayList();
-
-        if (toDate.compareTo(fromDate) < 0)
-        {
-            toDate = fromDate;
+        RangeFilter filter = ModelFactory.INSTANCE.rangeFilter().as();
+        RangeFilter.RangeFilterDef filterDef = ModelFactory.INSTANCE.rangeFilterDef().as();
+        filter.setRange(Collections.singletonMap("@timestamp", filterDef));
+        if(fromDate!=null) {
+            filterDef.setFrom(ConversionUtils.INSTANCE.dateToString(fromDate, TimeZone.createTimeZone(0)));
         }
-
-        long daStep;
-        if(step==0){
-            daStep = (toDate.getTime() - fromDate.getTime())/stepCount;
-        } else {
-            daStep = step;
+        if(toDate!=null) {
+            filterDef.setTo(ConversionUtils.INSTANCE.dateToString(toDate, TimeZone.createTimeZone(0)));
         }
-        Preconditions.checkArgument(daStep>0, "Iteration step cannot be calculated");
+        filters.add(filter);
+    }
 
-        long current = fromDate.getTime();
-        long to = toDate.getTime();
-        while (current <= to)
-        {
-            RangeFacet.RangeDate range = ModelFactory.INSTANCE.rangeFacetRangeDate().as();
-            range.setFrom(new Date(current));
-            range.setTo(new Date(current + daStep));
-            ranges.add(range);
-            current += daStep;
-        }
-        return ranges;
+    private String getIntervalStr() {
+        return interval.getIntervalName();
     }
 }

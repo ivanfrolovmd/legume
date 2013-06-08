@@ -10,6 +10,9 @@ public interface ElasticSearchRequest
     Query getQuery();
     void setQuery(Query query);
 
+    Filter getFilter();
+    void setFilter(Filter filter);
+
     Map<String, SortOrder> getSort();
     void setSort(Map<String, SortOrder> sort);
 
