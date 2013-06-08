@@ -20,7 +20,7 @@ import md.frolov.legume.client.Constants;
 import md.frolov.legume.client.elastic.ElasticSearchService;
 import md.frolov.legume.client.elastic.model.ModelFactory;
 import md.frolov.legume.client.elastic.model.request.ElasticSearchRequest;
-import md.frolov.legume.client.elastic.query.Query;
+import md.frolov.legume.client.elastic.query.RequestQuery;
 import md.frolov.legume.client.service.ConfigurationService;
 
 @Singleton
@@ -38,7 +38,7 @@ public class ElasticSearchServiceImpl implements ElasticSearchService, Constants
     private ModelFactory modelFactory;
 
     @Override
-    public <T> void query(final Query query, final AsyncCallback<T> callback, final Class<T> clazz)
+    public <T> void query(final RequestQuery query, final AsyncCallback<T> callback, final Class<T> clazz)
     {
         queryRaw(query.getUri(),query.getPayload(), callback, clazz);
     }
