@@ -32,9 +32,18 @@
 
         .controls {
             top:10px;
-            right:0;
-            width: 70px;
+            right: 70px;
+            left: 70px;
             position: absolute;
+            pointer-events: none;
+        }
+        .controls>div {
+            pointer-events: all;
+            float: right;
+            opacity: 0.2;
+        }
+        .controls>div:hover {
+            opacity: 1;
         }
     </ui:style>
     <g:ResizeLayoutPanel styleName="{style.container}" ui:field="resizePanel">
@@ -44,6 +53,8 @@
                 <b:ButtonGroup>
                     <b:Button size="MINI" icon="ZOOM_IN" ui:field="zoomIn"/>
                     <b:Button size="MINI" icon="ZOOM_OUT" ui:field="zoomOut"/>
+                    <b:Button size="MINI" icon="DOWNLOAD" ui:field="downloadImage"/>
+                    <b:Button size="MINI" ui:field="chooseDate">Choose date</b:Button>
                 </b:ButtonGroup>
             </g:FlowPanel>
             <g:FlowPanel ui:field="loading" styleName="{style.centeredWrapper}">
@@ -54,8 +65,8 @@
             <g:FlowPanel visible="false" ui:field="error" styleName="{style.centeredWrapper}">
                 <g:FlowPanel styleName="{style.centered}">
                     <b:ButtonGroup width="100%">
-                        <b:Button type="DEFAULT" icon="REFRESH">Try again</b:Button>
-                        <b:Button type="DEFAULT" icon="ZOOM_IN" title="Zoom in to reduce fetch size">Zoom in</b:Button>
+                        <b:Button icon="REFRESH">Try again</b:Button>
+                        <b:Button icon="ZOOM_IN" title="Zoom in to reduce fetch size">Zoom in</b:Button>
                     </b:ButtonGroup>
                 </g:FlowPanel>
             </g:FlowPanel>

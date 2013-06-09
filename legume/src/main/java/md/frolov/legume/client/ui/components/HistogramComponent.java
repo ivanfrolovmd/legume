@@ -15,6 +15,7 @@ import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -71,6 +72,8 @@ public class HistogramComponent extends Composite implements UpdateSearchQueryHa
     Button zoomOut;
     @UiField
     FlowPanel controls;
+    @UiField
+    Button downloadImage;
 
     private EventBus eventBus = WidgetInjector.INSTANCE.eventBus();
     private ElasticSearchService elasticSearchService = WidgetInjector.INSTANCE.elasticSearchService();
@@ -369,5 +372,15 @@ public class HistogramComponent extends Composite implements UpdateSearchQueryHa
         search.setFromDate(from);
         search.setToDate(to);
         requestHistogram(search);
+    }
+
+    @UiHandler("downloadImage")
+    public void onDownloadImage(final ClickEvent event)
+    {
+        if(plot.isExportAsImageEnabled()) {
+            plot.saveAsImage();
+        } else {
+            Window.alert("Sorry. This is not supported in your browser");
+        }
     }
 }
