@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
+import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.i18n.client.TimeZone;
 
 import md.frolov.legume.client.elastic.model.ModelFactory;
@@ -127,5 +128,11 @@ public class HistogramRequest implements RequestQuery
 
     private String getIntervalStr() {
         return interval.getIntervalName();
+    }
+
+    @Override
+    public RequestBuilder.Method getMethod()
+    {
+        return RequestBuilder.POST;
     }
 }

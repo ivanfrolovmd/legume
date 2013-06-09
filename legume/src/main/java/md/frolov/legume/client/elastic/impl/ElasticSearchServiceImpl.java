@@ -3,6 +3,7 @@ package md.frolov.legume.client.elastic.impl;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.logging.Logger;
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -40,21 +41,32 @@ public class ElasticSearchServiceImpl implements ElasticSearchService, Constants
     @Override
     public <T> void query(final RequestQuery query, final AsyncCallback<T> callback, final Class<T> clazz)
     {
-        queryRaw(query.getUri(),query.getPayload(), callback, clazz);
+        queryRaw(query.getUri(), query.getMethod(), query.getPayload(), callback, clazz);
     }
 
     @Override
-    public <T> void queryRaw(String uri, final ElasticSearchRequest request, final AsyncCallback<T> callback, final Class<T> clazz)
+    public <T> void queryRaw(String uri, RequestBuilder.Method method,@Nullable final ElasticSearchRequest request, final AsyncCallback<T> callback, final Class<T> clazz)
     {
         try
         {
             String url = configurationService.get(ELASTICSEARCH_SERVER) + uri;
-            RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.POST, url);
+            RequestBuilder requestBuilder = new RequestBuilder(method, url);
             requestBuilder.setTimeoutMillis(configurationService.getInt(ELASTICSEARCH_TIMEOUT));
-            if(request.getTimeout()==0) {
-                request.setTimeout(configurationService.getInt(ELASTICSEARCH_TIMEOUT));
+
+            String data;
+            if (request != null)
+            {
+                if (request.getTimeout() == 0)
+                {
+                    request.setTimeout(configurationService.getInt(ELASTICSEARCH_TIMEOUT));
+                }
+                data = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(request)).getPayload();
             }
-            String data = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(request)).getPayload();
+            else
+            {
+                data = null;
+            }
+
             Request xhrRequest = requestBuilder.sendRequest(data, new RequestCallback()
             {
                 @Override

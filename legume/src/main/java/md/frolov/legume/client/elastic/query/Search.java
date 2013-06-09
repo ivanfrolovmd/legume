@@ -7,6 +7,7 @@ import java.util.Iterator;
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
+import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.i18n.client.TimeZone;
 
 import md.frolov.legume.client.Constants;
@@ -240,5 +241,11 @@ public class Search implements RequestQuery
     public void reverseSortOrder()
     {
         sortByTimestampAsc = !sortByTimestampAsc;
+    }
+
+    @Override
+    public RequestBuilder.Method getMethod()
+    {
+        return RequestBuilder.POST;
     }
 }

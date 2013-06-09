@@ -127,11 +127,11 @@ public class StreamActivity extends AbstractActivity implements StreamView.Prese
                 {
                     return;
                 }
+                query.setFrom(query.getFrom() + result.getHits().getHits().size());
 
                 LOG.fine("Got response");
                 eventBus.fireEvent(new SearchResultsReceivedEvent(query, result, upwards));
                 eventBus.fireEvent(new SearchFinishedEvent(upwards));
-                query.setFrom(query.getFrom() + result.getHits().getHits().size());
             }
         }, SearchResponse.class);
     }
