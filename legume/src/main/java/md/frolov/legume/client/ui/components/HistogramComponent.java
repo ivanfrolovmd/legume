@@ -106,7 +106,7 @@ public class HistogramComponent extends Composite implements UpdateSearchQueryHa
         ));
 
         //Crosshair
-        plotOptions.setCrosshairOptions(CrosshairOptions.create().setColor("#999").setLineWidth(1).setMode(CrosshairOptions.Mode.X));
+        plotOptions.setCrosshairOptions(CrosshairOptions.create().setColor("hsl(210,60%,70%)").setLineWidth(1).setMode(CrosshairOptions.Mode.X));
 
         // create the plot
         plot = new SimplePlot(plotOptions);
@@ -180,7 +180,7 @@ public class HistogramComponent extends Composite implements UpdateSearchQueryHa
         }
         plot.getPlotOptions().setXAxesOptions(AxesOptions.create().addAxisOptions(TimeSeriesAxisOptions.create()
                 .setTickColor("#eee").setReserveSpace(true).setMinimum(min).setMaximum(max)
-                .setTimeFormat(interval.getDateTimeFormat())
+                .setTimeZone("browser").setTimeFormat(interval.getDateTimeFormat())
         ));
 
         loading.setVisible(false);
