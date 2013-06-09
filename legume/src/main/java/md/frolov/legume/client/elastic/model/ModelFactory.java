@@ -6,6 +6,7 @@ import com.google.web.bindery.autobean.shared.AutoBeanFactory;
 
 import md.frolov.legume.client.elastic.model.request.*;
 import md.frolov.legume.client.elastic.model.response.HealthStatus;
+import md.frolov.legume.client.elastic.model.response.PingResponse;
 import md.frolov.legume.client.elastic.model.response.SearchHits;
 import md.frolov.legume.client.elastic.model.response.SearchResponse;
 
@@ -15,7 +16,8 @@ public interface ModelFactory extends AutoBeanFactory {
 
     AutoBean <SearchHits> htis();
 
-    AutoBean<SearchResponse> response();
+    AutoBean<SearchResponse> searchResponse();
+    AutoBean<PingResponse> pingResponse();
 
     AutoBean<HealthStatus> healthStatus();
 

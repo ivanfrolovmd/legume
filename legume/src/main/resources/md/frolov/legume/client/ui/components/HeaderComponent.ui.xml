@@ -7,15 +7,18 @@
             background-color: #f1f1f1;
             border-bottom: 1px solid #e5e5e5;
         }
+
         .horizontal {
             vertical-align: middle;
             margin: 17px 10px;
         }
+
         .logo {
             font-family: OpenSansLight;
             font-size: 24px;
             margin: 4px 30px 4px 10px;
         }
+
         .searchBox {
             font-size: 14px;
             width: 700px;
@@ -25,8 +28,22 @@
         .dateBox{
             width: 200px;
         }
+
+        .statusBox {
+            position: absolute;
+            top:40px;
+            right: 10px;
+            width: 40px;
+            float: right;
+            text-align: right;
+        }
     </ui:style>
     <g:AbsolutePanel styleName="{style.box}">
+        <g:FlowPanel styleName="{style.statusBox}">
+            <b:Icon type="CIRCLE_BLANK" iconSize="LARGE" ui:field="statusIconChecking" title="Checking the status" />
+            <b:Icon type="BAN_CIRCLE" iconSize="LARGE" ui:field="statusIconError" title="Connection error" visible="false"/>
+            <b:Icon type="CIRCLE" iconSize="LARGE" ui:field="statusIconOk" title="Status: OK" visible="false"/>
+        </g:FlowPanel>
         <g:HorizontalPanel styleName="{style.horizontal}">
             <g:Label styleName="{style.logo}">Legume</g:Label>
             <b:TextBox ui:field="searchQuery" placeholder="Type your query here" addStyleNames="{style.searchBox}">Search</b:TextBox>
