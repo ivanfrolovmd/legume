@@ -10,7 +10,7 @@ import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.i18n.client.TimeZone;
 
 import md.frolov.legume.client.elastic.model.ModelFactory;
-import md.frolov.legume.client.elastic.model.request.*;
+import md.frolov.legume.client.elastic.model.query.*;
 import md.frolov.legume.client.util.ConversionUtils;
 
 /** @author Ivan Frolov (ifrolov@tacitknowledge.com) */

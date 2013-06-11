@@ -17,8 +17,8 @@ import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.EventBus;
 
-import md.frolov.legume.client.elastic.model.response.SearchHit;
-import md.frolov.legume.client.elastic.model.response.SearchHits;
+import md.frolov.legume.client.elastic.model.reply.SearchHit;
+import md.frolov.legume.client.elastic.model.reply.SearchHits;
 import md.frolov.legume.client.events.*;
 import md.frolov.legume.client.gin.WidgetInjector;
 import md.frolov.legume.client.ui.components.LogEventComponent;

@@ -20,7 +20,7 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
 import md.frolov.legume.client.activities.stream.StreamPlace;
-import md.frolov.legume.client.elastic.model.response.LogEvent;
+import md.frolov.legume.client.elastic.model.reply.LogEvent;
 import md.frolov.legume.client.elastic.query.Search;
 import md.frolov.legume.client.gin.WidgetInjector;
 import md.frolov.legume.client.util.ConversionUtils;

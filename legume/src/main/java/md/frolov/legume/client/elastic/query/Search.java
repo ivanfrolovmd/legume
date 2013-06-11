@@ -12,10 +12,10 @@ import com.google.gwt.i18n.client.TimeZone;
 
 import md.frolov.legume.client.Constants;
 import md.frolov.legume.client.elastic.model.ModelFactory;
-import md.frolov.legume.client.elastic.model.request.ElasticSearchRequest;
-import md.frolov.legume.client.elastic.model.request.FilteredQuery;
-import md.frolov.legume.client.elastic.model.request.QueryString;
-import md.frolov.legume.client.elastic.model.request.SortOrder;
+import md.frolov.legume.client.elastic.model.query.ElasticSearchRequest;
+import md.frolov.legume.client.elastic.model.query.FilteredQuery;
+import md.frolov.legume.client.elastic.model.query.QueryString;
+import md.frolov.legume.client.elastic.model.query.SortOrder;
 import md.frolov.legume.client.gin.WidgetInjector;
 import md.frolov.legume.client.util.ConversionUtils;
 

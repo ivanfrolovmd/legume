@@ -4,11 +4,12 @@ import com.google.gwt.core.client.GWT;
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanFactory;
 
-import md.frolov.legume.client.elastic.model.request.*;
-import md.frolov.legume.client.elastic.model.response.HealthStatus;
-import md.frolov.legume.client.elastic.model.response.PingResponse;
-import md.frolov.legume.client.elastic.model.response.SearchHits;
-import md.frolov.legume.client.elastic.model.response.SearchResponse;
+import md.frolov.legume.client.elastic.model.query.*;
+import md.frolov.legume.client.elastic.model.reply.HealthStatus;
+import md.frolov.legume.client.elastic.model.reply.Mapping;
+import md.frolov.legume.client.elastic.model.reply.PingReply;
+import md.frolov.legume.client.elastic.model.reply.SearchHits;
+import md.frolov.legume.client.elastic.model.reply.SearchResponse;
 
 @AutoBeanFactory.Category(QueryStringCategory.class)
 public interface ModelFactory extends AutoBeanFactory {
@@ -17,7 +18,7 @@ public interface ModelFactory extends AutoBeanFactory {
     AutoBean <SearchHits> htis();
 
     AutoBean<SearchResponse> searchResponse();
-    AutoBean<PingResponse> pingResponse();
+    AutoBean<PingReply> pingReply();
 
     AutoBean<HealthStatus> healthStatus();
 
@@ -47,4 +48,8 @@ public interface ModelFactory extends AutoBeanFactory {
     AutoBean<RangeFilter.RangeFilterDef> rangeFilterDef();
 
     AutoBean<MatchAllQuery> matchAllQuery();
+
+    AutoBean<Mapping> mapping();
+    AutoBean<Mapping.TypeMapping> typeMapping();
+    AutoBean<Mapping.PropertyMapping> propertyMapping();
 }

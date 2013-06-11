@@ -17,7 +17,7 @@ import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.EventBus;
 
-import md.frolov.legume.client.elastic.model.response.LogEvent;
+import md.frolov.legume.client.elastic.model.reply.LogEvent;
 import md.frolov.legume.client.events.LogMessageHoverEvent;
 import md.frolov.legume.client.gin.WidgetInjector;
 import md.frolov.legume.client.util.ColorUtils;

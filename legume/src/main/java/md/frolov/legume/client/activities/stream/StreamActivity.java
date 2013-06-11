@@ -12,7 +12,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 
 import md.frolov.legume.client.elastic.ElasticSearchService;
-import md.frolov.legume.client.elastic.model.response.SearchResponse;
+import md.frolov.legume.client.elastic.model.reply.SearchResponse;
 import md.frolov.legume.client.elastic.query.Search;
 import md.frolov.legume.client.events.SearchFinishedEvent;
 import md.frolov.legume.client.events.SearchInProgressEvent;
@@ -129,7 +129,7 @@ public class StreamActivity extends AbstractActivity implements StreamView.Prese
                 }
                 query.setFrom(query.getFrom() + result.getHits().getHits().size());
 
-                LOG.fine("Got response");
+                LOG.fine("Got reply");
                 eventBus.fireEvent(new SearchResultsReceivedEvent(query, result, upwards));
                 eventBus.fireEvent(new SearchFinishedEvent(upwards));
             }

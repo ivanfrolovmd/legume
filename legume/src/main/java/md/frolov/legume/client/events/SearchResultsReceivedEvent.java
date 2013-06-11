@@ -2,7 +2,7 @@ package md.frolov.legume.client.events;
 
 import com.google.gwt.event.shared.GwtEvent;
 
-import md.frolov.legume.client.elastic.model.response.SearchResponse;
+import md.frolov.legume.client.elastic.model.reply.SearchResponse;
 import md.frolov.legume.client.elastic.query.Search;
 
 /** @author Ivan Frolov (ifrolov@tacitknowledge.com) */

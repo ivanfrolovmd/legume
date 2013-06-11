@@ -13,7 +13,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-import md.frolov.legume.client.elastic.model.response.LogEvent;
+import md.frolov.legume.client.elastic.model.reply.LogEvent;
 
 /** @author Ivan Frolov (ifrolov@tacitknowledge.com) */
 public class LogEventExtendedComponent extends Composite
