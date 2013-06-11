@@ -1,6 +1,7 @@
 package md.frolov.legume.client.activities.stream;
 
 import java.util.Set;
+import java.util.logging.Logger;
 
 import com.github.gwtbootstrap.client.ui.Button;
 import com.google.common.collect.Sets;
@@ -26,6 +27,7 @@ import md.frolov.legume.client.util.IteratorIncrementalTask;
 
 public class StreamViewImpl extends Composite implements StreamView, SearchResultsReceivedEventHandler, SearchInProgressEventHandler, SearchFinishedEventHandler
 {
+    private static final Logger LOG = Logger.getLogger("StreamView");
 
     private static final int SCROLL_THRESHOLD = 50; //TODO configure scroll threshold
 
@@ -234,7 +236,7 @@ public class StreamViewImpl extends Composite implements StreamView, SearchResul
         {
             return;
         }
-        eventBus.fireEvent(new LogMessageEvent("Request top"));
+        LOG.info("Request top");
         topNoMoreResults.setVisible(false);
         presenter.requestMoreResults(true);
     }
@@ -245,7 +247,7 @@ public class StreamViewImpl extends Composite implements StreamView, SearchResul
         {
             return;
         }
-        eventBus.fireEvent(new LogMessageEvent("Request bottom"));
+        LOG.info("Request bottom");
         bottomNoMoreResults.setVisible(false);
         presenter.requestMoreResults(false);
     }

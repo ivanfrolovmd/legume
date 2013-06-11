@@ -10,7 +10,6 @@ import com.google.gwt.user.client.ui.RootLayoutPanel;
 
 import md.frolov.legume.client.activities.stream.StreamPlace;
 import md.frolov.legume.client.elastic.query.Search;
-import md.frolov.legume.client.events.LogMessageEvent;
 import md.frolov.legume.client.gin.WidgetInjector;
 
 /** Entry point classes define <code>onModuleLoad()</code>. */
@@ -36,7 +35,6 @@ public class Legume implements EntryPoint
             public void onUncaughtException(final Throwable e)
             {
                 LOG.log(Level.SEVERE,"uncaught",e);
-                injector.eventBus().fireEvent(new LogMessageEvent("Uncaught error: "+e.getMessage()));
             }
         });
     }
