@@ -34,8 +34,8 @@ import com.googlecode.gflot.client.options.side.IntegerSideOptions;
 
 import md.frolov.legume.client.activities.stream.StreamPlace;
 import md.frolov.legume.client.elastic.ElasticSearchService;
-import md.frolov.legume.client.elastic.model.response.Facet;
-import md.frolov.legume.client.elastic.model.response.SearchResponse;
+import md.frolov.legume.client.elastic.model.reply.Facet;
+import md.frolov.legume.client.elastic.model.reply.SearchResponse;
 import md.frolov.legume.client.elastic.query.HistogramInterval;
 import md.frolov.legume.client.elastic.query.HistogramRequest;
 import md.frolov.legume.client.elastic.query.Search;
@@ -74,6 +74,8 @@ public class HistogramComponent extends Composite implements UpdateSearchQueryHa
     FlowPanel controls;
     @UiField
     Button downloadImage;
+    @UiField
+    Button trackPosition;
 
     private EventBus eventBus = WidgetInjector.INSTANCE.eventBus();
     private ElasticSearchService elasticSearchService = WidgetInjector.INSTANCE.elasticSearchService();
@@ -296,6 +298,10 @@ public class HistogramComponent extends Composite implements UpdateSearchQueryHa
     @Override
     public void onLogMessageHover(final LogMessageHoverEvent event)
     {
+        if(!trackPosition.isToggled()) {
+            return;
+        }
+
         Date selectionDate = event.getDate();
         Date fromDate = activeSearch.getFromDate();
         Date toDate = activeSearch.getToDate();
