@@ -1,5 +1,5 @@
 GlobalProperties = {
-	'elasticSearchServer': 'http://localhost:9200',
+	'elasticSearchServer': 'http://demo.logstash.net:9200',
     'elasticSearchTimeout': 30000,
     'pageSize': 100
 }
