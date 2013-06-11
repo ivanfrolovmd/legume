@@ -1,0 +1,13 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:b="urn:import:com.github.gwtbootstrap.client.ui"
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+    <ui:style>
+        .dropdown {
+            display: block;
+        }
+    </ui:style>
+    <b:Dropdown ui:field="dropDown" addStyleNames="{style.dropdown}">
+        <b:NavLink>Score</b:NavLink>
+        <b:NavLink>Colorize</b:NavLink>
+    </b:Dropdown>
+</ui:UiBinder>

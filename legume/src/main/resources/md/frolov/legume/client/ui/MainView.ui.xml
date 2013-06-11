@@ -18,10 +18,9 @@
                     <l:HistogramComponent/>
                 </g:north>
                 <g:west size='250'>
-                    <g:FlowPanel>
-                        <g:Label>Navigation. To be implemented.</g:Label>
-                        <l:LoggerComponent/>
-                    </g:FlowPanel>
+                    <g:ResizeLayoutPanel>
+                        <l:FieldsComponent/>
+                    </g:ResizeLayoutPanel>
                 </g:west>
                 <g:center>
                     <!-- ResizeLayoutPanel required to insert other layout panels, like ScrollPanel -->
