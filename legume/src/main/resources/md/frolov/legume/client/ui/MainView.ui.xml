@@ -6,27 +6,33 @@
         .viewContainer {
             background: #E5E5E5;
         }
+        .box {
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+        }
     </ui:style>
-    <g:DockLayoutPanel unit='PX'>
-        <g:north size='70'>
-            <l:HeaderComponent/>
-        </g:north>
+        <g:DockLayoutPanel unit='PX' styleName="{style.box}">
+            <g:north size='70'>
+                <l:HeaderComponent/>
+            </g:north>
 
-        <g:center>
-            <g:DockLayoutPanel unit="PX">
-                <g:north size="100">
-                    <l:HistogramComponent/>
-                </g:north>
-                <g:west size='250'>
-                    <g:ResizeLayoutPanel>
-                        <l:FieldsComponent/>
-                    </g:ResizeLayoutPanel>
-                </g:west>
-                <g:center>
-                    <!-- ResizeLayoutPanel required to insert other layout panels, like ScrollPanel -->
-                    <g:ResizeLayoutPanel ui:field="viewContainer" styleName="{style.viewContainer}"/>
-                </g:center>
-            </g:DockLayoutPanel>
-        </g:center>
-    </g:DockLayoutPanel>
+            <g:center>
+                <g:DockLayoutPanel unit="PX">
+                    <g:north size="100">
+                        <l:HistogramComponent/>
+                    </g:north>
+                    <g:west size='250'>
+                        <g:ResizeLayoutPanel>
+                            <l:FieldsComponent/>
+                        </g:ResizeLayoutPanel>
+                    </g:west>
+                    <g:center>
+                        <!-- ResizeLayoutPanel required to insert other layout panels, like ScrollPanel -->
+                        <g:ResizeLayoutPanel ui:field="viewContainer" styleName="{style.viewContainer}"/>
+                    </g:center>
+                </g:DockLayoutPanel>
+            </g:center>
+        </g:DockLayoutPanel>
 </ui:UiBinder>

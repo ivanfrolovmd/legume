@@ -9,6 +9,7 @@ import md.frolov.legume.client.activities.config.ConfigViewImpl;
 import md.frolov.legume.client.activities.stream.StreamView;
 import md.frolov.legume.client.activities.stream.StreamViewImpl;
 import md.frolov.legume.client.ui.MainView;
+import md.frolov.legume.client.ui.components.ConnectionManagerComponent;
 
 public class ViewModule extends AbstractGinModule{
 
@@ -18,6 +19,7 @@ public class ViewModule extends AbstractGinModule{
 
         bind(StreamView.class).to(StreamViewImpl.class);
         bind(ConfigView.class).to(ConfigViewImpl.class);
+        bind(ConnectionManagerComponent.class);
     }
 
 }

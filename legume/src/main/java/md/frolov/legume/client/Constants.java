@@ -4,4 +4,5 @@ public interface Constants {
     String ELASTICSEARCH_SERVER = "elasticSearchServer";
     String ELASTICSEARCH_TIMEOUT = "elasticSearchTimeout";
     String PAGE_SIZE = "pageSize";
+    String ELASTICSEARCH_CONNECTIONS = "elasticSearchConnections";
 }

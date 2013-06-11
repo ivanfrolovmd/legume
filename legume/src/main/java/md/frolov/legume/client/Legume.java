@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
+import com.google.gwt.user.client.ui.RootPanel;
 
 import md.frolov.legume.client.activities.stream.StreamPlace;
 import md.frolov.legume.client.elastic.query.Search;
@@ -24,6 +25,7 @@ public class Legume implements EntryPoint
     {
         injector.activityManager().setDisplay(injector.mainView());
         RootLayoutPanel.get().add(injector.mainView());
+        RootPanel.get().add(injector.connectionManagerComponent());
 
         Search query = new Search("", null, new Date(), new Date());
         injector.placeHistoryHandler().register(injector.placeController(), injector.eventBus(), new StreamPlace(query)); //TODO change to homeplace
@@ -34,7 +36,7 @@ public class Legume implements EntryPoint
             @Override
             public void onUncaughtException(final Throwable e)
             {
-                LOG.log(Level.SEVERE,"uncaught",e);
+                LOG.log(Level.SEVERE, "uncaught", e);
             }
         });
     }

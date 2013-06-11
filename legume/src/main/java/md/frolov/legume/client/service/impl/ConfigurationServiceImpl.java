@@ -2,17 +2,24 @@ package md.frolov.legume.client.service.impl;
 
 import java.util.Collection;
 import java.util.Map;
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import com.google.common.collect.Maps;
 import com.google.gwt.user.client.Cookies;
+import com.google.web.bindery.autobean.shared.AutoBeanCodex;
+import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 
+import md.frolov.legume.client.elastic.model.ModelFactory;
 import md.frolov.legume.client.service.ConfigurationService;
 import md.frolov.legume.client.util.JsMap;
 
 @Singleton
 public class ConfigurationServiceImpl implements ConfigurationService
 {
+    @Inject
+    private ModelFactory modelFactory;
+
     @Override
     public String get(final String key)
     {
@@ -64,6 +71,24 @@ public class ConfigurationServiceImpl implements ConfigurationService
         }
 
         return properties;
+    }
+
+    @Override
+    public <T> T getObject(final String key, final Class<T> clazz)
+    {
+        try{
+            String json = get(key);
+            return AutoBeanCodex.decode(modelFactory, clazz, json).as();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    @Override
+    public <T> void put(final String key, final T object)
+    {
+        String json = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(object)).getPayload();
+        put(key, json);
     }
 
     private final native String getFromProperties(final String key) /*-{

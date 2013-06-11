@@ -3,10 +3,8 @@ package md.frolov.legume.client.ui.components;
 import java.util.Date;
 
 import com.github.gwtbootstrap.client.ui.Button;
-import com.github.gwtbootstrap.client.ui.Icon;
 import com.github.gwtbootstrap.client.ui.TextBox;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyPressEvent;
@@ -21,9 +19,6 @@ import com.google.web.bindery.event.shared.EventBus;
 
 import md.frolov.legume.client.activities.stream.StreamPlace;
 import md.frolov.legume.client.elastic.ElasticSearchService;
-import md.frolov.legume.client.elastic.api.Callback;
-import md.frolov.legume.client.elastic.api.PingRequest;
-import md.frolov.legume.client.elastic.api.PingResponse;
 import md.frolov.legume.client.elastic.query.Search;
 import md.frolov.legume.client.events.UpdateSearchQuery;
 import md.frolov.legume.client.events.UpdateSearchQueryHandler;
@@ -51,12 +46,6 @@ public class HeaderComponent extends Composite implements UpdateSearchQueryHandl
     ListBox commonTimes;
     @UiField
     Button openInNewWindow;
-    @UiField
-    Icon statusIconChecking;
-    @UiField
-    Icon statusIconOk;
-    @UiField
-    Icon statusIconError;
 
     private EventBus eventBus = WidgetInjector.INSTANCE.eventBus();
     private ElasticSearchService elasticSearchService = WidgetInjector.INSTANCE.elasticSearchService();
@@ -64,49 +53,7 @@ public class HeaderComponent extends Composite implements UpdateSearchQueryHandl
     public HeaderComponent()
     {
         initWidget(binder.createAndBindUi(this));
-
-        initStatusIcon();
-
         eventBus.addHandler(UpdateSearchQuery.TYPE, this);
-    }
-
-    private void initStatusIcon() {
-        final Callback<PingRequest,PingResponse> callback = new Callback<PingRequest, PingResponse>()
-        {
-            @Override
-            public void onFailure(final Throwable caught)
-            {
-                statusIconError.setVisible(true);
-                statusIconChecking.setVisible(false);
-                statusIconOk.setVisible(false);
-            }
-
-            @Override
-            public void onSuccess(final PingRequest request, final PingResponse response)
-            {
-                if(response.getPingReply().getStatus() == 200) {
-                    statusIconOk.setVisible(true);
-                    statusIconError.setVisible(false);
-                    statusIconChecking.setVisible(false);
-                } else {
-                    onFailure(null);
-                }
-            }
-        };
-
-        elasticSearchService.query(new PingRequest(), callback);
-        Scheduler.get().scheduleFixedDelay(new Scheduler.RepeatingCommand()
-        {
-            @Override
-            public boolean execute()
-            {
-                statusIconChecking.setVisible(true);
-                statusIconError.setVisible(false);
-                statusIconOk.setVisible(false);
-                elasticSearchService.query(new PingRequest(), callback);
-                return true;
-            }
-        }, 30000);
     }
 
     @UiHandler("submitButton")

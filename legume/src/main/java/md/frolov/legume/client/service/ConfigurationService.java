@@ -9,7 +9,11 @@ public interface ConfigurationService {
 
     int getInt(String key);
 
+    <T> T getObject(String key, Class<T> clazz);
+
     void put(String key, String value);
+
+    <T> void put(String key, T object);
 
     Map<String, String> getPropertyMap();
 }
