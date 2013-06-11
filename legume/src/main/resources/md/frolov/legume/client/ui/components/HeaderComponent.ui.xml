@@ -31,11 +31,12 @@
 
         .statusBox {
             position: absolute;
-            top:40px;
+            top:10px;
             right: 10px;
             width: 40px;
             float: right;
             text-align: right;
+            color: #666;
         }
     </ui:style>
     <g:AbsolutePanel styleName="{style.box}">
@@ -47,12 +48,14 @@
         <g:HorizontalPanel styleName="{style.horizontal}">
             <g:Label styleName="{style.logo}">Legume</g:Label>
             <b:TextBox ui:field="searchQuery" placeholder="Type your query here" addStyleNames="{style.searchBox}">Search</b:TextBox>
+            <b:ButtonToolbar>
             <b:ButtonGroup>
                 <b:Button ui:field="submitButton" type="PRIMARY" icon="SEARCH">Search</b:Button>
                 <b:Button ui:field="resetButton">Reset</b:Button>
                 <b:Button target="_blank" ui:field="openInNewWindow" icon="EXTERNAL_LINK"></b:Button>
             </b:ButtonGroup>
             <b:Button targetHistoryToken="config:" icon="COGS">Configure</b:Button>
+            </b:ButtonToolbar>
         </g:HorizontalPanel>
         <g:HorizontalPanel visible="false"> <!-- TODO Make time control -->
             <g:ListBox ui:field="commonTimes">

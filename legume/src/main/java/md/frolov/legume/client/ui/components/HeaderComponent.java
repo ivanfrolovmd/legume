@@ -13,7 +13,6 @@ import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
@@ -22,8 +21,9 @@ import com.google.web.bindery.event.shared.EventBus;
 
 import md.frolov.legume.client.activities.stream.StreamPlace;
 import md.frolov.legume.client.elastic.ElasticSearchService;
-import md.frolov.legume.client.elastic.model.response.PingResponse;
-import md.frolov.legume.client.elastic.query.Ping;
+import md.frolov.legume.client.elastic.api.Callback;
+import md.frolov.legume.client.elastic.api.PingRequest;
+import md.frolov.legume.client.elastic.api.PingResponse;
 import md.frolov.legume.client.elastic.query.Search;
 import md.frolov.legume.client.events.UpdateSearchQuery;
 import md.frolov.legume.client.events.UpdateSearchQueryHandler;
@@ -71,7 +71,7 @@ public class HeaderComponent extends Composite implements UpdateSearchQueryHandl
     }
 
     private void initStatusIcon() {
-        final AsyncCallback<PingResponse> callback = new AsyncCallback<PingResponse>()
+        final Callback<PingRequest,PingResponse> callback = new Callback<PingRequest, PingResponse>()
         {
             @Override
             public void onFailure(final Throwable caught)
@@ -82,9 +82,9 @@ public class HeaderComponent extends Composite implements UpdateSearchQueryHandl
             }
 
             @Override
-            public void onSuccess(final PingResponse result)
+            public void onSuccess(final PingRequest request, final PingResponse response)
             {
-                if(result.getStatus() == 200) {
+                if(response.getPingReply().getStatus() == 200) {
                     statusIconOk.setVisible(true);
                     statusIconError.setVisible(false);
                     statusIconChecking.setVisible(false);
@@ -94,7 +94,7 @@ public class HeaderComponent extends Composite implements UpdateSearchQueryHandl
             }
         };
 
-        elasticSearchService.query(new Ping(), callback, PingResponse.class);
+        elasticSearchService.query(new PingRequest(), callback);
         Scheduler.get().scheduleFixedDelay(new Scheduler.RepeatingCommand()
         {
             @Override
@@ -103,7 +103,7 @@ public class HeaderComponent extends Composite implements UpdateSearchQueryHandl
                 statusIconChecking.setVisible(true);
                 statusIconError.setVisible(false);
                 statusIconOk.setVisible(false);
-                elasticSearchService.query(new Ping(), callback, PingResponse.class);
+                elasticSearchService.query(new PingRequest(), callback);
                 return true;
             }
         }, 30000);
