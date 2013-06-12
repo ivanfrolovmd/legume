@@ -55,7 +55,7 @@ public class MappingsResponse extends ESResponse<Mapping>
             return;
         }
 
-        if(Boolean.TRUE.toString().equals(value.getDynamic())) {
+        if(Boolean.TRUE.toString().equals(value.getDynamic()) && value.getProperties() != null) {
             for (Map.Entry<String, Mapping.PropertyMapping> dynProperty : value.getProperties().entrySet())
             {
                 visitProperty(fullName + ".", typeProperties, dynProperty.getKey(), dynProperty.getValue());
