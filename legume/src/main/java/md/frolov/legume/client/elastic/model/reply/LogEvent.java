@@ -14,7 +14,7 @@ public interface LogEvent {
     List<String> getTags();
 
     @PropertyName("@fields")
-    Map<String, List<String>> getFields(); // TODO what about numbers?
+    Map<String, List<String>> getFields(); // TODO what about numbers? This may be not list as well
 
     @PropertyName("@timestamp")
     Date getTimestamp();

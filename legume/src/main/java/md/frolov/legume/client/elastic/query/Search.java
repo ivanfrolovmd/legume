@@ -12,7 +12,7 @@ import com.google.gwt.i18n.client.TimeZone;
 
 import md.frolov.legume.client.Constants;
 import md.frolov.legume.client.elastic.model.ModelFactory;
-import md.frolov.legume.client.elastic.model.query.ElasticSearchRequest;
+import md.frolov.legume.client.elastic.model.query.ElasticSearchQuery;
 import md.frolov.legume.client.elastic.model.query.FilteredQuery;
 import md.frolov.legume.client.elastic.model.query.QueryString;
 import md.frolov.legume.client.elastic.model.query.SortOrder;
@@ -109,9 +109,9 @@ public class Search implements RequestQuery
     }
 
     @Override
-    public ElasticSearchRequest getPayload()
+    public ElasticSearchQuery getPayload()
     {
-        ElasticSearchRequest esRequest = ModelFactory.INSTANCE.elasticSearchRequest().as();
+        ElasticSearchQuery esRequest = ModelFactory.INSTANCE.elasticSearchQuery().as();
         esRequest.setFrom(from);
         esRequest.setSize(size);
 

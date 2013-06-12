@@ -72,11 +72,11 @@ public class HistogramRequest implements RequestQuery
     }
 
     @Override
-    public ElasticSearchRequest getPayload()
+    public ElasticSearchQuery getPayload()
     {
         Preconditions.checkNotNull(interval);
 
-        ElasticSearchRequest esRequest = ModelFactory.INSTANCE.elasticSearchRequest().as();
+        ElasticSearchQuery esRequest = ModelFactory.INSTANCE.elasticSearchQuery().as();
 
         DateHistogramFacet facet = ModelFactory.INSTANCE.dateHistogramFacet().as();
         DateHistogramFacet.DateHistogramFacetDef def = ModelFactory.INSTANCE.dateHistogramFacetDef().as();

@@ -5,7 +5,7 @@ import java.util.Map;
 import com.google.web.bindery.autobean.shared.AutoBean;
 
 /** @author Ivan Frolov (ifrolov@tacitknowledge.com) */
-public interface ElasticSearchRequest
+public interface ElasticSearchQuery
 {
     Query getQuery();
     void setQuery(Query query);

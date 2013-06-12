@@ -2,12 +2,12 @@ package md.frolov.legume.client.elastic.query;
 
 import com.google.gwt.http.client.RequestBuilder;
 
-import md.frolov.legume.client.elastic.model.query.ElasticSearchRequest;
+import md.frolov.legume.client.elastic.model.query.ElasticSearchQuery;
 
 /** @author Ivan Frolov (ifrolov@tacitknowledge.com) */
 public interface RequestQuery
 {
     String getUri();
-    ElasticSearchRequest getPayload();
+    ElasticSearchQuery getPayload();
     RequestBuilder.Method getMethod();
 }

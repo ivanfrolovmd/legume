@@ -4,7 +4,8 @@ import java.util.Map;
 
 import com.google.web.bindery.autobean.shared.AutoBean.PropertyName;
 
-public interface SearchResponse {
+public interface ElasticSearchReply
+{
     long getTook();
 
     @PropertyName("timed_out")

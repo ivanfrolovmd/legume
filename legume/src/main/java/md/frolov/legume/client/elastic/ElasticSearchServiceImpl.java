@@ -25,7 +25,7 @@ import md.frolov.legume.client.elastic.api.Callback;
 import md.frolov.legume.client.elastic.api.ESRequest;
 import md.frolov.legume.client.elastic.api.ESResponse;
 import md.frolov.legume.client.elastic.model.ModelFactory;
-import md.frolov.legume.client.elastic.model.query.ElasticSearchRequest;
+import md.frolov.legume.client.elastic.model.query.ElasticSearchQuery;
 import md.frolov.legume.client.elastic.model.reply.WrappedMap;
 import md.frolov.legume.client.elastic.query.RequestQuery;
 import md.frolov.legume.client.service.ConfigurationService;
@@ -51,7 +51,7 @@ public class ElasticSearchServiceImpl implements ElasticSearchService, Constants
     }
 
     @Override
-    public <T> void queryRaw(String uri, RequestBuilder.Method method,@Nullable final ElasticSearchRequest request, final AsyncCallback<T> callback, final Class<T> clazz)
+    public <T> void queryRaw(String uri, RequestBuilder.Method method,@Nullable final ElasticSearchQuery request, final AsyncCallback<T> callback, final Class<T> clazz)
     {
         try
         {

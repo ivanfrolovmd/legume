@@ -11,9 +11,15 @@ public interface Facet
     @AutoBean.PropertyName("_type")
     String getType();
 
+    long getTotal();
+    long getMissing();
+    long getOther();
+
     List<Range> getRanges();
 
     List<Entry> getEntries();
+
+    List<Term> getTerms();
 
     interface Range{
         long getFrom();
@@ -23,6 +29,11 @@ public interface Facet
 
     interface Entry{
         Date getTime();
+        long getCount();
+    }
+
+    interface Term {
+        String getTerm(); //TODO could it be not string?
         long getCount();
     }
 }

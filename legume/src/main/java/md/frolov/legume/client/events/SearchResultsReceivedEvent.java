@@ -2,28 +2,28 @@ package md.frolov.legume.client.events;
 
 import com.google.gwt.event.shared.GwtEvent;
 
-import md.frolov.legume.client.elastic.model.reply.SearchResponse;
+import md.frolov.legume.client.elastic.model.reply.ElasticSearchReply;
 import md.frolov.legume.client.elastic.query.Search;
 
 /** @author Ivan Frolov (ifrolov@tacitknowledge.com) */
 public class SearchResultsReceivedEvent extends GwtEvent<SearchResultsReceivedEventHandler>
 {
     private final Search searchQuery;
-    private final SearchResponse searchResponse;
+    private final ElasticSearchReply searchResponse;
     private final boolean top;
 
-    public SearchResultsReceivedEvent(final Search searchQuery, final SearchResponse searchResponse){
-        this(searchQuery, searchResponse, false);
+    public SearchResultsReceivedEvent(final Search searchQuery, final ElasticSearchReply elasticSearchReply){
+        this(searchQuery, elasticSearchReply, false);
     }
 
-    public SearchResultsReceivedEvent(final Search searchQuery, final SearchResponse searchResponse, boolean top)
+    public SearchResultsReceivedEvent(final Search searchQuery, final ElasticSearchReply elasticSearchReply, boolean top)
     {
-        this.searchResponse = searchResponse;
+        this.searchResponse = elasticSearchReply;
         this.searchQuery = searchQuery;
         this.top = top;
     }
 
-    public SearchResponse getSearchResponse()
+    public ElasticSearchReply getSearchResponse()
     {
         return searchResponse;
     }

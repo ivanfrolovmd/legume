@@ -34,8 +34,8 @@ import com.googlecode.gflot.client.options.side.IntegerSideOptions;
 
 import md.frolov.legume.client.activities.stream.StreamPlace;
 import md.frolov.legume.client.elastic.ElasticSearchService;
+import md.frolov.legume.client.elastic.model.reply.ElasticSearchReply;
 import md.frolov.legume.client.elastic.model.reply.Facet;
-import md.frolov.legume.client.elastic.model.reply.SearchResponse;
 import md.frolov.legume.client.elastic.query.HistogramInterval;
 import md.frolov.legume.client.elastic.query.HistogramRequest;
 import md.frolov.legume.client.elastic.query.Search;
@@ -154,7 +154,7 @@ public class HistogramComponent extends Composite implements UpdateSearchQueryHa
         */
     }
 
-    private void updateHistogramWithData(SearchResponse response, final Date from, final Date to, final HistogramInterval interval)
+    private void updateHistogramWithData(ElasticSearchReply response, final Date from, final Date to, final HistogramInterval interval)
     {
         Facet facet = response.getFacets().values().iterator().next();
         List<Facet.Entry> entries = facet.getEntries();
@@ -257,7 +257,7 @@ public class HistogramComponent extends Composite implements UpdateSearchQueryHa
         request.setInterval(interval);
         request.setQuery(searchQuery.getQuery());
 
-        WidgetInjector.INSTANCE.elasticSearchService().query(request, new AsyncCallback<SearchResponse>()
+        WidgetInjector.INSTANCE.elasticSearchService().query(request, new AsyncCallback<ElasticSearchReply>()
         {
             @Override
             public void onFailure(final Throwable caught)
@@ -268,12 +268,12 @@ public class HistogramComponent extends Composite implements UpdateSearchQueryHa
             }
 
             @Override
-            public void onSuccess(final SearchResponse result)
+            public void onSuccess(final ElasticSearchReply result)
             {
                 updateHistogramWithData(result, from, to, interval);
                 inprocess = false;
             }
-        }, SearchResponse.class);
+        }, ElasticSearchReply.class);
     }
 
     private HistogramInterval getInterval(Date from, Date to) {

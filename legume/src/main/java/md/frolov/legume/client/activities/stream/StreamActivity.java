@@ -12,7 +12,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 
 import md.frolov.legume.client.elastic.ElasticSearchService;
-import md.frolov.legume.client.elastic.model.reply.SearchResponse;
+import md.frolov.legume.client.elastic.model.reply.ElasticSearchReply;
 import md.frolov.legume.client.elastic.query.Search;
 import md.frolov.legume.client.events.SearchFinishedEvent;
 import md.frolov.legume.client.events.SearchInProgressEvent;
@@ -107,7 +107,7 @@ public class StreamActivity extends AbstractActivity implements StreamView.Prese
     {
         final Search query = upwards ? upwardsQuery : downwardsQuery;
         eventBus.fireEvent(new SearchInProgressEvent(upwards));
-        elasticSearchService.query(query, new AsyncCallback<SearchResponse>()
+        elasticSearchService.query(query, new AsyncCallback<ElasticSearchReply>()
         {
             @Override
             public void onFailure(final Throwable caught)
@@ -121,7 +121,7 @@ public class StreamActivity extends AbstractActivity implements StreamView.Prese
             }
 
             @Override
-            public void onSuccess(final SearchResponse result)
+            public void onSuccess(final ElasticSearchReply result)
             {
                 if (finished)
                 {
@@ -133,7 +133,7 @@ public class StreamActivity extends AbstractActivity implements StreamView.Prese
                 eventBus.fireEvent(new SearchResultsReceivedEvent(query, result, upwards));
                 eventBus.fireEvent(new SearchFinishedEvent(upwards));
             }
-        }, SearchResponse.class);
+        }, ElasticSearchReply.class);
     }
 
     @Override
