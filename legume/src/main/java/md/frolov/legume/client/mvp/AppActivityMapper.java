@@ -11,6 +11,8 @@ import md.frolov.legume.client.activities.config.ConfigActivity;
 import md.frolov.legume.client.activities.config.ConfigPlace;
 import md.frolov.legume.client.activities.stream.StreamActivity;
 import md.frolov.legume.client.activities.stream.StreamPlace;
+import md.frolov.legume.client.activities.terms.TermsActivity;
+import md.frolov.legume.client.activities.terms.TermsPlace;
 
 public class AppActivityMapper implements ActivityMapper {
     @Inject
@@ -19,6 +21,9 @@ public class AppActivityMapper implements ActivityMapper {
     @Inject
     private Provider<ConfigActivity> configActivity;
 
+    @Inject
+    private Provider<TermsActivity> termsActivity;
+
     @Override
     public Activity getActivity(Place place) {
         // TODO make it configurable, mappable. Get rid of ifs.
@@ -26,6 +31,8 @@ public class AppActivityMapper implements ActivityMapper {
             return streamActivity.get();
         if(place instanceof ConfigPlace)
             return configActivity.get();
+        if(place instanceof TermsPlace)
+            return termsActivity.get();
 
         return null;
     }
