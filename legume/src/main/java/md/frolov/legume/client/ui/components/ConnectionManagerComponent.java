@@ -19,18 +19,17 @@ import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
 
 import md.frolov.legume.client.Constants;
-import md.frolov.legume.client.activities.stream.StreamPlace;
 import md.frolov.legume.client.configuration.ConnectionsConf;
 import md.frolov.legume.client.elastic.ElasticSearchService;
 import md.frolov.legume.client.elastic.api.Callback;
 import md.frolov.legume.client.elastic.api.PingRequest;
 import md.frolov.legume.client.elastic.api.PingResponse;
 import md.frolov.legume.client.elastic.model.ModelFactory;
-import md.frolov.legume.client.elastic.query.Search;
 import md.frolov.legume.client.gin.WidgetInjector;
 import md.frolov.legume.client.service.ConfigurationService;
 
@@ -143,7 +142,7 @@ public class ConnectionManagerComponent extends Composite implements Constants
 
     private void selectServer(String serverAddress) {
         configurationService.put(ELASTICSEARCH_SERVER, serverAddress);
-        placeController.goTo(new StreamPlace(Search.DEFAULT));
+        Window.Location.reload();
     }
 
     @UiHandler("addNew")
