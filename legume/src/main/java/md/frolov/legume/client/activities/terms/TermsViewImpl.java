@@ -2,13 +2,14 @@ package md.frolov.legume.client.activities.terms;
 
 import java.util.Map;
 
-import com.github.gwtbootstrap.client.ui.CellTable;
-import com.google.common.collect.Lists;
+import com.github.gwtbootstrap.client.ui.Button;
+import com.github.gwtbootstrap.client.ui.constants.IconType;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.FlexTable;
+import com.google.gwt.user.client.ui.HTMLTable;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.googlecode.gflot.client.PieDataPoint;
@@ -33,8 +34,8 @@ public class TermsViewImpl extends Composite implements TermsView
 
     private static TermsViewImplUiBinder binder = GWT.create(TermsViewImplUiBinder.class);
 
-    @UiField(provided = true)
-    CellTable<Map.Entry<String, Long>> results;
+    @UiField
+    FlexTable results;
     @UiField(provided = true)
     SimplePlot plot;
     @UiField
@@ -46,9 +47,10 @@ public class TermsViewImpl extends Composite implements TermsView
 
     public TermsViewImpl()
     {
-        initResultsCellTable();
         initPlot();
         initWidget(binder.createAndBindUi(this));
+
+        initResultsTable();
     }
 
     private void initPlot()
@@ -70,46 +72,55 @@ public class TermsViewImpl extends Composite implements TermsView
         plot = new SimplePlot(plotOptions);
     }
 
-    private void initResultsCellTable()
-    {
-        results = new CellTable<Map.Entry<String, Long>>();
-        results.addColumn(new TextColumn<Map.Entry<String, Long>>()
-        {
-            @Override
-            public String getValue(final Map.Entry<String, Long> object)
-            {
-                return object.getKey();
-            }
-        }, "Term");
-
-        //TODO add filter action
-
-        results.addColumn(new TextColumn<Map.Entry<String, Long>>()
-        {
-            @Override
-            public String getValue(final Map.Entry<String, Long> object)
-            {
-                return object.getValue().toString();
-            }
-        }, "Count");
+    private void initResultsTable() {
+        HTMLTable.ColumnFormatter columnFormatter = results.getColumnFormatter();
+        columnFormatter.setWidth(1, "50px");
+        columnFormatter.setWidth(2,"40px");
     }
 
     @Override
     public void handleResults(final TermsFacetResponse response)
     {
-        results.setRowData(Lists.newArrayList(response.getTerms().entrySet()));
+        results.removeAllRows();
+        results.setText(0,0,"Term");
+        results.setText(0,1,"Count");
+        results.setText(0,2,"");
 
         plot.getModel().removeAllSeries();
         PlotModel model = plot.getModel();
+
+        int row=1;
         for (Map.Entry<String, Long> entry : response.getTerms().entrySet())
         {
+            //results rable
+            results.setText(row, 0, entry.getKey());
+            results.setText(row, 1, entry.getValue().toString());
+            results.setWidget(row, 2, new Button("Action", IconType.FILTER));
+            row++;
+
+            //plot
             SeriesHandler handler = model.addSeries(Series.create()); //TODO set color?
             handler.add(PieDataPoint.of(entry.getValue()));
         }
-        plot.redraw();
 
-        totalLabel.setText("Total: " + response.getTotal());
-        missingLabel.setText("Missing: " + response.getMissing());
-        otherLabel.setText("Other: " + response.getOther());
+        results.setText(row,0,"Other");
+        results.setText(row,1,String.valueOf(response.getOther()));
+        results.setText(row,2,"");
+        row++;
+        SeriesHandler otherHandler = model.addSeries(Series.create());
+        otherHandler.add(PieDataPoint.of(response.getOther()));
+
+        results.setText(row,0,"Missing");
+        results.setText(row,1,String.valueOf(response.getMissing()));
+        results.setText(row,2,"");
+        row++;
+        SeriesHandler missingHandler = model.addSeries(Series.create());
+        missingHandler.add(PieDataPoint.of(response.getMissing()));
+
+        results.setText(row,0,"Total");
+        results.setText(row, 1, String.valueOf(response.getTotal()));
+        results.setText(row,2,"");
+
+        plot.redraw();
     }
 }
