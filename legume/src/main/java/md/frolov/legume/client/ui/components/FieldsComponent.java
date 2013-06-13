@@ -74,7 +74,7 @@ public class FieldsComponent extends Composite
     private void addType(String type, Set<MappingsResponse.Property> properties) {
         AccordionGroup accordionGroup = new AccordionGroup();
         accordionGroup.setHeading(type);
-        Icon icon = new Icon(IconType.CIRCLE_BLANK);
+        Icon icon = new Icon(IconType.CIRCLE);
         icon.setIconSize(IconSize.SMALL);
         DOM.setStyleAttribute(icon.getElement(), "color", colorUtils.getHashColor(type, 100, 40));
         accordionGroup.addCustomTrigger(icon);
@@ -90,7 +90,7 @@ public class FieldsComponent extends Composite
     private void addGlobalProperties() {
         AccordionGroup accordionGroup = new AccordionGroup();
         accordionGroup.setHeading("Common properties");
-        accordionGroup.setIcon(IconType.CIRCLE_BLANK);
+        accordionGroup.setIcon(IconType.CIRCLE);
 
         accordionGroup.add(new FieldDropdown("@type","@type","string"));
         accordionGroup.add(new FieldDropdown("@tags","@tags","string"));

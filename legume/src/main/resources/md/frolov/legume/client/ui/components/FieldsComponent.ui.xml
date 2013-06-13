@@ -25,6 +25,10 @@
             text-decoration: none;
         }
 
+        .accordion a i {
+            margin-right: 3px; /* More space between text and icon */
+        }
+
         @external .accordion-body;
         @external .in;
         .accordion .accordion-body.in, .accordion .accordion-body.in:hover  {

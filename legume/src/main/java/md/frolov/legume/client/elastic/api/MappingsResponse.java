@@ -34,6 +34,12 @@ public class MappingsResponse extends ESResponse<Mapping>
         {
             String typeName = type.getKey();
             final Set<Property> typeProperties;
+
+            if(!type.getValue().getProperties().containsKey("@type")) {
+                //we're not interested in non-logstash types
+                continue;
+            }
+
             if(properties.containsKey(typeName)) {
                 typeProperties = properties.get(typeName);
             } else {
