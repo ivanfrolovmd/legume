@@ -24,7 +24,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
 
 import md.frolov.legume.client.Constants;
-import md.frolov.legume.client.configuration.ConnectionsConf;
+import md.frolov.legume.client.model.ConnectionsConf;
 import md.frolov.legume.client.elastic.ElasticSearchService;
 import md.frolov.legume.client.elastic.api.Callback;
 import md.frolov.legume.client.elastic.api.PingRequest;

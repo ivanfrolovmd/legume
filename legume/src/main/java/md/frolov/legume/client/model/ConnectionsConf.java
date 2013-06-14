@@ -1,4 +1,4 @@
-package md.frolov.legume.client.configuration;
+package md.frolov.legume.client.model;
 
 import java.util.Map;
 
