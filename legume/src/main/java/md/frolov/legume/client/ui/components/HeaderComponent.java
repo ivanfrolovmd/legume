@@ -65,11 +65,6 @@ public class HeaderComponent extends Composite implements UpdateSearchQueryHandl
         injector.placeController().goTo(new StreamPlace(query)); //TODO change this. 'Terms' activity would like to stay there
     }
 
-    @UiHandler("resetButton")
-    public void onResetButtonClick(ClickEvent event) {
-        searchQuery.setText("");
-    }
-
     @Override
     public void onUpdateSearchQuery(final UpdateSearchQuery event)
     {

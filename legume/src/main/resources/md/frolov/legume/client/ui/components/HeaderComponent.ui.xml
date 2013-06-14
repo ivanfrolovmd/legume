@@ -1,49 +1,61 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'
              xmlns:b="urn:import:com.github.gwtbootstrap.client.ui"
-             xmlns:d="urn:import:com.google.gwt.user.datepicker.client">
+        >
     <ui:style>
         .box {
             background-color: #f1f1f1;
             border-bottom: 1px solid #e5e5e5;
         }
 
-        .horizontal {
-            vertical-align: middle;
-            margin: 17px 10px;
+        .logoBox {
+            position: absolute;
+            left: 0;
+            width: 250px;
+            top: 0;
+            bottom: 0;
+            padding: 18px;
         }
 
         .logo, .logo:hover, .logo:active, .logo:visited {
             font-family: OpenSansLight;
             font-size: 24px;
-            margin: 4px 30px 4px 10px;
             text-decoration: none;
             color: #333;
         }
 
-        .searchBox {
-            font-size: 14px;
-            width: 700px;
-            margin: 0 15px 0 0;
+        .controlsBox, .configBox {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            padding: 18px 0;
+        }
+        .controlsBox {
+            left: 250px;
+            right: 340px;
+            min-width: 400px;
+            overflow: visible;
         }
 
-        .dateBox {
-            width: 200px;
+        .configBox {
+            right: 40px;
+            width: 150px;
         }
 
     </ui:style>
-    <g:AbsolutePanel styleName="{style.box}">
-        <g:HorizontalPanel styleName="{style.horizontal}">
+    <g:FlowPanel styleName="{style.box}">
+        <g:FlowPanel styleName="{style.logoBox}">
             <g:Anchor styleName="{style.logo}" href="http://legume.md" target="_blank">Legume</g:Anchor>
-            <b:TextBox ui:field="searchQuery" placeholder="Type your query here" addStyleNames="{style.searchBox}">Search</b:TextBox>
-            <b:ButtonToolbar>
-                <b:ButtonGroup>
-                    <b:Button ui:field="submitButton" type="PRIMARY" icon="SEARCH">Search</b:Button>
-                    <b:Button ui:field="resetButton">Reset</b:Button>
-                    <b:Button target="_blank" ui:field="openInNewWindow" icon="EXTERNAL_LINK"></b:Button>
-                </b:ButtonGroup>
-                <b:Button targetHistoryToken="config:" icon="COGS">Configure</b:Button>
-            </b:ButtonToolbar>
-        </g:HorizontalPanel>
-    </g:AbsolutePanel>
+        </g:FlowPanel>
+        <g:FlowPanel styleName="{style.controlsBox}">
+            <b:AppendButton>
+                <b:TextBox ui:field="searchQuery" placeholder="Type your query here" width="100%"/>
+                <b:Button ui:field="submitButton" type="PRIMARY" icon="SEARCH">Search</b:Button>
+                <b:Button target="_blank" ui:field="openInNewWindow" icon="EXTERNAL_LINK"></b:Button>
+            </b:AppendButton>
+        </g:FlowPanel>
+        <g:FlowPanel styleName="{style.configBox}">
+            <b:Button targetHistoryToken="config:" icon="COGS">Configure</b:Button>
+        </g:FlowPanel>
+    </g:FlowPanel>
 </ui:UiBinder>
