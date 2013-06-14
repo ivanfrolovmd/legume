@@ -1,1 +1,3 @@
-# This is my README
+# Legume for logstash.
+
+http://legume.md

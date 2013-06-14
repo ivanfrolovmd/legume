@@ -93,7 +93,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>gwt-maven-plugin</artifactId>
-                <version>2.5.0</version>
+                <version>2.5.1</version>
                 <executions>
                     <execution>
                         <goals>
@@ -117,7 +117,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
-                <version>2.1.1</version>
+                <version>2.3</version>
                 <executions>
                     <execution>
                         <phase>compile</phase>
@@ -135,28 +135,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>2.3.2</version>
                 <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-eclipse-plugin</artifactId>
-                <version>2.9</version>
-                <configuration>
-                    <additionalProjectnatures>
-                        <projectnature>com.google.gwt.eclipse.core.gwtNature</projectnature>
-                    </additionalProjectnatures>
-                    <additionalConfig>
-                        <file>
-                            <name>.settings/com.google.gdt.eclipse.core.prefs</name>
-                            <content><![CDATA[eclipse.preferences.version=1
-jarsExcludedFromWebInfLib=
-warSrcDir=target/${project.build.finalName}
-warSrcDirIsOutput=true
-                                                ]]></content>
-                        </file>
-                    </additionalConfig>
+                    <source>1.7</source>
+                    <target>1.7</target>
                 </configuration>
             </plugin>
         </plugins>
