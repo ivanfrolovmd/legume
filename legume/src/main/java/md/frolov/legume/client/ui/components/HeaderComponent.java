@@ -1,28 +1,23 @@
 package md.frolov.legume.client.ui.components;
 
-import java.util.Date;
-
 import com.github.gwtbootstrap.client.ui.Button;
 import com.github.gwtbootstrap.client.ui.TextBox;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.user.datepicker.client.DateBox;
 import com.google.web.bindery.event.shared.EventBus;
 
+import md.frolov.legume.client.Application;
 import md.frolov.legume.client.activities.stream.StreamPlace;
-import md.frolov.legume.client.elastic.ElasticSearchService;
-import md.frolov.legume.client.elastic.query.Search;
 import md.frolov.legume.client.events.UpdateSearchQuery;
 import md.frolov.legume.client.events.UpdateSearchQueryHandler;
 import md.frolov.legume.client.gin.WidgetInjector;
+import md.frolov.legume.client.model.Search;
 
 /** @author Ivan Frolov (ifrolov@tacitknowledge.com) */
 public class HeaderComponent extends Composite implements UpdateSearchQueryHandler
@@ -39,16 +34,10 @@ public class HeaderComponent extends Composite implements UpdateSearchQueryHandl
     @UiField
     TextBox searchQuery;
     @UiField
-    DateBox fromDate;
-    @UiField
-    DateBox toDate;
-    @UiField
-    ListBox commonTimes;
-    @UiField
     Button openInNewWindow;
 
     private EventBus eventBus = WidgetInjector.INSTANCE.eventBus();
-    private ElasticSearchService elasticSearchService = WidgetInjector.INSTANCE.elasticSearchService();
+    private Application application = WidgetInjector.INSTANCE.application();
 
     public HeaderComponent()
     {
@@ -71,34 +60,14 @@ public class HeaderComponent extends Composite implements UpdateSearchQueryHandl
 
     private void submitSearch()
     {
-        Search query = new Search();
-        query.setQuery(searchQuery.getText());
-        query.setFromDate(fromDate.getValue());
-        query.setToDate(toDate.getValue());
-        injector.placeController().goTo(new StreamPlace(query));
-    }
-
-    @UiHandler("commonTimes")
-    public void onPredefinedTimeChange(final ChangeEvent event)
-    {
-        Long time = Long.valueOf(commonTimes.getValue(commonTimes.getSelectedIndex()));
-        if(time ==-1) {
-            return;
-        }
-        if(time == 0) {
-            fromDate.setValue(null);
-        } else {
-            fromDate.setValue(new Date(new Date().getTime()-time));
-        }
-        toDate.setValue(null);
-        submitSearch();
+        Search query = application.getCurrentSearch().clone();
+        query.setQuery(searchQuery.getText());;
+        injector.placeController().goTo(new StreamPlace(query)); //TODO change this. 'Terms' activity would like to stay there
     }
 
     @UiHandler("resetButton")
     public void onResetButtonClick(ClickEvent event) {
         searchQuery.setText("");
-        fromDate.setValue(null);
-        toDate.setValue(null);
     }
 
     @Override
@@ -106,12 +75,12 @@ public class HeaderComponent extends Composite implements UpdateSearchQueryHandl
     {
         Search query = event.getSearchQuery();
         searchQuery.setText(query.getQuery());
-        fromDate.setValue(query.getFromDate());
-        toDate.setValue(query.getToDate());
-
-        String token = new StreamPlace.Tokenizer().getToken(new StreamPlace(query));
-        openInNewWindow.setTargetHistoryToken(StreamPlace.TOKEN_PREFIX + ":" + token);
     }
 
-
+    @UiHandler("openInNewWindow")
+    public void onOpenInNewWindowClick(final ClickEvent event)
+    {
+        String place = new StreamPlace(application.getCurrentSearch()).getTargetHistoryToken();
+        openInNewWindow.setTargetHistoryToken(place);
+    }
 }

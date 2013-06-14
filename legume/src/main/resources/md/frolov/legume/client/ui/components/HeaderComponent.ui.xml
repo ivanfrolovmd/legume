@@ -13,10 +13,12 @@
             margin: 17px 10px;
         }
 
-        .logo {
+        .logo, .logo:hover, .logo:active, .logo:visited {
             font-family: OpenSansLight;
             font-size: 24px;
             margin: 4px 30px 4px 10px;
+            text-decoration: none;
+            color: #333;
         }
 
         .searchBox {
@@ -25,43 +27,23 @@
             margin: 0 15px 0 0;
         }
 
-        .dateBox{
+        .dateBox {
             width: 200px;
         }
 
     </ui:style>
     <g:AbsolutePanel styleName="{style.box}">
         <g:HorizontalPanel styleName="{style.horizontal}">
-            <g:Label styleName="{style.logo}">Legume</g:Label>
+            <g:Anchor styleName="{style.logo}" href="http://legume.md" target="_blank">Legume</g:Anchor>
             <b:TextBox ui:field="searchQuery" placeholder="Type your query here" addStyleNames="{style.searchBox}">Search</b:TextBox>
             <b:ButtonToolbar>
-            <b:ButtonGroup>
-                <b:Button ui:field="submitButton" type="PRIMARY" icon="SEARCH">Search</b:Button>
-                <b:Button ui:field="resetButton">Reset</b:Button>
-                <b:Button target="_blank" ui:field="openInNewWindow" icon="EXTERNAL_LINK"></b:Button>
-            </b:ButtonGroup>
-            <b:Button targetHistoryToken="config:" icon="COGS">Configure</b:Button>
+                <b:ButtonGroup>
+                    <b:Button ui:field="submitButton" type="PRIMARY" icon="SEARCH">Search</b:Button>
+                    <b:Button ui:field="resetButton">Reset</b:Button>
+                    <b:Button target="_blank" ui:field="openInNewWindow" icon="EXTERNAL_LINK"></b:Button>
+                </b:ButtonGroup>
+                <b:Button targetHistoryToken="config:" icon="COGS">Configure</b:Button>
             </b:ButtonToolbar>
-        </g:HorizontalPanel>
-        <g:HorizontalPanel visible="false"> <!-- TODO Make time control -->
-            <g:ListBox ui:field="commonTimes">
-                <g:item value="-1">Predefined times</g:item>
-                <g:item value="900000">Last 15 minutes</g:item>
-                <g:item value="1800000">Last 30 minutes</g:item>
-                <g:item value="3600000">Last hour</g:item>
-                <g:item value="7200000">Last 2 hours</g:item>
-                <g:item value="14400000">Last 4 hours</g:item>
-                <g:item value="21600000">Last 6 hours</g:item>
-                <g:item value="43200000">Last 12 hours</g:item>
-                <g:item value="86400000">Last 24 hours</g:item>
-                <g:item value="172800000">Last 48 hours</g:item>
-                <g:item value="604800000">Last 7 days</g:item>
-                <g:item value="0">All time</g:item>
-            </g:ListBox>
-            <g:Label>from:</g:Label>
-            <d:DateBox ui:field="fromDate" styleName="{style.dateBox}"/>
-            <g:Label>, to:</g:Label>
-            <d:DateBox ui:field="toDate" styleName="{style.dateBox}"/>
         </g:HorizontalPanel>
     </g:AbsolutePanel>
 </ui:UiBinder>

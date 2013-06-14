@@ -2,40 +2,36 @@ package md.frolov.legume.client.events;
 
 import com.google.gwt.event.shared.GwtEvent;
 
-import md.frolov.legume.client.elastic.model.reply.ElasticSearchReply;
-import md.frolov.legume.client.elastic.query.Search;
+import md.frolov.legume.client.elastic.api.SearchRequest;
+import md.frolov.legume.client.elastic.api.SearchResponse;
 
 /** @author Ivan Frolov (ifrolov@tacitknowledge.com) */
 public class SearchResultsReceivedEvent extends GwtEvent<SearchResultsReceivedEventHandler>
 {
-    private final Search searchQuery;
-    private final ElasticSearchReply searchResponse;
-    private final boolean top;
+    private final SearchRequest searchRequest;
+    private final SearchResponse searchResponse;
+    private final boolean upwards;
 
-    public SearchResultsReceivedEvent(final Search searchQuery, final ElasticSearchReply elasticSearchReply){
-        this(searchQuery, elasticSearchReply, false);
-    }
-
-    public SearchResultsReceivedEvent(final Search searchQuery, final ElasticSearchReply elasticSearchReply, boolean top)
+    public SearchResultsReceivedEvent(final SearchRequest searchRequest, final SearchResponse searchResponse, boolean upwards)
     {
-        this.searchResponse = elasticSearchReply;
-        this.searchQuery = searchQuery;
-        this.top = top;
+        this.searchRequest = searchRequest;
+        this.searchResponse = searchResponse;
+        this.upwards = upwards;
     }
 
-    public ElasticSearchReply getSearchResponse()
+    public SearchRequest getSearchRequest()
+    {
+        return searchRequest;
+    }
+
+    public SearchResponse getSearchResponse()
     {
         return searchResponse;
     }
 
-    public Search getSearchQuery()
+    public boolean isUpwards()
     {
-        return searchQuery;
-    }
-
-    public boolean isTop()
-    {
-        return top;
+        return upwards;
     }
 
     public static Type<SearchResultsReceivedEventHandler> TYPE = new Type<SearchResultsReceivedEventHandler>();

@@ -8,21 +8,24 @@ import javax.inject.Inject;
 import com.google.gwt.activity.shared.AbstractActivity;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.place.shared.PlaceController;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 
+import md.frolov.legume.client.Constants;
 import md.frolov.legume.client.elastic.ElasticSearchService;
-import md.frolov.legume.client.elastic.model.reply.ElasticSearchReply;
-import md.frolov.legume.client.elastic.query.Search;
+import md.frolov.legume.client.elastic.api.Callback;
+import md.frolov.legume.client.elastic.api.SearchRequest;
+import md.frolov.legume.client.elastic.api.SearchResponse;
 import md.frolov.legume.client.events.SearchFinishedEvent;
 import md.frolov.legume.client.events.SearchInProgressEvent;
 import md.frolov.legume.client.events.SearchResultsReceivedEvent;
-import md.frolov.legume.client.events.UpdateSearchQuery;
+import md.frolov.legume.client.gin.WidgetInjector;
+import md.frolov.legume.client.model.Search;
 import md.frolov.legume.client.service.ConfigurationService;
 
 public class StreamActivity extends AbstractActivity implements StreamView.Presenter
 {
     private static final Logger LOG = Logger.getLogger("StreamActivity");
+    private static final int DEFAULT_QUERY_SIZE = WidgetInjector.INSTANCE.configurationService().getInt(Constants.PAGE_SIZE);
 
     @Inject
     private StreamView streamView;
@@ -40,12 +43,10 @@ public class StreamActivity extends AbstractActivity implements StreamView.Prese
 
     private StreamPlace place;
 
-    /** reference query, requested initially */
-    private Search activeSearchQuery;
     /** query to scroll upwards */
-    private Search upwardsQuery;
+    private SearchRequest upwardsQuery;
     /** query to scroll downwards */
-    private Search downwardsQuery;
+    private SearchRequest downwardsQuery;
 
     private boolean finished = false;
 
@@ -57,83 +58,82 @@ public class StreamActivity extends AbstractActivity implements StreamView.Prese
         place = (StreamPlace) placeController.getWhere();
         this.eventBus = eventBus;
 
-        initQueries(place.getQuery());
-        eventBus.fireEvent(new UpdateSearchQuery(activeSearchQuery));
-        boolean isUpwards = isUpwardsDirection();
+        initQueries(place.getSearch());
 
-        requestMoreResults(isUpwards);
+        requestMoreResults(false);
     }
 
-    private void initQueries(Search requestedSearchQuery)
+    private void initQueries(Search search)
     {
-        activeSearchQuery = requestedSearchQuery;
+        long from = search.getFromDate();
+        long to = search.getToDate();
+        long focus = search.getFocusDate();
 
-        Date fromDate = activeSearchQuery.getFromDate();
-        Date toDate = activeSearchQuery.getToDate();
-        Date focusDate = activeSearchQuery.getFocusDate();
-
-        if (fromDate == null && toDate == null && focusDate == null)
+        //determine focus date
+        if (focus < from || focus > to)
         {
-            //setting search to "all time up to now, focus on now"
-            focusDate = new Date();
-            toDate = focusDate;
+            focus = from;
         }
-        if (focusDate == null)
+        if (focus == 0)
         {
-            focusDate = fromDate != null ? fromDate : toDate;
+            focus = determineFocusDate(from, to);
         }
 
-        activeSearchQuery.setFromDate(fromDate);
-        activeSearchQuery.setToDate(toDate);
-        activeSearchQuery.setFocusDate(focusDate);
-
-        downwardsQuery = activeSearchQuery.clone();
-        downwardsQuery.setFromDate(focusDate);
-        downwardsQuery.setToDate(null);
-
-        upwardsQuery = activeSearchQuery.clone();
-        upwardsQuery.setToDate(focusDate);
-        upwardsQuery.setFromDate(null);
-        upwardsQuery.reverseSortOrder();
+        downwardsQuery = new SearchRequest(new Search(search.getQuery(), focus, 0, focus), true, 0, DEFAULT_QUERY_SIZE);
+        upwardsQuery = new SearchRequest(new Search(search.getQuery(), 0, focus, focus), false, 0, DEFAULT_QUERY_SIZE);
     }
 
-    private boolean isUpwardsDirection()
+    private long determineFocusDate(final long from, final long to)
     {
-        return activeSearchQuery.getFocusDate().equals(activeSearchQuery.getToDate());
+        if (to == 0)
+        {
+            //upto now
+            if (from < 0)
+            {
+                return from;
+            }
+            else
+            {
+                return new Date().getTime();
+            }
+        }
+
+        return from;
     }
 
     @Override
     public void requestMoreResults(final boolean upwards)
     {
-        final Search query = upwards ? upwardsQuery : downwardsQuery;
+        final SearchRequest query = upwards ? upwardsQuery : downwardsQuery;
         eventBus.fireEvent(new SearchInProgressEvent(upwards));
-        elasticSearchService.query(query, new AsyncCallback<ElasticSearchReply>()
+
+        elasticSearchService.query(query, new Callback<SearchRequest, SearchResponse>()
         {
             @Override
-            public void onFailure(final Throwable caught)
+            public void onFailure(final Throwable exception)
             {
                 if (finished)
                 {
                     return;
                 }
-                LOG.log(Level.SEVERE, "Can't fetch results", caught);
+                LOG.log(Level.SEVERE, "Can't fetch results", exception);
                 eventBus.fireEvent(new SearchFinishedEvent(upwards));
             }
 
             @Override
-            public void onSuccess(final ElasticSearchReply result)
+            public void onSuccess(final SearchRequest query, final SearchResponse response)
             {
                 if (finished)
                 {
                     return;
                 }
-                query.setFrom(query.getFrom() + result.getHits().getHits().size());
+                query.setFrom(query.getFrom() + response.getHits().size());
 
                 LOG.fine("Got reply");
-                eventBus.fireEvent(new SearchResultsReceivedEvent(query, result, upwards));
+                eventBus.fireEvent(new SearchResultsReceivedEvent(query, response, upwards));
                 eventBus.fireEvent(new SearchFinishedEvent(upwards));
             }
-        }, ElasticSearchReply.class);
+        });
     }
 
     @Override
@@ -148,7 +148,8 @@ public class StreamActivity extends AbstractActivity implements StreamView.Prese
         stop();
     }
 
-    private void stop() {
+    private void stop()
+    {
         finished = true;
         elasticSearchService.cancelAllRequests();
     }

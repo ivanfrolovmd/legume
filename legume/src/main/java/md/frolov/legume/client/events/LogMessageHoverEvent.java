@@ -1,20 +1,18 @@
 package md.frolov.legume.client.events;
 
-import java.util.Date;
-
 import com.google.gwt.event.shared.GwtEvent;
 
 /** @author Ivan Frolov (ifrolov@tacitknowledge.com) */
 public class LogMessageHoverEvent extends GwtEvent<LogMessageHoverEventHandler>
 {
-    private final Date date;
+    private final long date;
 
-    public LogMessageHoverEvent(final Date date)
+    public LogMessageHoverEvent(final long date)
     {
         this.date = date;
     }
 
-    public Date getDate()
+    public long getDate()
     {
         return date;
     }

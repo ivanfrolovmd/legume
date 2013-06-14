@@ -1,41 +1,77 @@
 package md.frolov.legume.client.activities.terms;
 
-import com.google.gwt.place.shared.Place;
+import java.util.Iterator;
+
+import com.google.common.base.Joiner;
+import com.google.common.base.Splitter;
 import com.google.gwt.place.shared.PlaceTokenizer;
 import com.google.gwt.place.shared.Prefix;
 
-import md.frolov.legume.client.elastic.api.TermsFacetRequest;
+import md.frolov.legume.client.activities.SearchPlace;
+import md.frolov.legume.client.model.Search;
 
 /** @author Ivan Frolov (ifrolov@tacitknowledge.com) */
-public class TermsPlace extends Place
+public class TermsPlace extends SearchPlace
 {
-    public static final String TOKEN_PREFIX = "terms";
+    private static final String TOKEN_PREFIX = "terms";
+    private static final Tokenizer TOKENIZER = new Tokenizer();
 
-    private final TermsFacetRequest request;
+    private final String fieldName;
 
-    public TermsPlace(final TermsFacetRequest request)
+    public TermsPlace(final String fieldName, final Search search)
     {
-        this.request = request;
+        super(search);
+        this.fieldName = fieldName;
     }
 
-    public TermsFacetRequest getRequest()
+    public String getFieldName()
     {
-        return request;
+        return fieldName;
+    }
+
+    @Override
+    public String getTokenPrefix()
+    {
+        return TOKEN_PREFIX;
+    }
+
+    @Override
+    public Tokenizer getTokenizer()
+    {
+        return TOKENIZER;
     }
 
     @Prefix(TOKEN_PREFIX)
-        public static class Tokenizer implements PlaceTokenizer<TermsPlace>
+    public static class Tokenizer implements PlaceTokenizer<TermsPlace>
+    {
+        @Override
+        public TermsPlace getPlace(String token)
         {
-            @Override
-            public TermsPlace getPlace(String token) {
-                TermsFacetRequest request = TermsFacetRequest.fromHistoryToken(token);
-                return new TermsPlace(request);
-            }
+            //TODO deal with exceptions
+            Iterable<String> parts = Splitter.on('/').limit(5).split(token);
+            Iterator<String> it = parts.iterator();
 
-            @Override
-            public String getToken(TermsPlace place) {
-                return place.getRequest().toHistoryToken();
-            }
+            Long fromDateTime = Long.valueOf(it.next());
+            Long toDateTime = Long.valueOf(it.next());
+            Long focusDateTime = Long.valueOf(it.next());
 
+            String field = it.next();
+            String query = it.next();
+
+            return new TermsPlace(field, new Search(query, fromDateTime, toDateTime, focusDateTime));
         }
+
+        @Override
+        public String getToken(TermsPlace place)
+        {
+            Search search = place.getSearch();
+            return Joiner.on("/").join(new Object[]{
+                    search.getFromDate(),
+                    search.getToDate(),
+                    search.getFocusDate(),
+                    place.getFieldName(),
+                    search.getQuery()
+            });
+        }
+    }
 }

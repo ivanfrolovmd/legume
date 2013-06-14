@@ -8,6 +8,7 @@ import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.place.shared.PlaceHistoryHandler;
 import com.google.web.bindery.event.shared.EventBus;
 
+import md.frolov.legume.client.Application;
 import md.frolov.legume.client.Messages;
 import md.frolov.legume.client.elastic.ElasticSearchService;
 import md.frolov.legume.client.elastic.model.ModelFactory;
@@ -36,4 +37,6 @@ public interface WidgetInjector extends Ginjector {
 
     ModelFactory modelFactory();
     ElasticSearchService elasticSearchService();
+
+    Application application();
 }

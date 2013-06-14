@@ -2,8 +2,6 @@ package md.frolov.legume.client.activities.terms;
 
 import java.util.Map;
 
-import com.github.gwtbootstrap.client.ui.Button;
-import com.github.gwtbootstrap.client.ui.constants.IconType;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -24,6 +22,7 @@ import com.googlecode.gflot.client.options.PieSeriesOptions;
 import com.googlecode.gflot.client.options.PlotOptions;
 
 import md.frolov.legume.client.elastic.api.TermsFacetResponse;
+import md.frolov.legume.client.ui.controls.FieldActionsDropdown;
 
 /** @author Ivan Frolov (ifrolov@tacitknowledge.com) */
 public class TermsViewImpl extends Composite implements TermsView
@@ -74,12 +73,12 @@ public class TermsViewImpl extends Composite implements TermsView
 
     private void initResultsTable() {
         HTMLTable.ColumnFormatter columnFormatter = results.getColumnFormatter();
-        columnFormatter.setWidth(1, "50px");
-        columnFormatter.setWidth(2,"40px");
+        columnFormatter.setWidth(1, "90px");
+        columnFormatter.setWidth(2,"30px");
     }
 
     @Override
-    public void handleResults(final TermsFacetResponse response)
+    public void handleResults(final String fieldName, final TermsFacetResponse response)
     {
         results.removeAllRows();
         results.setText(0,0,"Term");
@@ -95,7 +94,7 @@ public class TermsViewImpl extends Composite implements TermsView
             //results rable
             results.setText(row, 0, entry.getKey());
             results.setText(row, 1, entry.getValue().toString());
-            results.setWidget(row, 2, new Button("Action", IconType.FILTER));
+            results.setWidget(row, 2, new FieldActionsDropdown(fieldName, entry.getKey(), 0));
             row++;
 
             //plot
@@ -119,7 +118,7 @@ public class TermsViewImpl extends Composite implements TermsView
 
         results.setText(row,0,"Total");
         results.setText(row, 1, String.valueOf(response.getTotal()));
-        results.setText(row,2,"");
+        results.setText(row, 2, "");
 
         plot.redraw();
     }

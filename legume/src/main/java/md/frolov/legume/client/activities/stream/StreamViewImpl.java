@@ -1,5 +1,6 @@
 package md.frolov.legume.client.activities.stream;
 
+import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
 
@@ -19,8 +20,12 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.EventBus;
 
 import md.frolov.legume.client.elastic.model.reply.SearchHit;
-import md.frolov.legume.client.elastic.model.reply.SearchHits;
-import md.frolov.legume.client.events.*;
+import md.frolov.legume.client.events.SearchFinishedEvent;
+import md.frolov.legume.client.events.SearchFinishedEventHandler;
+import md.frolov.legume.client.events.SearchInProgressEvent;
+import md.frolov.legume.client.events.SearchInProgressEventHandler;
+import md.frolov.legume.client.events.SearchResultsReceivedEvent;
+import md.frolov.legume.client.events.SearchResultsReceivedEventHandler;
 import md.frolov.legume.client.gin.WidgetInjector;
 import md.frolov.legume.client.ui.components.LogEventComponent;
 import md.frolov.legume.client.util.IteratorIncrementalTask;
@@ -86,7 +91,6 @@ public class StreamViewImpl extends Composite implements StreamView, SearchResul
     @Override
     public void onSearchResultsReceived(final SearchResultsReceivedEvent event)
     {
-        final SearchHits hits = event.getSearchResponse().getHits();
 //        resultsPanel.setVisible(false);
         nothingFound.setVisible(false);
 
@@ -120,11 +124,11 @@ public class StreamViewImpl extends Composite implements StreamView, SearchResul
     {
         isRendering=true;
 
-        final SearchHits hits = event.getSearchResponse().getHits();
-        final boolean isFullFetch = hits.getHits().size() == event.getSearchQuery().getSize();
-        final boolean upwards = event.isTop();
+        final List<SearchHit> hits = event.getSearchResponse().getHits();
+        final boolean isFullFetch = hits.size() == event.getSearchRequest().getSize();
+        final boolean upwards = event.isUpwards();
 
-        Scheduler.get().scheduleIncremental(new IteratorIncrementalTask<SearchHit>(hits.getHits()) {
+        Scheduler.get().scheduleIncremental(new IteratorIncrementalTask<SearchHit>(hits) {
             private FlowPanel panel;
             private int cnt = 0;
 

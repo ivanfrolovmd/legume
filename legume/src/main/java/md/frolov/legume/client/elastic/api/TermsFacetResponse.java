@@ -48,4 +48,5 @@ public class TermsFacetResponse extends ESResponse<ElasticSearchReply>
     {
         return other;
     }
+
 }

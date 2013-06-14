@@ -2,7 +2,7 @@ package md.frolov.legume.client.events;
 
 import com.google.gwt.event.shared.GwtEvent;
 
-import md.frolov.legume.client.elastic.query.Search;
+import md.frolov.legume.client.model.Search;
 
 /** @author Ivan Frolov (ifrolov@tacitknowledge.com) */
 public class UpdateSearchQuery extends GwtEvent<UpdateSearchQueryHandler>

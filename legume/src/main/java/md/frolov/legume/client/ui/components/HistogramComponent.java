@@ -1,13 +1,9 @@
 package md.frolov.legume.client.ui.components;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
 import com.github.gwtbootstrap.client.ui.Button;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Maps;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.logical.shared.ResizeEvent;
@@ -16,7 +12,6 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.ResizeLayoutPanel;
@@ -32,23 +27,23 @@ import com.googlecode.gflot.client.event.PlotSelectedListener;
 import com.googlecode.gflot.client.options.*;
 import com.googlecode.gflot.client.options.side.IntegerSideOptions;
 
+import md.frolov.legume.client.Application;
 import md.frolov.legume.client.activities.stream.StreamPlace;
 import md.frolov.legume.client.elastic.ElasticSearchService;
-import md.frolov.legume.client.elastic.model.reply.ElasticSearchReply;
-import md.frolov.legume.client.elastic.model.reply.Facet;
-import md.frolov.legume.client.elastic.query.HistogramInterval;
-import md.frolov.legume.client.elastic.query.HistogramRequest;
-import md.frolov.legume.client.elastic.query.Search;
+import md.frolov.legume.client.elastic.api.Callback;
+import md.frolov.legume.client.elastic.api.HistogramRequest;
+import md.frolov.legume.client.elastic.api.HistogramResponse;
 import md.frolov.legume.client.events.LogMessageHoverEvent;
 import md.frolov.legume.client.events.LogMessageHoverEventHandler;
 import md.frolov.legume.client.events.UpdateSearchQuery;
 import md.frolov.legume.client.events.UpdateSearchQueryHandler;
 import md.frolov.legume.client.gin.WidgetInjector;
+import md.frolov.legume.client.model.Search;
 
 /** @author Ivan Frolov (ifrolov@tacitknowledge.com) */
 public class HistogramComponent extends Composite implements UpdateSearchQueryHandler, LogMessageHoverEventHandler
 {
-    private static final long MAXIMUM_STEPS = 2000; //TODO constraint to client width?
+    private static final int MAXIMUM_STEPS = 2000; //TODO constraint to client width?
 
     interface HistogramComponentUiBinder extends UiBinder<Widget, HistogramComponent>
     {
@@ -79,8 +74,8 @@ public class HistogramComponent extends Composite implements UpdateSearchQueryHa
 
     private EventBus eventBus = WidgetInjector.INSTANCE.eventBus();
     private ElasticSearchService elasticSearchService = WidgetInjector.INSTANCE.elasticSearchService();
+    private Application application = WidgetInjector.INSTANCE.application();
 
-    private Search activeSearch;
     private boolean inprocess = false;
 
     public HistogramComponent()
@@ -119,23 +114,17 @@ public class HistogramComponent extends Composite implements UpdateSearchQueryHa
             @Override
             public void onPlotSelected(final PlotSelectionArea area)
             {
-                Date from = new Date(area.getX().getFrom().longValue());
-                Date to = new Date(area.getX().getTo().longValue());
+                long from = area.getX().getFrom().longValue();
+                long to = area.getX().getTo().longValue();
 
-                Search q = ((StreamPlace)WidgetInjector.INSTANCE.placeController().getWhere()).getQuery();
-                q.setFromDate(from);
-                q.setToDate(to);
-                q.setFocusDate(from);
-                WidgetInjector.INSTANCE.placeController().goTo(new StreamPlace(q));
-
-                /*
-                plot.clearSelection(true);
-                plot.setVisible(false);
-                controls.setVisible(false);
-                loading.setVisible(true);
-                */
+                Search search = application.getCurrentSearch().clone();
+                search.setFromDate(from);
+                search.setToDate(to);
+                search.setFocusDate(from);
+                WidgetInjector.INSTANCE.placeController().goTo(new StreamPlace(search)); //TODO change this. It might be useful to zoom in/out when in 'terms' activity
             }
         });
+
         /*
         plot.addClickListener(new PlotClickListener()
         {
@@ -154,35 +143,19 @@ public class HistogramComponent extends Composite implements UpdateSearchQueryHa
         */
     }
 
-    private void updateHistogramWithData(ElasticSearchReply response, final Date from, final Date to, final HistogramInterval interval)
+    private void updateHistogramWithData(HistogramResponse response)
     {
-        Facet facet = response.getFacets().values().iterator().next();
-        List<Facet.Entry> entries = facet.getEntries();
-
         plot.getModel().removeAllSeries();
         SeriesHandler handler = plot.getModel().addSeries(Series.of("","#999"));
 
-        Map<Long,Long> values = populateWithNulls(facet.getEntries(), from, to, interval.getTime());
-        for (Map.Entry<Long, Long> entry : values.entrySet())
+        for (Map.Entry<Long, Long> entry : response.getDateValueMap().entrySet())
         {
             handler.add(DataPoint.of(entry.getKey(),entry.getValue()));
         }
 
-        long min;
-        if(from!=null){
-            min = from.getTime();
-        } else {
-            min = Iterables.getFirst(values.keySet(),null).longValue();
-        }
-        long max;
-        if(to!=null) {
-            max = to.getTime();
-        } else {
-            max = Iterables.getLast(values.keySet()).longValue();
-        }
         plot.getPlotOptions().setXAxesOptions(AxesOptions.create().addAxisOptions(TimeSeriesAxisOptions.create()
-                .setTickColor("#eee").setReserveSpace(true).setMinimum(min).setMaximum(max)
-                .setTimeZone("browser").setTimeFormat(interval.getDateTimeFormat())
+                .setTickColor("#eee").setReserveSpace(true)
+                .setTimeZone("browser").setTimeFormat(response.getInterval().getDateTimeFormat())
         ));
 
         loading.setVisible(false);
@@ -192,35 +165,6 @@ public class HistogramComponent extends Composite implements UpdateSearchQueryHa
 
         plot.clearCrosshair();
         plot.lockCrosshair();
-    }
-
-    private Map<Long, Long> populateWithNulls(final List<Facet.Entry> entries, Date from, Date to, final long interval)
-    {
-        TreeMap<Long, Long> result = Maps.newTreeMap();
-        if(entries==null || entries.isEmpty()) {
-            result.put(from.getTime(),0l);
-            result.put(to.getTime(),0l);
-            return result;
-        }
-
-        if(from==null) {
-            from = entries.get(0).getTime();
-        }
-        if(to==null) {
-            to = new Date();
-        }
-
-        for(long t = entries.get(0).getTime().getTime(); t>from.getTime(); t-=interval){
-            result.put(t, 0l);
-        }
-        for(long t=entries.get(0).getTime().getTime(); t<to.getTime(); t+=interval) {
-            result.put(t, 0l);
-        }
-        for (Facet.Entry entry : entries)
-        {
-            result.put(entry.getTime().getTime(),entry.getCount());
-        }
-        return result;
     }
 
     @Override
@@ -236,7 +180,7 @@ public class HistogramComponent extends Composite implements UpdateSearchQueryHa
         plot.redraw();
     }
 
-    private void requestHistogram(Search searchQuery) {
+    private void requestHistogram(Search search) {
         if(inprocess) {
             return;
         }
@@ -247,20 +191,11 @@ public class HistogramComponent extends Composite implements UpdateSearchQueryHa
         error.setVisible(true);
         loading.setVisible(true);
 
-        activeSearch = searchQuery;
-        HistogramRequest request = new HistogramRequest();
-        final Date from = searchQuery.getFromDate();
-        final Date to = searchQuery.getToDate();
-        final HistogramInterval interval = getInterval(searchQuery.getFromDate(), searchQuery.getToDate());
-        request.setFromDate(from);
-        request.setToDate(to);
-        request.setInterval(interval);
-        request.setQuery(searchQuery.getQuery());
-
-        WidgetInjector.INSTANCE.elasticSearchService().query(request, new AsyncCallback<ElasticSearchReply>()
+        HistogramRequest request = new HistogramRequest(search, MAXIMUM_STEPS);
+        elasticSearchService.query(request, new Callback<HistogramRequest, HistogramResponse>()
         {
             @Override
-            public void onFailure(final Throwable caught)
+            public void onFailure(final Throwable exception)
             {
                 loading.setVisible(false);
                 error.setVisible(true);
@@ -268,32 +203,14 @@ public class HistogramComponent extends Composite implements UpdateSearchQueryHa
             }
 
             @Override
-            public void onSuccess(final ElasticSearchReply result)
+            public void onSuccess(final HistogramRequest query, final HistogramResponse response)
             {
-                updateHistogramWithData(result, from, to, interval);
+                updateHistogramWithData(response);
                 inprocess = false;
             }
-        }, ElasticSearchReply.class);
+        });
     }
 
-    private HistogramInterval getInterval(Date from, Date to) {
-        if(from==null) {
-            return HistogramInterval.h1;
-        }
-
-        if(to==null) {
-            to = new Date();
-        }
-
-        long allTime = to.getTime()-from.getTime();
-        for (HistogramInterval histogramInterval : HistogramInterval.values())
-        {
-            if(allTime/histogramInterval.getTime()<MAXIMUM_STEPS) {
-                return histogramInterval;
-            }
-        }
-        return HistogramInterval.h1;
-    }
 
     @Override
     public void onLogMessageHover(final LogMessageHoverEvent event)
@@ -302,34 +219,41 @@ public class HistogramComponent extends Composite implements UpdateSearchQueryHa
             return;
         }
 
-        Date selectionDate = event.getDate();
-        Date fromDate = activeSearch.getFromDate();
-        Date toDate = activeSearch.getToDate();
+        Search search = application.getCurrentSearch();
+        long selectionDate = event.getDate();
+        long toDate = search.getToDate();
+        if(toDate<0) {
+            toDate = new Date().getTime() + toDate;
+        }
+        long fromDate = search.getFromDate();
+        if(fromDate <0) {
+            fromDate = toDate + fromDate;
+        }
         boolean update = false;
 
-        if(fromDate!=null && selectionDate.getTime()>toDate.getTime()) {
+        if(fromDate!=0 && selectionDate>toDate) {
             update = true;
-            long alltime = toDate.getTime() - fromDate.getTime();
-            toDate = new Date(selectionDate.getTime() + alltime / 2);
-            Date now = new Date();
-            if(toDate.getTime()>now.getTime()) {
+            long alltime = toDate - fromDate;
+            toDate = selectionDate + alltime / 2;
+            long now = new Date().getTime();
+            if(toDate>now) {
                 toDate = now;
             }
-            fromDate = new Date(toDate.getTime()-alltime);
-        } else if(fromDate != null && selectionDate.getTime()<fromDate.getTime()) {
+            fromDate = toDate-alltime;
+        } else if(fromDate != 0 && selectionDate<fromDate) {
             update = true;
-            long alltime = toDate.getTime() - fromDate.getTime();
-            fromDate = new Date(fromDate.getTime()-alltime/2);
-            toDate = new Date(toDate.getTime()-alltime/2);
+            long alltime = toDate - fromDate;
+            fromDate = fromDate-alltime/2;
+            toDate = toDate-alltime/2;
         }
 
         if(update) {
-            Search search = activeSearch.clone();
+            Search newSearch = search.clone();
             search.setFromDate(fromDate);
             search.setToDate(toDate);
             requestHistogram(search);
         } else {
-            plot.lockCrosshair(PlotPosition.of(event.getDate().getTime(),0));
+            plot.lockCrosshair(PlotPosition.of(event.getDate(),0));
         }
     }
 
@@ -344,10 +268,10 @@ public class HistogramComponent extends Composite implements UpdateSearchQueryHa
         }
 
         long allTime = to - from;
-        Date fromDate = new Date(from + allTime/3);
-        Date toDate = new Date(to - allTime/3);
+        long fromDate = from + allTime/3;
+        long toDate = to - allTime/3;
 
-        Search search = activeSearch.clone();
+        Search search = application.getCurrentSearch().clone();
         search.setFromDate(fromDate);
         search.setToDate(toDate);
         requestHistogram(search);
@@ -356,28 +280,35 @@ public class HistogramComponent extends Composite implements UpdateSearchQueryHa
     @UiHandler("zoomOut")
     public void onZoomOut(final ClickEvent event)
     {
-        Date from = activeSearch.getFromDate();
-        Date to = activeSearch.getToDate();
-        Date now = new Date();
-        if(from == null) {
+        Search search = application.getCurrentSearch();
+        long from = search.getFromDate();
+        long to = search.getToDate();
+        long now = new Date().getTime();
+        if(from == 0) {
             return;
         }
-        if(to == null) {
+        if(to == 0) {
             to = now;
         }
+        if(to<0) {
+            to = now+to;
+        }
+        if(from<0) {
+            from = from+to;
+        }
 
-        long allTime = to.getTime() - from.getTime();
-        from = new Date(from.getTime() - allTime/2);
-        to = new Date(to.getTime() + allTime/2);
+        long allTime = to - from;
+        from = from - allTime/2;
+        to = to + allTime/2;
 
-        if(to.getTime()>now.getTime()) {
-            from = new Date(from.getTime() - (to.getTime() - now.getTime()));
+        if(to>now) {
+            from = from - (to - now);
             to = now;
         }
-        Search search = activeSearch.clone();
-        search.setFromDate(from);
-        search.setToDate(to);
-        requestHistogram(search);
+        Search newSearch = search.clone();
+        newSearch.setFromDate(from);
+        newSearch.setToDate(to);
+        requestHistogram(newSearch);
     }
 
     @UiHandler("downloadImage")

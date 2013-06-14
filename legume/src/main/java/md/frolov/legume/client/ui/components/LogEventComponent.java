@@ -138,6 +138,6 @@ public class LogEventComponent extends Composite
     @UiHandler("focusPanel")
     public void handleMouseOver(final MouseOverEvent event)
     {
-        eventBus.fireEvent(new LogMessageHoverEvent(logEvent.getTimestamp()));
+        eventBus.fireEvent(new LogMessageHoverEvent(logEvent.getTimestamp().getTime()));
     }
 }

@@ -1,17 +1,17 @@
 package md.frolov.legume.client;
 
-import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.place.shared.PlaceChangeEvent;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 
 import md.frolov.legume.client.activities.stream.StreamPlace;
-import md.frolov.legume.client.elastic.query.Search;
 import md.frolov.legume.client.gin.WidgetInjector;
+import md.frolov.legume.client.model.Search;
 
 /** Entry point classes define <code>onModuleLoad()</code>. */
 public class Legume implements EntryPoint
@@ -23,12 +23,13 @@ public class Legume implements EntryPoint
     /** This is the entry point method. */
     public void onModuleLoad()
     {
+        injector.eventBus().addHandler(PlaceChangeEvent.TYPE, injector.application());
+
         injector.activityManager().setDisplay(injector.mainView());
         RootLayoutPanel.get().add(injector.mainView());
         RootPanel.get().add(injector.connectionManagerComponent());
 
-        Search query = new Search("", null, new Date(), new Date());
-        injector.placeHistoryHandler().register(injector.placeController(), injector.eventBus(), new StreamPlace(query)); //TODO change to homeplace
+        injector.placeHistoryHandler().register(injector.placeController(), injector.eventBus(), new StreamPlace(Search.DEFAULT)); //TODO change to homeplace
         injector.placeHistoryHandler().handleCurrentHistory();
 
         GWT.setUncaughtExceptionHandler(new GWT.UncaughtExceptionHandler()

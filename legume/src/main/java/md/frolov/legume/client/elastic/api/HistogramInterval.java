@@ -1,4 +1,4 @@
-package md.frolov.legume.client.elastic.query;
+package md.frolov.legume.client.elastic.api;
 
 /** @author Ivan Frolov (ifrolov@tacitknowledge.com) */
 public enum HistogramInterval

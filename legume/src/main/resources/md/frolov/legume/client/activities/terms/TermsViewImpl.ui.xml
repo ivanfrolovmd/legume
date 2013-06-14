@@ -17,7 +17,7 @@
         <g:FlowPanel styleName="{style.box}">
             <b:Row>
                 <b:Column size="6">
-                    <g:FlexTable ui:field="results" styleName="table table-bordered table-striped" addStyleNames="{style.table}"/>
+                    <g:FlexTable ui:field="results" styleName="table table-bordered table-striped table-hover" addStyleNames="{style.table}"/>
                     <g:Label ui:field="totalLabel" />
                     <g:Label ui:field="otherLabel" />
                     <g:Label ui:field="missingLabel" />

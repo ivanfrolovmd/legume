@@ -1,0 +1,25 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:b="urn:import:com.github.gwtbootstrap.client.ui"
+        >
+    <ui:style>
+        .dropdown {
+            display: block;
+        }
+        @external .caret;
+        .dropdown span.caret {
+            display: none;
+        }
+        .dropdown>a, .dropdown>a:hover {
+            text-decoration: none;
+            color: #666;
+        }
+    </ui:style>
+    <b:Dropdown icon="FILTER" addStyleNames="{style.dropdown}" ui:field="actionsDropdown">
+        <!-- TODO think off better wording -->
+        <b:NavLink icon="OK" ui:field="includeFilter">Restrict to this</b:NavLink>
+        <b:NavLink icon="OK_CIRCLE" ui:field="includeOnlyFilter">Search only this</b:NavLink>
+        <b:NavLink icon="REMOVE" ui:field="excludeFilter">Exclude this</b:NavLink>
+        <b:NavLink icon="REMOVE_CIRCLE" ui:field="excludeOnlyFilter">Search all except this</b:NavLink>
+        <b:NavLink icon="COPY" ui:field="copyToClipboard">Copy to clipboard</b:NavLink>
+    </b:Dropdown>
+</ui:UiBinder>

@@ -35,11 +35,14 @@ public class TermsActivity extends AbstractActivity
     {
         panel.setWidget(termsView);
 
-        request = ((TermsPlace)placeController.getWhere()).getRequest();
+        TermsPlace place = (TermsPlace) placeController.getWhere();
+        request = new TermsFacetRequest(place.getFieldName(), place.getSearch());
         query();
     }
 
     private void query() {
+        //TODO show loading in UI
+
         elasticSearchService.query(request, new Callback<TermsFacetRequest, TermsFacetResponse>()
         {
             @Override
@@ -52,7 +55,7 @@ public class TermsActivity extends AbstractActivity
             @Override
             public void onSuccess(final TermsFacetRequest query, final TermsFacetResponse response)
             {
-                termsView.handleResults(response);
+                termsView.handleResults(query.getFieldName(), response);
             }
         });
     }

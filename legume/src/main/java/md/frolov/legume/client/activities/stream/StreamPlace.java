@@ -1,37 +1,61 @@
 package md.frolov.legume.client.activities.stream;
 
-import com.google.gwt.place.shared.Place;
+import java.util.Iterator;
+
+import com.google.common.base.Joiner;
+import com.google.common.base.Splitter;
 import com.google.gwt.place.shared.PlaceTokenizer;
 import com.google.gwt.place.shared.Prefix;
 
-import md.frolov.legume.client.elastic.query.Search;
+import md.frolov.legume.client.activities.SearchPlace;
+import md.frolov.legume.client.model.Search;
 
-public class StreamPlace extends Place {
-    public final static String TOKEN_PREFIX = "stream";
-    private final Search query;
+public class StreamPlace extends SearchPlace
+{
+    private final static String TOKEN_PREFIX = "stream";
+    private final static Tokenizer TOKENIZER = new Tokenizer();
 
-    public StreamPlace(final Search query)
+    public StreamPlace(final Search search)
     {
-        this.query = query;
+        super(search);
+    }
+
+    @Override
+    public PlaceTokenizer getTokenizer()
+    {
+        return TOKENIZER;
+    }
+
+    @Override
+    public String getTokenPrefix()
+    {
+        return TOKEN_PREFIX;
     }
 
     @Prefix(TOKEN_PREFIX)
     public static class Tokenizer implements PlaceTokenizer<StreamPlace> {
         @Override
         public StreamPlace getPlace(String token) {
-            Search query = Search.fromHistoryToken(token);
-            return new StreamPlace(query);
+            Iterator<String> parts = Splitter.on("/").limit(4).split(token).iterator();
+
+            Long fromDate = Long.valueOf(parts.next());
+            Long toDate= Long.valueOf(parts.next());
+            Long focusDate = Long.valueOf(parts.next());
+            String query = parts.next();
+
+            return new StreamPlace(new Search(query, fromDate, toDate, focusDate));
         }
 
         @Override
         public String getToken(StreamPlace place) {
-            return place.getQuery().toHistoryToken();
+            Search search = place.getSearch();
+            return Joiner.on("/").join(new Object[]{
+                    search.getFromDate(),
+                    search.getToDate(),
+                    search.getFocusDate(),
+                    search.getQuery()
+            });
         }
 
-    }
-
-    public Search getQuery()
-    {
-        return query;
     }
 }

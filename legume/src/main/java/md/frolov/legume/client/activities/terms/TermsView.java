@@ -7,5 +7,5 @@ import md.frolov.legume.client.elastic.api.TermsFacetResponse;
 /** @author Ivan Frolov (ifrolov@tacitknowledge.com) */
 public interface TermsView extends IsWidget
 {
-    void handleResults(TermsFacetResponse response);
+    void handleResults(final String fieldName, TermsFacetResponse response);
 }
