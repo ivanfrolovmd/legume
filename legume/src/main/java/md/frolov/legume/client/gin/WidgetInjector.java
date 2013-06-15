@@ -16,7 +16,6 @@ import md.frolov.legume.client.service.ColorizeService;
 import md.frolov.legume.client.service.ConfigurationService;
 import md.frolov.legume.client.ui.MainView;
 import md.frolov.legume.client.ui.components.ConnectionManagerComponent;
-import md.frolov.legume.client.util.ColorUtils;
 
 @GinModules({BusinessModule.class, ConstantsModule.class, MVPModule.class, ViewModule.class})
 public interface WidgetInjector extends Ginjector
@@ -32,8 +31,6 @@ public interface WidgetInjector extends Ginjector
     ActivityManager activityManager();
     PlaceHistoryHandler placeHistoryHandler();
     PlaceController placeController();
-
-    ColorUtils colorUtils();
 
     ConfigurationService configurationService();
 
