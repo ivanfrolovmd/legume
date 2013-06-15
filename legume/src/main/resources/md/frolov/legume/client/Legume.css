@@ -56,3 +56,9 @@ body {
     font-size: 12px;
 }
 
+strong {
+    font-family: 'OpenSansBold';
+}
+em {
+    font-family: 'OpenSansItalic';
+}

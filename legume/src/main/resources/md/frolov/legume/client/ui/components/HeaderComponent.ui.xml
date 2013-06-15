@@ -43,6 +43,10 @@
             width: 150px;
         }
 
+        .searchText{
+            font-family: 'OpenSansRegular';
+        }
+
     </ui:style>
     <g:FlowPanel styleName="{style.box}">
         <g:FlowPanel styleName="{style.logoBox}">
@@ -50,7 +54,7 @@
         </g:FlowPanel>
         <g:FlowPanel styleName="{style.controlsBox}">
             <b:AppendButton>
-                <b:TextBox ui:field="searchQuery" placeholder="Type your query here" width="100%"/>
+                <b:TextBox ui:field="searchQuery" addStyleNames="{style.searchText}" placeholder="Type your query here" width="100%"/>
                 <b:Button ui:field="submitButton" type="PRIMARY" icon="SEARCH">Search</b:Button>
                 <b:Button target="_blank" ui:field="openInNewWindow" icon="EXTERNAL_LINK"></b:Button>
             </b:AppendButton>
