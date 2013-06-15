@@ -1,0 +1,17 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:b="urn:import:com.github.gwtbootstrap.client.ui"
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+    <ui:style>
+        .textArea {
+            width: 555px;
+            height: 300px;
+        }
+    </ui:style>
+
+    <b:Modal ui:field="modal" title="Copy to clipboard" keyboard="true" dynamicSafe="true" width="600px">
+        <g:TextArea ui:field="textArea" styleName="{style.textArea}"/>
+        <b:ModalFooter>
+            <b:Button icon="OK" ui:field="close" type="PRIMARY">Thanks</b:Button>
+        </b:ModalFooter>
+    </b:Modal>
+</ui:UiBinder>
