@@ -6,7 +6,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>md.frolov.legume</groupId>
     <artifactId>legume</artifactId>
-    <packaging>war</packaging>
+    <packaging>jar</packaging>
     <version>1.0-SNAPSHOT</version>
     <name>GWT Maven Archetype</name>
 
@@ -97,15 +97,11 @@
                 <executions>
                     <execution>
                         <goals>
-                            <goal>compile</goal>
-                            <goal>test</goal>
+                            <goal>resources</goal>
                             <goal>i18n</goal>
-                            <goal>generateAsync</goal>
                         </goals>
                     </execution>
                 </executions>
-                <!-- Plugin configuration. There are many available options, see gwt-maven-plugin
-                    documentation at codehaus.org -->
                 <configuration>
                     <runTarget>Legume.html</runTarget>
                     <hostedWebapp>${webappDirectory}</hostedWebapp>
