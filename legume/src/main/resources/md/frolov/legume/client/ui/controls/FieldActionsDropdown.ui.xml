@@ -20,6 +20,7 @@
         <b:NavLink icon="OK_CIRCLE" ui:field="includeOnlyFilter">Search only this</b:NavLink>
         <b:NavLink icon="REMOVE" ui:field="excludeFilter">Exclude this</b:NavLink>
         <b:NavLink icon="REMOVE_CIRCLE" ui:field="excludeOnlyFilter">Search all except this</b:NavLink>
+        <b:NavLink icon="BAR_CHART" ui:field="score">Score on this field</b:NavLink>
         <b:NavLink icon="COPY" ui:field="copyToClipboard">Copy to clipboard</b:NavLink>
     </b:Dropdown>
 </ui:UiBinder>

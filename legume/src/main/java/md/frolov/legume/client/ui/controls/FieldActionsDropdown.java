@@ -15,6 +15,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 import md.frolov.legume.client.Application;
 import md.frolov.legume.client.activities.stream.StreamPlace;
+import md.frolov.legume.client.activities.terms.TermsPlace;
 import md.frolov.legume.client.gin.WidgetInjector;
 import md.frolov.legume.client.model.Search;
 
@@ -41,6 +42,8 @@ public class FieldActionsDropdown extends Composite
     NavLink excludeOnlyFilter;
     @UiField
     NavLink copyToClipboard;
+    @UiField
+    NavLink score;
 
     private final String fieldName;
     private final String valueText;
@@ -64,6 +67,9 @@ public class FieldActionsDropdown extends Composite
             Search search = application.getCurrentSearch().clone();
             search.setFocusDate(focusdate);
             String originalQueryString = search.getQuery();
+
+            score.setTargetHistoryToken(new TermsPlace(fieldName, search).getTargetHistoryToken());
+
             StreamPlace place = new StreamPlace(search);
 
             search.setQuery(getQueryString(originalQueryString, filter));
@@ -75,6 +81,7 @@ public class FieldActionsDropdown extends Composite
             includeOnlyFilter.setTargetHistoryToken(place.getTargetHistoryToken());
             search.setQuery(("NOT "+filter));
             excludeOnlyFilter.setTargetHistoryToken(place.getTargetHistoryToken());
+
         }
         else
         {
