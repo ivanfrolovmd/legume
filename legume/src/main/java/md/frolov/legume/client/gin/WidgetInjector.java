@@ -17,8 +17,9 @@ import md.frolov.legume.client.ui.MainView;
 import md.frolov.legume.client.ui.components.ConnectionManagerComponent;
 import md.frolov.legume.client.util.ColorUtils;
 
-@GinModules({BusinessModule.class, MVPModule.class, ViewModule.class})
-public interface WidgetInjector extends Ginjector {
+@GinModules({BusinessModule.class, ConstantsModule.class, MVPModule.class, ViewModule.class})
+public interface WidgetInjector extends Ginjector
+{
     WidgetInjector INSTANCE = GWT.create(WidgetInjector.class);
     
     MainView mainView();

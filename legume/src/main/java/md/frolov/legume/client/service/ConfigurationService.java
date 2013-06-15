@@ -8,6 +8,7 @@ public interface ConfigurationService {
     String get(String key, String defaultValue);
 
     int getInt(String key);
+    double getDouble(String key, double defaultValue);
 
     <T> T getObject(String key, Class<T> clazz);
 
@@ -16,4 +17,5 @@ public interface ConfigurationService {
     <T> void put(String key, T object);
 
     Map<String, String> getPropertyMap();
+
 }

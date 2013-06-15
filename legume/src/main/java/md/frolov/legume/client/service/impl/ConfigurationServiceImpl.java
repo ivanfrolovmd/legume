@@ -32,7 +32,14 @@ public class ConfigurationServiceImpl implements ConfigurationService
         String value = Cookies.getCookie(key);
         if (value == null)
         {
-            value = getFromProperties(key);
+            try
+            {
+                value = getFromProperties(key);
+            }
+            catch (Exception e)
+            {
+                //do nothing
+            }
         }
         if (value == null)
         {
@@ -45,6 +52,12 @@ public class ConfigurationServiceImpl implements ConfigurationService
     public int getInt(final String key)
     {
         return Integer.valueOf(get(key, "0"));
+    }
+
+    @Override
+    public double getDouble(final String key, final double defaultValue)
+    {
+        return Double.valueOf(get(key, String.valueOf(defaultValue)));
     }
 
     @Override

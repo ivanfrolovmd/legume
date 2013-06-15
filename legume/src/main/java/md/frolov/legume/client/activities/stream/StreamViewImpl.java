@@ -3,6 +3,8 @@ package md.frolov.legume.client.activities.stream;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
+import javax.inject.Inject;
+import javax.inject.Named;
 
 import com.github.gwtbootstrap.client.ui.Button;
 import com.google.common.collect.Sets;
@@ -26,15 +28,12 @@ import md.frolov.legume.client.events.SearchInProgressEvent;
 import md.frolov.legume.client.events.SearchInProgressEventHandler;
 import md.frolov.legume.client.events.SearchResultsReceivedEvent;
 import md.frolov.legume.client.events.SearchResultsReceivedEventHandler;
-import md.frolov.legume.client.gin.WidgetInjector;
 import md.frolov.legume.client.ui.components.LogEventComponent;
 import md.frolov.legume.client.util.IteratorIncrementalTask;
 
 public class StreamViewImpl extends Composite implements StreamView, SearchResultsReceivedEventHandler, SearchInProgressEventHandler, SearchFinishedEventHandler
 {
     private static final Logger LOG = Logger.getLogger("StreamView");
-
-    private static final int SCROLL_THRESHOLD = 50; //TODO configure scroll threshold
 
     private static StreamViewImplUiBinder uiBinder = GWT.create(StreamViewImplUiBinder.class);
 
@@ -62,7 +61,11 @@ public class StreamViewImpl extends Composite implements StreamView, SearchResul
     @UiField
     Button topTryAgain;
 
-    private EventBus eventBus = WidgetInjector.INSTANCE.eventBus();
+    @Inject
+    @Named("scrollThreashold")
+    private Integer scrollThreashold = 50;
+
+    private EventBus eventBus;
     private Presenter presenter;
     private boolean isRendering;
     private boolean initial;
@@ -71,9 +74,11 @@ public class StreamViewImpl extends Composite implements StreamView, SearchResul
     {
     }
 
-    public StreamViewImpl()
+    @Inject
+    public StreamViewImpl(EventBus eventBus)
     {
         initWidget(uiBinder.createAndBindUi(this));
+        this.eventBus = eventBus;
         eventBus.addHandler(SearchResultsReceivedEvent.TYPE, this);
         eventBus.addHandler(SearchInProgressEvent.TYPE, this);
         eventBus.addHandler(SearchFinishedEvent.TYPE, this);
@@ -216,11 +221,11 @@ public class StreamViewImpl extends Composite implements StreamView, SearchResul
             return;
         }
 
-        if (toTop < SCROLL_THRESHOLD && !topNoMoreResults.isVisible())
+        if (toTop < scrollThreashold && !topNoMoreResults.isVisible())
         {
             requestMoreTop();
         }
-        if (toBottom < SCROLL_THRESHOLD && !bottomNoMoreResults.isVisible())
+        if (toBottom < scrollThreashold && !bottomNoMoreResults.isVisible())
         {
             requestMoreBottom();
         }
