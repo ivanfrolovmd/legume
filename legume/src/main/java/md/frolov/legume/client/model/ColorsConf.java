@@ -1,7 +1,7 @@
 package md.frolov.legume.client.model;
 
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /** @author Ivan Frolov (ifrolov@tacitknowledge.com) */
 public interface ColorsConf
@@ -9,10 +9,10 @@ public interface ColorsConf
     Map<String, Map<String, Integer>> getFieldValueColorMap();
     void setFieldValueColorMap(Map<String, Map<String, Integer>> fieldValueColorMap);
 
-    List<String> getLabelFields();
-    void setLabelFields(List<String> labelFields);
+    Set<String> getLabelFields();
+    void setLabelFields(Set<String> labelFields);
 
-    List<String> getBackgroundFields();
-    void setBackgroundFields(List<String> backgroundFields);
+    Set<String> getBackgroundFields();
+    void setBackgroundFields(Set<String> backgroundFields);
 }
 

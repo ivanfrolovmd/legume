@@ -18,12 +18,12 @@ public interface ColorizeService
     // hue: 0 to 360
     void setColorHue(String fieldName, String value, int hue);
 
-    List<String> getLabelFields();
+    Set<String> getLabelFields();
     void addLabelField(String fieldName);
     void removeLabelField(String fieldName);
     void clearLabelFields();
 
-    List<String> getBackgroundFields();
+    Set<String> getBackgroundFields();
     void addBackgroundField(String fieldName);
     void removeBackgroundField(String fieldName);
     void clearBackgroundFields();

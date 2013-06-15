@@ -1,14 +1,13 @@
 package md.frolov.legume.client.service.impl;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import com.google.gwt.dom.client.StyleElement;
 import com.google.gwt.dom.client.StyleInjector;
 
@@ -29,8 +28,8 @@ public class ColorizeServiceImpl implements ColorizeService, Constants
 
     /** This map contains color mappings: fieldName -> value -> color hue (0 to 360) */
     private final Map<String, Map<String, Integer>> fieldValueColorMap;
-    private final List<String> labelFields;
-    private final List<String> backgroundFields;
+    private final Set<String> labelFields;
+    private final Set<String> backgroundFields;
 
     @Inject
     public ColorizeServiceImpl(ConfigurationService configurationService)
@@ -43,8 +42,9 @@ public class ColorizeServiceImpl implements ColorizeService, Constants
         } else {
             fieldValueColorMap = Maps.newHashMap();
             addColorizableField("@type");
-            labelFields = Lists.newArrayList("@type");
-            backgroundFields = Lists.newArrayList();
+            labelFields = Sets.newLinkedHashSet();
+            labelFields.add("@type");
+            backgroundFields = Sets.newLinkedHashSet();
         }
 
         refresh();
@@ -190,7 +190,7 @@ public class ColorizeServiceImpl implements ColorizeService, Constants
     }
 
     @Override
-    public List<String> getLabelFields()
+    public Set<String> getLabelFields()
     {
         return labelFields;
     }
@@ -215,7 +215,7 @@ public class ColorizeServiceImpl implements ColorizeService, Constants
     }
 
     @Override
-    public List<String> getBackgroundFields()
+    public Set<String> getBackgroundFields()
     {
         return backgroundFields;
     }
