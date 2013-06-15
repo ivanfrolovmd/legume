@@ -1,0 +1,58 @@
+@url openSansLightEotUrl openSansLightEot;
+@url openSansLightWoffUrl openSansLightWoff;
+@url openSansLightTtfUrl openSansLightTtf;
+@url openSansLightSvgUrl openSansLightSvg;
+@font-face {
+    font-family: 'OpenSansLight';
+    src: openSansLightEotUrl;
+    src: openSansLightWoffUrl format('woff'), openSansLightTtfUrl format('truetype'), openSansLightSvgUrl format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+@url openSansRegularEotUrl openSansRegularEot;
+@url openSansRegularWoffUrl openSansRegularWoff;
+@url openSansRegularTtfUrl openSansRegularTtf;
+@url openSansRegularSvgUrl openSansRegularSvg;
+@font-face {
+    font-family: 'OpenSansRegular';
+    src: openSansRegularEotUrl;
+    src: openSansRegularWoffUrl format('woff'), openSansRegularTtfUrl format('truetype'), openSansRegularSvgUrl format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+@url openSansItalicEotUrl openSansItalicEot;
+@url openSansItalicWoffUrl openSansItalicWoff;
+@url openSansItalicTtfUrl openSansItalicTtf;
+@url openSansItalicSvgUrl openSansItalicSvg;
+@font-face {
+    font-family: 'OpenSansItalic';
+    src: openSansItalicEotUrl;
+    src: openSansItalicWoffUrl format('woff'), openSansItalicTtfUrl format('truetype'), openSansItalicSvgUrl format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+@url openSansBoldEotUrl openSansBoldEot;
+@url openSansBoldWoffUrl openSansBoldWoff;
+@url openSansBoldTtfUrl openSansBoldTtf;
+@url openSansBoldSvgUrl openSansBoldSvg;
+@font-face {
+    font-family: 'OpenSansBold';
+    src: openSansBoldEotUrl;
+    src: openSansBoldWoffUrl format('woff'), openSansBoldTtfUrl format('truetype'), openSansBoldSvgUrl format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+body {
+    font-family: OpenSansRegular, Arial, sans-serif;
+    color: #333;
+    font-size: 12px;
+}
+

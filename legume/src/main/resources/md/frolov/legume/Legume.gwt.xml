@@ -31,8 +31,6 @@
     <set-property name="gwt.logging.logLevel" value="FINE"/> <!-- TODO Change in the maven build -->
     <set-property name="gwt.logging.popupHandler" value="DISABLED" />
 
-    <stylesheet src="../Legume.css" />
-
 	<!-- Specify the app entry point class. -->
 	<entry-point class='md.frolov.legume.client.Legume' />
 

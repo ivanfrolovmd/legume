@@ -20,9 +20,13 @@ public class Legume implements EntryPoint
 
     private WidgetInjector injector = WidgetInjector.INSTANCE;
 
+    private ResourceBundle resources = GWT.create(ResourceBundle.class);
+
     /** This is the entry point method. */
     public void onModuleLoad()
     {
+        resources.mainCss().ensureInjected();
+
         injector.eventBus().addHandler(PlaceChangeEvent.TYPE, injector.application());
 
         injector.activityManager().setDisplay(injector.mainView());
@@ -41,5 +45,6 @@ public class Legume implements EntryPoint
             }
         });
     }
+
 
 }
