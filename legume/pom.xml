@@ -10,15 +10,19 @@
     <version>1.0-SNAPSHOT</version>
     <name>GWT Maven Archetype</name>
 
+    <parent>
+        <groupId>md.frolov.legume</groupId>
+        <artifactId>parent</artifactId>
+        <version>1</version>
+        <relativePath>..</relativePath>
+    </parent>
+
     <properties>
-        <gwtVersion>2.5.1</gwtVersion>
-        <webappDirectory>${project.build.directory}/${project.build.finalName}</webappDirectory>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <downloadSources>true</downloadSources>
     </properties>
 
     <dependencies>
-
         <!-- GWT -->
         <dependency>
             <groupId>com.google.gwt</groupId>
@@ -84,11 +88,7 @@
     </dependencies>
 
     <build>
-        <!-- Generate compiled stuff in the folder used for developing mode -->
-        <outputDirectory>${webappDirectory}/WEB-INF/classes</outputDirectory>
-
         <plugins>
-
             <!-- GWT Maven Plugin -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
@@ -109,23 +109,6 @@
                 </configuration>
             </plugin>
 
-            <!-- Copy static web files before executing gwt:run -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-war-plugin</artifactId>
-                <version>2.3</version>
-                <executions>
-                    <execution>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>exploded</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <webappDirectory>${webappDirectory}</webappDirectory>
-                </configuration>
-            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>

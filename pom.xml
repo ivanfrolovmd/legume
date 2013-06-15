@@ -1,15 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-        <modelVersion>4.0.0</modelVersion>
-        <groupId>md.frolov.legume</groupId>
-        <artifactId>parent</artifactId>
-        <version>1</version>
-        <packaging>pom</packaging>
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>md.frolov.legume</groupId>
+    <artifactId>parent</artifactId>
+    <version>1</version>
+    <packaging>pom</packaging>
 
-        <modules>
-            <module>legume</module>
-            <module>legume-web</module>
-            <module>legume-war</module>
-        </modules>
+    <properties>
+        <gwtVersion>2.5.1</gwtVersion>
+    </properties>
+
+    <modules>
+        <module>legume</module>
+        <module>legume-web</module>
+        <module>legume-war</module>
+    </modules>
+
 </project>

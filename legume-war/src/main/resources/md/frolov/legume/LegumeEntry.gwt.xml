@@ -2,7 +2,6 @@
 <module rename-to="legume">
 
     <inherits name='com.google.gwt.user.User'/>
-    <inherits name='com.google.gwt.i18n.I18N' />
     <inherits name="md.frolov.legume.Legume"/>
 
     <entry-point class='md.frolov.legume.client.LegumeEntry'/>
