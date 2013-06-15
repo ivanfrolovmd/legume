@@ -95,21 +95,25 @@ public class LogEventComponent extends Composite
 
     private void addColorClasses(LogEvent logEvent)
     {
-        addColorClass("type", logEvent.getType());
-        addColorClass("source", logEvent.getSourceHost());
+        addColorClass("@type", logEvent.getType());
+        addColorClass("@source", logEvent.getSource());
+        addColorClass("@source_path", logEvent.getSourcePath());
+        addColorClass("@message", logEvent.getMessage());
+        addColorClass("@source_host", logEvent.getSourceHost());
 
         for (Map.Entry<String, List<String>> entry : logEvent.getFields().entrySet())
         {
             String fieldName = "@fields." + entry.getKey();
-            if (colorizeService.isFieldColorizable(fieldName))
-            {
-                addColorClass(fieldName, entry.getValue());
-            }
+            addColorClass(fieldName, entry.getValue());
         }
     }
 
     private void addColorClass(final String fieldName, final String value)
     {
+        if (!colorizeService.isFieldColorizable(fieldName))
+        {
+            return;
+        }
         if (value == null || value.length() == 0)
         {
             return;
