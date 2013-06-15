@@ -22,7 +22,7 @@ import md.frolov.legume.client.elastic.api.Callback;
 import md.frolov.legume.client.elastic.api.MappingsRequest;
 import md.frolov.legume.client.elastic.api.MappingsResponse;
 import md.frolov.legume.client.gin.WidgetInjector;
-import md.frolov.legume.client.util.ColorUtils;
+import md.frolov.legume.client.service.ColorizeService;
 
 /** @author Ivan Frolov (ifrolov@tacitknowledge.com) */
 public class FieldsComponent extends Composite
@@ -34,7 +34,7 @@ public class FieldsComponent extends Composite
     private static final Logger LOG = Logger.getLogger("FieldsComponent");
     private static FieldsComponentUiBinder binder = GWT.create(FieldsComponentUiBinder.class);
     private ElasticSearchService elasticSearchService = WidgetInjector.INSTANCE.elasticSearchService();
-    private ColorUtils colorUtils = WidgetInjector.INSTANCE.colorUtils();
+    private ColorizeService colorizeService = WidgetInjector.INSTANCE.colorizeService();
 
     @UiField
     Accordion typesAccordion;
@@ -76,7 +76,7 @@ public class FieldsComponent extends Composite
         accordionGroup.setHeading(type);
         Icon icon = new Icon(IconType.CIRCLE);
         icon.setIconSize(IconSize.SMALL);
-        DOM.setStyleAttribute(icon.getElement(), "color", colorUtils.getHashColor(type, 100, 40));
+        DOM.setStyleAttribute(icon.getElement(), "color", colorizeService.getCssColor("@type", type, 100, 40));
         accordionGroup.addCustomTrigger(icon);
 
         for (MappingsResponse.Property property : properties)

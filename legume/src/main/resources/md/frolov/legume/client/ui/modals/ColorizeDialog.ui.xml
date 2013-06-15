@@ -1,0 +1,41 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:b="urn:import:com.github.gwtbootstrap.client.ui"
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+        >
+    <ui:style>
+        .addBox {
+            display: inline;
+            margin-right: 6px;
+        }
+    </ui:style>
+    <b:Modal ui:field="modal" keyboard="true" dynamicSafe="true">
+        <b:Form>
+            <b:ButtonGroup>
+                <b:Button toggle="true" ui:field="colorizeToggle">Use this field for coloring</b:Button>
+                <b:Button toggle="true" ui:field="highlightLabelsToggle">Highlight labels</b:Button>
+                <b:Button toggle="true" ui:field="highlightBackgroundsToggle">Highlight backgrounds</b:Button>
+            </b:ButtonGroup>
+        </b:Form>
+        <g:FlowPanel ui:field="editContainer">
+            <b:WellForm type="HORIZONTAL" title="Terms" ui:field="form">
+                <g:Label ui:field="noTermsLabel">There are no terms yet. New terms will appear here automotacially as you browse through the logs.</g:Label>
+                <!--
+                <b:ControlGroup>
+                    <b:ControlLabel>Term1</b:ControlLabel>
+                    <b:IntegerBox placeholder="hue: 0 to 360" width="100px"/>
+                    <b:Button icon="REMOVE"/>
+                </b:ControlGroup>
+                -->
+            </b:WellForm>
+            <b:AppendButton addStyleNames="{style.addBox}">
+                <b:TextBox placeholder="Term" ui:field="termText"/>
+                <b:Button icon="PLUS" ui:field="addTerm">Add</b:Button>
+            </b:AppendButton>
+            <b:Button icon="MAGIC" ui:field="randomizeField">Randomize colors</b:Button>
+        </g:FlowPanel>
+        <b:ModalFooter>
+            <b:Button icon="OK" type="PRIMARY" ui:field="okButton">Apply</b:Button>
+            <b:Button ui:field="cancelButton">Cancel</b:Button>
+        </b:ModalFooter>
+    </b:Modal>
+</ui:UiBinder>

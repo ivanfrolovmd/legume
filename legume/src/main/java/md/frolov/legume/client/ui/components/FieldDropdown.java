@@ -14,6 +14,7 @@ import com.google.gwt.user.client.ui.Widget;
 import md.frolov.legume.client.Application;
 import md.frolov.legume.client.activities.terms.TermsPlace;
 import md.frolov.legume.client.gin.WidgetInjector;
+import md.frolov.legume.client.ui.modals.ColorizeDialog;
 
 /** @author Ivan Frolov (ifrolov@tacitknowledge.com) */
 public class FieldDropdown extends Composite
@@ -47,5 +48,11 @@ public class FieldDropdown extends Composite
     public void onScoreClick(final ClickEvent event)
     {
         score.setTargetHistoryToken(new TermsPlace(fieldFullName, application.getCurrentSearch()).getTargetHistoryToken());
+    }
+
+    @UiHandler("colorize")
+    public void onColorizeClick(final ClickEvent event)
+    {
+        new ColorizeDialog(fieldFullName, null).show();
     }
 }

@@ -74,16 +74,20 @@
             position: relative;
         }
 
-        @external .bgHighlight; /* @external disables obfuscation */
-        .bgHighlight {
-            background: white;
+        @external .hlLabel;
+        .hlLabel{
+            background-color: #999;
+        }
+        @external .hlBackground;
+        .hlBackground{
+            background-color: white;
         }
     </ui:style>
 
     <g:FocusPanel ui:field="focusPanel">
         <g:FlowPanel styleName="{style.relative}">
-            <g:FlowPanel ui:field="type" styleName="{style.type}"/>
-            <g:FlowPanel addStyleNames="{style.box}" stylePrimaryName="{style.bgHighlight}" ui:field="box">
+            <g:FlowPanel ui:field="type" styleName="{style.type}" addStyleNames="{style.hlLabel}"/>
+            <g:FlowPanel addStyleNames="{style.box} {style.hlBackground}" ui:field="box">
                 <g:HorizontalPanel ui:field="summary" styleName="{style.summaryBox}">
                     <g:Label ui:field="time" styleName="{style.time}"/>
                     <g:Label ui:field="message" styleName="{style.message}"/>

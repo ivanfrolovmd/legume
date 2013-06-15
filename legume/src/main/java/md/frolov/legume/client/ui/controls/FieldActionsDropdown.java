@@ -1,9 +1,7 @@
 package md.frolov.legume.client.ui.controls;
 
 import com.github.gwtbootstrap.client.ui.Dropdown;
-import com.github.gwtbootstrap.client.ui.Modal;
 import com.github.gwtbootstrap.client.ui.NavLink;
-import com.github.gwtbootstrap.client.ui.TextArea;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.regexp.shared.RegExp;
@@ -18,6 +16,8 @@ import md.frolov.legume.client.activities.stream.StreamPlace;
 import md.frolov.legume.client.activities.terms.TermsPlace;
 import md.frolov.legume.client.gin.WidgetInjector;
 import md.frolov.legume.client.model.Search;
+import md.frolov.legume.client.ui.modals.ColorizeDialog;
+import md.frolov.legume.client.ui.modals.CopyToClipboardDialog;
 
 /** @author Ivan Frolov (ifrolov@tacitknowledge.com) */
 public class FieldActionsDropdown extends Composite
@@ -44,6 +44,8 @@ public class FieldActionsDropdown extends Composite
     NavLink copyToClipboard;
     @UiField
     NavLink score;
+    @UiField
+    NavLink assignColor;
 
     private final String fieldName;
     private final String valueText;
@@ -89,6 +91,7 @@ public class FieldActionsDropdown extends Composite
             excludeFilter.setVisible(false);
             includeOnlyFilter.setVisible(false);
             excludeOnlyFilter.setVisible(false);
+            assignColor.setVisible(false);
         }
     }
 
@@ -118,21 +121,13 @@ public class FieldActionsDropdown extends Composite
     public void handleCopyToClipboard(final ClickEvent event)
     {
         event.stopPropagation();
+        new CopyToClipboardDialog(fieldName, valueText).show();
+    }
 
-        //TODO move to declarative layout
-        Modal modal = new Modal(false, true);
-        modal.setWidth("600px");
-        modal.setTitle("Copy to clipboard");
-
-        String text = valueText;
-        TextArea textArea = new TextArea();
-        textArea.setWidth("550px");
-        textArea.setHeight("300px");
-        textArea.setText(text);
-        modal.add(textArea);
-
-        modal.show();
-        textArea.setSelectionRange(0, text.length());
-        textArea.setFocus(true);
+    @UiHandler("assignColor")
+    public void onAssignColorClick(final ClickEvent event)
+    {
+        event.stopPropagation();
+        new ColorizeDialog(fieldName, valueText).show();
     }
 }

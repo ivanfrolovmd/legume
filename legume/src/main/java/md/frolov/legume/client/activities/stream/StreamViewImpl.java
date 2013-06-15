@@ -28,6 +28,7 @@ import md.frolov.legume.client.events.SearchInProgressEvent;
 import md.frolov.legume.client.events.SearchInProgressEventHandler;
 import md.frolov.legume.client.events.SearchResultsReceivedEvent;
 import md.frolov.legume.client.events.SearchResultsReceivedEventHandler;
+import md.frolov.legume.client.service.ColorizeService;
 import md.frolov.legume.client.ui.components.LogEventComponent;
 import md.frolov.legume.client.util.IteratorIncrementalTask;
 
@@ -65,7 +66,12 @@ public class StreamViewImpl extends Composite implements StreamView, SearchResul
     @Named("scrollThreashold")
     private Integer scrollThreashold = 50;
 
+    @Inject
+    private ColorizeService colorizeService;
+
+    @Inject
     private EventBus eventBus;
+
     private Presenter presenter;
     private boolean isRendering;
     private boolean initial;
@@ -78,7 +84,6 @@ public class StreamViewImpl extends Composite implements StreamView, SearchResul
     public StreamViewImpl(EventBus eventBus)
     {
         initWidget(uiBinder.createAndBindUi(this));
-        this.eventBus = eventBus;
         eventBus.addHandler(SearchResultsReceivedEvent.TYPE, this);
         eventBus.addHandler(SearchInProgressEvent.TYPE, this);
         eventBus.addHandler(SearchFinishedEvent.TYPE, this);
@@ -192,6 +197,8 @@ public class StreamViewImpl extends Composite implements StreamView, SearchResul
                         handleNoMoreResults(upwards);
                     }
                 }
+
+                colorizeService.refresh();
             }
         });
     }

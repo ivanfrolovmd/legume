@@ -6,5 +6,7 @@ public interface Constants {
     String PAGE_SIZE = "pageSize";
     String ELASTICSEARCH_CONNECTIONS = "elasticSearchConnections";
 
+    String COLORS_CONF = "colorsConf";
+
     String SCROLL_THREASHOLD_CLIENT_HEIGHT_RATIO = "scrollThreasholdClientHeightRatio";
 }

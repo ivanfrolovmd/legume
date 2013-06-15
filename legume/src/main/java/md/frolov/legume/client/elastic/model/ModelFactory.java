@@ -4,6 +4,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanFactory;
 
+import md.frolov.legume.client.model.ColorsConf;
 import md.frolov.legume.client.model.ConnectionsConf;
 import md.frolov.legume.client.elastic.model.query.*;
 import md.frolov.legume.client.elastic.model.reply.ElasticSearchReply;
@@ -58,4 +59,5 @@ public interface ModelFactory extends AutoBeanFactory {
     AutoBean<Mapping.PropertyMapping> propertyMapping();
 
     AutoBean<ConnectionsConf> connectionsConf();
+    AutoBean<ColorsConf> colorsConf();
 }

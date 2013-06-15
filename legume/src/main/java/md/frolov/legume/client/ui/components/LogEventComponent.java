@@ -1,5 +1,8 @@
 package md.frolov.legume.client.ui.components;
 
+import java.util.List;
+import java.util.Map;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.MouseOverEvent;
@@ -8,7 +11,6 @@ import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FocusPanel;
@@ -20,7 +22,7 @@ import com.google.web.bindery.event.shared.EventBus;
 import md.frolov.legume.client.elastic.model.reply.LogEvent;
 import md.frolov.legume.client.events.LogMessageHoverEvent;
 import md.frolov.legume.client.gin.WidgetInjector;
-import md.frolov.legume.client.util.ColorUtils;
+import md.frolov.legume.client.service.ColorizeService;
 
 /** @author Ivan Frolov (ifrolov@tacitknowledge.com) */
 public class LogEventComponent extends Composite
@@ -43,7 +45,7 @@ public class LogEventComponent extends Composite
     private final LogEvent logEvent;
 
     private WidgetInjector injector = WidgetInjector.INSTANCE;
-    private ColorUtils colorUtils = injector.colorUtils();
+    private ColorizeService colorizeService = injector.colorizeService();
     private EventBus eventBus = injector.eventBus();
 
     @UiField
@@ -76,8 +78,6 @@ public class LogEventComponent extends Composite
         String summaryText = abbreviate(logEvent.getMessage(), MAX_SUMMARY_WIDTH);
         message.setText(summaryText);
 
-        String typeColor = colorUtils.getHashColor(logEvent.getType(), 100, 40);
-        DOM.setStyleAttribute(type.getElement(), "backgroundColor", typeColor);
         addColorClasses(logEvent);
     }
 
@@ -93,26 +93,41 @@ public class LogEventComponent extends Composite
         }
     }
 
-    private void addColorClasses(LogEvent logEvent) {
+    private void addColorClasses(LogEvent logEvent)
+    {
         addColorClass("type", logEvent.getType());
         addColorClass("source", logEvent.getSourceHost());
-        //TODO add tags
-        //TODO add fields
+
+        for (Map.Entry<String, List<String>> entry : logEvent.getFields().entrySet())
+        {
+            String fieldName = "@fields." + entry.getKey();
+            if (colorizeService.isFieldColorizable(fieldName))
+            {
+                addColorClass(fieldName, entry.getValue());
+            }
+        }
     }
 
-    private void addColorClass(final String key, final String value)
+    private void addColorClass(final String fieldName, final String value)
     {
-        if(value != null && value.length()<30 && value.length()>0) {
-            String cssName = escape(key)+"-"+escape(value);
-            box.addStyleDependentName(cssName);
+        if (value == null || value.length() == 0)
+        {
+            return;
         }
+        focusPanel.addStyleName(colorizeService.getCssClassName(fieldName, value));
     }
 
-    private String escape(String str) {
-        if(str!=null) {
-            return str.toLowerCase().replaceAll("\\W","");
+    private void addColorClass(final String fieldName, final List<String> values)
+    {
+        if (values == null || values.isEmpty())
+        {
+            return;
         }
-        return str;
+
+        for (String value : values)
+        {
+            addColorClass(fieldName, value);
+        }
     }
 
     @UiHandler("focusPanel")
