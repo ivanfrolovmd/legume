@@ -5,10 +5,12 @@
     <ui:style>
         .addBox {
             display: inline;
+        }
+        .marginRight {
             margin-right: 6px;
         }
     </ui:style>
-    <b:Modal ui:field="modal" keyboard="true" dynamicSafe="true">
+    <b:Modal ui:field="modal" keyboard="true" dynamicSafe="true" width="580px">
         <b:Form>
             <b:ButtonGroup>
                 <b:Button toggle="true" ui:field="colorizeToggle">Use this field for coloring</b:Button>
@@ -27,11 +29,12 @@
                 </b:ControlGroup>
                 -->
             </b:WellForm>
-            <b:AppendButton addStyleNames="{style.addBox}">
+            <b:AppendButton addStyleNames="{style.marginRight} {style.addBox}">
                 <b:TextBox placeholder="Term" ui:field="termText"/>
                 <b:Button icon="PLUS" ui:field="addTerm">Add</b:Button>
             </b:AppendButton>
-            <b:Button icon="MAGIC" ui:field="randomizeField">Randomize colors</b:Button>
+            <b:Button icon="MAGIC" ui:field="randomizeField" addStyleNames="{style.marginRight}">Randomize colors</b:Button>
+            <b:Button icon="TRASH" ui:field="clearFields">Clear</b:Button>
         </g:FlowPanel>
         <b:ModalFooter>
             <b:Button icon="OK" type="PRIMARY" ui:field="okButton">Apply</b:Button>

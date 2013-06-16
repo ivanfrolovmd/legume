@@ -58,6 +58,8 @@ public class ColorizeDialog
     Label noTermsLabel;
     @UiField
     Button randomizeField;
+    @UiField
+    Button clearFields;
 
     Map<String, Integer> colorsMap = Maps.newHashMap();
 
@@ -85,8 +87,8 @@ public class ColorizeDialog
         } else {
             refreshRequired = true;
             colorizeToggle.setActive(false);
-            highlightLabelsToggle.setVisible(false);
-            highlightBackgroundsToggle.setVisible(false);
+            highlightLabelsToggle.setEnabled(false);
+            highlightBackgroundsToggle.setEnabled(false);
             editContainer.setVisible(false);
         }
     }
@@ -141,12 +143,12 @@ public class ColorizeDialog
     public void onToggleColorize(final ClickEvent event)
     {
         if(colorizeToggle.isToggled()) {
-            highlightLabelsToggle.setVisible(false);
-            highlightBackgroundsToggle.setVisible(false);
+            highlightLabelsToggle.setEnabled(false);
+            highlightBackgroundsToggle.setEnabled(false);
             editContainer.setVisible(false);
         } else {
-            highlightLabelsToggle.setVisible(true);
-            highlightBackgroundsToggle.setVisible(true);
+            highlightLabelsToggle.setEnabled(true);
+            highlightBackgroundsToggle.setEnabled(true);
             editContainer.setVisible(true);
         }
     }
@@ -168,6 +170,13 @@ public class ColorizeDialog
         }
     }
 
+    @UiHandler("clearFields")
+    public void onClearFieldsClick(final ClickEvent event)
+    {
+        form.clear();
+        colorsMap.clear();
+    }
+
     @UiHandler("okButton")
     public void onOkClick(final ClickEvent event)
     {
@@ -185,6 +194,7 @@ public class ColorizeDialog
                 colorizeService.removeBackgroundField(fieldName);
             }
 
+            colorizeService.getValues(fieldName).clear();
             for (Map.Entry<String, Integer> entry : colorsMap.entrySet())
             {
                 colorizeService.setColorHue(fieldName, entry.getKey(), entry.getValue());
