@@ -11,6 +11,7 @@ import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 
 import md.frolov.legume.client.elastic.model.ModelFactory;
+import md.frolov.legume.client.model.GlobalConf;
 import md.frolov.legume.client.service.ConfigurationService;
 import md.frolov.legume.client.util.JsMap;
 
@@ -102,6 +103,24 @@ public class ConfigurationServiceImpl implements ConfigurationService
     {
         String json = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(object)).getPayload();
         put(key, json);
+    }
+
+    @Override
+    public String exportConfig()
+    {
+        GlobalConf conf = ModelFactory.INSTANCE.globalConf().as();
+        conf.setProperties(getPropertyMap());
+        return AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(conf)).getPayload();
+    }
+
+    @Override
+    public void importConfig(final String importJson)
+    {
+        GlobalConf conf = AutoBeanCodex.decode(ModelFactory.INSTANCE, GlobalConf.class, importJson).as();
+        for (Map.Entry<String, String> prop : conf.getProperties().entrySet())
+        {
+            put(prop.getKey(), prop.getValue());
+        }
     }
 
     private final native String getFromProperties(final String key) /*-{

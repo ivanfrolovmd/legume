@@ -12,6 +12,7 @@ import md.frolov.legume.client.elastic.model.reply.HealthStatus;
 import md.frolov.legume.client.elastic.model.reply.Mapping;
 import md.frolov.legume.client.elastic.model.reply.PingReply;
 import md.frolov.legume.client.elastic.model.reply.SearchHits;
+import md.frolov.legume.client.model.GlobalConf;
 
 @AutoBeanFactory.Category(QueryStringCategory.class)
 public interface ModelFactory extends AutoBeanFactory {
@@ -60,4 +61,5 @@ public interface ModelFactory extends AutoBeanFactory {
 
     AutoBean<ConnectionsConf> connectionsConf();
     AutoBean<ColorsConf> colorsConf();
+    AutoBean<GlobalConf> globalConf();
 }

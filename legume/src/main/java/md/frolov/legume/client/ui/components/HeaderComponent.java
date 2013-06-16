@@ -1,23 +1,36 @@
 package md.frolov.legume.client.ui.components;
 
+import org.vectomatic.file.File;
+import org.vectomatic.file.FileList;
+import org.vectomatic.file.FileReader;
+import org.vectomatic.file.FileUploadExt;
+import org.vectomatic.file.events.LoadEndEvent;
+import org.vectomatic.file.events.LoadEndHandler;
+
 import com.github.gwtbootstrap.client.ui.Button;
+import com.github.gwtbootstrap.client.ui.NavLink;
+import com.github.gwtbootstrap.client.ui.SplitDropdownButton;
 import com.github.gwtbootstrap.client.ui.TextBox;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.EventBus;
 
 import md.frolov.legume.client.Application;
+import md.frolov.legume.client.activities.config.ConfigPlace;
 import md.frolov.legume.client.activities.stream.StreamPlace;
 import md.frolov.legume.client.events.UpdateSearchQuery;
 import md.frolov.legume.client.events.UpdateSearchQueryHandler;
 import md.frolov.legume.client.gin.WidgetInjector;
 import md.frolov.legume.client.model.Search;
+import md.frolov.legume.client.service.ConfigurationService;
 
 /** @author Ivan Frolov (ifrolov@tacitknowledge.com) */
 public class HeaderComponent extends Composite implements UpdateSearchQueryHandler
@@ -35,9 +48,18 @@ public class HeaderComponent extends Composite implements UpdateSearchQueryHandl
     TextBox searchQuery;
     @UiField
     Button openInNewWindow;
+    @UiField
+    SplitDropdownButton configureButton;
+    @UiField
+    NavLink exportButton;
+    @UiField
+    NavLink importButton;
+    @UiField
+    FileUploadExt uploadFile;
 
     private EventBus eventBus = WidgetInjector.INSTANCE.eventBus();
     private Application application = WidgetInjector.INSTANCE.application();
+    private ConfigurationService configurationService = WidgetInjector.INSTANCE.configurationService();
 
     public HeaderComponent()
     {
@@ -77,5 +99,49 @@ public class HeaderComponent extends Composite implements UpdateSearchQueryHandl
     {
         String place = new StreamPlace(application.getCurrentSearch()).getTargetHistoryToken();
         openInNewWindow.setTargetHistoryToken(place);
+    }
+
+    @UiHandler("configureButton")
+    public void onConfigureClick(final ClickEvent event)
+    {
+        injector.placeController().goTo(new ConfigPlace());
+    }
+
+    @UiHandler("importButton")
+    public void onImportButtonClick(final ClickEvent event)
+    {
+        uploadFile.click();
+    }
+
+    @UiHandler("uploadFile")
+    public void onUploadFile(final ChangeEvent event)
+    {
+        FileList files = uploadFile.getFiles();
+        if(files.getLength()>0) {
+            File file = files.getItem(0);
+            final FileReader reader = new FileReader();
+
+            reader.addLoadEndHandler(new LoadEndHandler()
+            {
+                @Override
+                public void onLoadEnd(final LoadEndEvent event)
+                {
+                    String text = reader.getStringResult();
+                    configurationService.importConfig(text);
+                    Window.Location.reload();
+                }
+            });
+
+            reader.readAsText(file);
+        }
+    }
+
+    @UiHandler("exportButton")
+    public void onExportButtonClick(final ClickEvent event)
+    {
+        StringBuilder sb = new StringBuilder();
+        sb.append("data:application/text;charset=utf-8,");
+        sb.append(configurationService.exportConfig());
+        exportButton.setHref(sb.toString());
     }
 }

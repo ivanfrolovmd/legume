@@ -1,6 +1,7 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'
              xmlns:b="urn:import:com.github.gwtbootstrap.client.ui"
+             xmlns:f="urn:import:org.vectomatic.file"
         >
     <ui:style>
         .box {
@@ -60,7 +61,11 @@
             </b:AppendButton>
         </g:FlowPanel>
         <g:FlowPanel styleName="{style.configBox}">
-            <b:Button targetHistoryToken="config:" icon="COGS">Configure</b:Button>
+            <b:SplitDropdownButton icon="COGS" text="Configure" ui:field="configureButton">
+                <b:NavLink icon="SIGNOUT" ui:field="exportButton">Export settings</b:NavLink>
+                <b:NavLink icon="SIGNIN" ui:field="importButton">Import settings</b:NavLink>
+            </b:SplitDropdownButton>
+            <f:FileUploadExt ui:field="uploadFile" visible="false"/>
         </g:FlowPanel>
     </g:FlowPanel>
 </ui:UiBinder>

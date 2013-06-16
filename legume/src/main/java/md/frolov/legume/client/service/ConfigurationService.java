@@ -18,4 +18,6 @@ public interface ConfigurationService {
 
     Map<String, String> getPropertyMap();
 
+    String exportConfig();
+    void importConfig(String importJson);
 }

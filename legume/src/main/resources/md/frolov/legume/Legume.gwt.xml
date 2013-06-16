@@ -26,6 +26,7 @@
     <inherits name="com.google.common.collect.Collect"/>
     <inherits name="com.google.common.cache.Cache"/>
     <inherits name="com.flipthebird.GwtHashCodeEquals"/>
+    <inherits name="org.vectomatic.libgwtfile"/>
 
 	<inherits name='com.google.gwt.logging.Logging' />
     <set-property name="gwt.logging.logLevel" value="FINE"/> <!-- TODO Change in the maven build -->
