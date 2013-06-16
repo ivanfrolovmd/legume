@@ -18,6 +18,8 @@ import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
@@ -143,5 +145,6 @@ public class HeaderComponent extends Composite implements UpdateSearchQueryHandl
         sb.append("data:application/text;charset=utf-8,");
         sb.append(configurationService.exportConfig());
         exportButton.setHref(sb.toString());
+        DOM.setElementAttribute((Element) exportButton.getElement().getFirstChildElement(), "download", "settings.json");
     }
 }
