@@ -10,9 +10,11 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.google.gwt.dom.client.StyleElement;
 import com.google.gwt.dom.client.StyleInjector;
+import com.google.web.bindery.event.shared.EventBus;
 
 import md.frolov.legume.client.Constants;
 import md.frolov.legume.client.elastic.model.ModelFactory;
+import md.frolov.legume.client.events.ColorConfUpdatedEvent;
 import md.frolov.legume.client.model.ColorsConf;
 import md.frolov.legume.client.service.ColorizeService;
 import md.frolov.legume.client.service.ConfigurationService;
@@ -23,6 +25,9 @@ public class ColorizeServiceImpl implements ColorizeService, Constants
 {
     @Inject
     private ConfigurationService configurationService;
+
+    @Inject
+    private EventBus eventBus;
 
     private StyleElement styleElement;
 
@@ -35,16 +40,19 @@ public class ColorizeServiceImpl implements ColorizeService, Constants
     public ColorizeServiceImpl(ConfigurationService configurationService)
     {
         ColorsConf colorsConf = configurationService.getObject(COLORS_CONF, ColorsConf.class);
+        fieldValueColorMap = Maps.newHashMap();
+        labelFields = Sets.newLinkedHashSet();
+        backgroundFields = Sets.newLinkedHashSet();
         if(colorsConf!=null) {
-            fieldValueColorMap = colorsConf.getFieldValueColorMap();
-            labelFields = colorsConf.getLabelFields();
-            backgroundFields = colorsConf.getBackgroundFields();
+            for (Map.Entry<String, Map<String, Integer>> entry : colorsConf.getFieldValueColorMap().entrySet())
+            {
+                fieldValueColorMap.put(entry.getKey(), Maps.newLinkedHashMap(entry.getValue()));
+            }
+            labelFields.addAll(colorsConf.getLabelFields());
+            backgroundFields.addAll(colorsConf.getBackgroundFields());
         } else {
-            fieldValueColorMap = Maps.newHashMap();
             addColorizableField("@type");
-            labelFields = Sets.newLinkedHashSet();
             labelFields.add("@type");
-            backgroundFields = Sets.newLinkedHashSet();
         }
 
         refresh();
