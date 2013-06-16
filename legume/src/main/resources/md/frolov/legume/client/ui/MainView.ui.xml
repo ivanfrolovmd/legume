@@ -19,7 +19,7 @@
     </ui:style>
         <g:DockLayoutPanel unit='PX' styleName="{style.box}">
             <g:north size='70'>
-                <l:HeaderComponent/>
+                <l:HeaderComponent ui:field="header"/>
             </g:north>
 
             <g:center>

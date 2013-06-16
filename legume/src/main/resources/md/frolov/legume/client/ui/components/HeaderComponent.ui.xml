@@ -34,13 +34,13 @@
         }
         .controlsBox {
             left: 270px;
-            right: 340px;
+            right: 350px;
             min-width: 400px;
             overflow: visible;
         }
 
         .configBox {
-            right: 40px;
+            right: 50px;
             width: 150px;
         }
 
