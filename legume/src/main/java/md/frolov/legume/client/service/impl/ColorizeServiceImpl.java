@@ -29,7 +29,7 @@ public class ColorizeServiceImpl implements ColorizeService, Constants
     @Inject
     private EventBus eventBus;
 
-    private StyleElement styleElement;
+    private final StyleElement styleElement;
 
     /** This map contains color mappings: fieldName -> value -> color hue (0 to 360) */
     private final Map<String, Map<String, Integer>> fieldValueColorMap;
@@ -39,6 +39,8 @@ public class ColorizeServiceImpl implements ColorizeService, Constants
     @Inject
     public ColorizeServiceImpl(ConfigurationService configurationService)
     {
+        styleElement = StyleInjector.injectStylesheetAtEnd("");
+
         ColorsConf colorsConf = configurationService.getObject(COLORS_CONF, ColorsConf.class);
         fieldValueColorMap = Maps.newHashMap();
         labelFields = Sets.newLinkedHashSet();
@@ -104,10 +106,7 @@ public class ColorizeServiceImpl implements ColorizeService, Constants
 
     @Override
     public void refresh() {
-        if(styleElement != null) {
-            styleElement.removeFromParent();
-        }
-        styleElement = StyleInjector.injectStylesheetAtEnd(generateCssStyleSheet());
+        StyleInjector.setContents(styleElement, generateCssStyleSheet());
     }
 
     @Override
