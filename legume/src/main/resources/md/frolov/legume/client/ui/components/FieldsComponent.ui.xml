@@ -2,10 +2,6 @@
              xmlns:b="urn:import:com.github.gwtbootstrap.client.ui"
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
     <ui:style>
-        .box {
-            padding: 10px;
-        }
-
         .accordion {
         }
 
@@ -35,9 +31,7 @@
             overflow: visible;
         }
     </ui:style>
-    <g:ScrollPanel styleName="{style.box}">
-        <g:FlowPanel>
-            <b:Accordion ui:field="typesAccordion" addStyleNames="{style.accordion}"/>
-        </g:FlowPanel>
-    </g:ScrollPanel>
+    <g:FlowPanel>
+        <b:Accordion ui:field="typesAccordion" addStyleNames="{style.accordion}"/>
+    </g:FlowPanel>
 </ui:UiBinder>

@@ -12,6 +12,10 @@
             top: 0;
             bottom: 0;
         }
+
+        .leftPanel {
+            padding: 10px;
+        }
     </ui:style>
         <g:DockLayoutPanel unit='PX' styleName="{style.box}">
             <g:north size='70'>
@@ -24,9 +28,12 @@
                         <l:HistogramComponent/>
                     </g:north>
                     <g:west size='250'>
-                        <g:ResizeLayoutPanel>
-                            <l:FieldsComponent/>
-                        </g:ResizeLayoutPanel>
+                        <g:ScrollPanel>
+                            <g:FlowPanel styleName="{style.leftPanel}">
+                                <l:FieldsComponent/>
+                                <l:ColorFieldsComponent/>
+                            </g:FlowPanel>
+                        </g:ScrollPanel>
                     </g:west>
                     <g:center>
                         <!-- ResizeLayoutPanel required to insert other layout panels, like ScrollPanel -->

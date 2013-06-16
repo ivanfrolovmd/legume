@@ -91,6 +91,7 @@ public class ColorizeServiceImpl implements ColorizeService, Constants
         colorsConf.setLabelFields(labelFields);
         colorsConf.setBackgroundFields(backgroundFields);
         configurationService.put(COLORS_CONF, colorsConf);
+        eventBus.fireEvent(new ColorConfUpdatedEvent());
     }
 
     @Override
