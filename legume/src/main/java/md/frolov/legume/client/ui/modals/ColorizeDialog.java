@@ -157,6 +157,7 @@ public class ColorizeDialog
     public void onAddTermClick(final ClickEvent event)
     {
         addValue(termText.getText(), Random.nextInt(360));
+        termText.setText("");
     }
 
     @UiHandler("randomizeField")
