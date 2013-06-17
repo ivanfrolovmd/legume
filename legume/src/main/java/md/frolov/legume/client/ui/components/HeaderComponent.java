@@ -26,13 +26,13 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.EventBus;
 
 import md.frolov.legume.client.Application;
-import md.frolov.legume.client.activities.config.ConfigPlace;
 import md.frolov.legume.client.activities.stream.StreamPlace;
 import md.frolov.legume.client.events.UpdateSearchQuery;
 import md.frolov.legume.client.events.UpdateSearchQueryHandler;
 import md.frolov.legume.client.gin.WidgetInjector;
 import md.frolov.legume.client.model.Search;
 import md.frolov.legume.client.service.ConfigurationService;
+import md.frolov.legume.client.ui.modals.ConfigurationModal;
 
 /** @author Ivan Frolov (ifrolov@tacitknowledge.com) */
 public class HeaderComponent extends Composite implements UpdateSearchQueryHandler
@@ -106,7 +106,7 @@ public class HeaderComponent extends Composite implements UpdateSearchQueryHandl
     @UiHandler("configureButton")
     public void onConfigureClick(final ClickEvent event)
     {
-        injector.placeController().goTo(new ConfigPlace());
+        new ConfigurationModal().show();
     }
 
     @UiHandler("importButton")

@@ -7,8 +7,6 @@ import com.google.gwt.activity.shared.Activity;
 import com.google.gwt.activity.shared.ActivityMapper;
 import com.google.gwt.place.shared.Place;
 
-import md.frolov.legume.client.activities.config.ConfigActivity;
-import md.frolov.legume.client.activities.config.ConfigPlace;
 import md.frolov.legume.client.activities.stream.StreamActivity;
 import md.frolov.legume.client.activities.stream.StreamPlace;
 import md.frolov.legume.client.activities.terms.TermsActivity;
@@ -19,9 +17,6 @@ public class AppActivityMapper implements ActivityMapper {
     private Provider<StreamActivity> streamActivity;
 
     @Inject
-    private Provider<ConfigActivity> configActivity;
-
-    @Inject
     private Provider<TermsActivity> termsActivity;
 
     @Override
@@ -29,8 +24,6 @@ public class AppActivityMapper implements ActivityMapper {
         // TODO make it configurable, mappable. Get rid of ifs.
         if(place instanceof StreamPlace)
             return streamActivity.get();
-        if(place instanceof ConfigPlace)
-            return configActivity.get();
         if(place instanceof TermsPlace)
             return termsActivity.get();
 

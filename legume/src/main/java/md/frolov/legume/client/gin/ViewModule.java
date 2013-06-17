@@ -4,8 +4,6 @@ import javax.inject.Singleton;
 
 import com.google.gwt.inject.client.AbstractGinModule;
 
-import md.frolov.legume.client.activities.config.ConfigView;
-import md.frolov.legume.client.activities.config.ConfigViewImpl;
 import md.frolov.legume.client.activities.stream.StreamView;
 import md.frolov.legume.client.activities.stream.StreamViewImpl;
 import md.frolov.legume.client.activities.terms.TermsView;
@@ -20,7 +18,6 @@ public class ViewModule extends AbstractGinModule{
         bind(MainView.class).in(Singleton.class);
 
         bind(StreamView.class).to(StreamViewImpl.class);
-        bind(ConfigView.class).to(ConfigViewImpl.class);
         bind(TermsView.class).to(TermsViewImpl.class);
         bind(ConnectionManagerComponent.class);
     }
