@@ -36,6 +36,8 @@ public class ColorizeServiceImpl implements ColorizeService, Constants
     private final Set<String> labelFields;
     private final Set<String> backgroundFields;
 
+    private boolean changed = true;
+
     @Inject
     public ColorizeServiceImpl(ConfigurationService configurationService)
     {
@@ -92,6 +94,7 @@ public class ColorizeServiceImpl implements ColorizeService, Constants
     @Override
     public void saveAndRefresh() {
         save();
+        changed = true;
         refresh();
     }
 
@@ -106,7 +109,10 @@ public class ColorizeServiceImpl implements ColorizeService, Constants
 
     @Override
     public void refresh() {
-        StyleInjector.setContents(styleElement, generateCssStyleSheet());
+        if(changed) {
+            StyleInjector.setContents(styleElement, generateCssStyleSheet());
+            changed = false;
+        }
     }
 
     @Override
@@ -161,6 +167,7 @@ public class ColorizeServiceImpl implements ColorizeService, Constants
         if(hue == null) {
             hue = generateColor(fieldName, value);
             valueColorMap.put(value, hue);
+            changed = true;
         }
         return hue;
     }
