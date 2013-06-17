@@ -9,7 +9,7 @@
 	<!-- <inherits name='com.google.gwt.junit.JUnit' /> -->
 
     <inherits name="com.github.gwtbootstrap.Bootstrap" />
-    <inherits name='com.github.gwtbootstrap.datepicker.Datepicker' />
+    <inherits name="com.github.gwtbootstrap.datetimepicker.Datetimepicker"/>
 
     <inherits name="com.googlecode.gflot.GFlot"/>
     <set-property name="gflot.load.jquery" value="EXTERNAL" /> <!-- JQuery is introduced in Bootstrap -->
