@@ -1,25 +1,28 @@
 package md.frolov.legume.client.service.impl;
 
-import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.google.gwt.user.client.Cookies;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 
 import md.frolov.legume.client.elastic.model.ModelFactory;
 import md.frolov.legume.client.model.GlobalConf;
 import md.frolov.legume.client.service.ConfigurationService;
-import md.frolov.legume.client.util.JsMap;
+import md.frolov.legume.client.service.StorageDao;
 
 @Singleton
 public class ConfigurationServiceImpl implements ConfigurationService
 {
     @Inject
     private ModelFactory modelFactory;
+
+    @Inject
+    private List<StorageDao> storageDaos;
 
     @Override
     public String get(final String key)
@@ -30,20 +33,19 @@ public class ConfigurationServiceImpl implements ConfigurationService
     @Override
     public String get(final String key, final String defaultValue)
     {
-        String value = Cookies.getCookie(key);
-        if (value == null)
+        String value = null;
+        for (StorageDao storageDao : storageDaos)
         {
-            try
-            {
-                value = getFromProperties(key);
-            }
-            catch (Exception e)
-            {
+            try {
+                value = storageDao.get(key);
+            } catch (Exception e){
                 //do nothing
             }
+            if(value != null) {
+                break;
+            }
         }
-        if (value == null)
-        {
+        if(value == null) {
             value = defaultValue;
         }
         return value;
@@ -64,27 +66,30 @@ public class ConfigurationServiceImpl implements ConfigurationService
     @Override
     public void put(final String key, final String value)
     {
-        Cookies.setCookie(key, value); //TODO secure cookies?
+        for (StorageDao storageDao : storageDaos)
+        {
+            try{
+                storageDao.put(key,value);
+                return;
+            } catch (Exception e) {
+                //continue
+            }
+        }
+
+        throw new IllegalStateException("Can't save property");
     }
 
     @Override
     public Map<String, String> getPropertyMap()
     {
-        Map<String,String> properties = Maps.newTreeMap();
-
-        JsMap jsMap = getFromProperties();
-        for (String key : jsMap.keySet())
+        List<StorageDao> reversedList = Lists.reverse(storageDaos);
+        Map<String, String> result = Maps.newHashMap();
+        for (StorageDao dao : reversedList)
         {
-            properties.put(key, jsMap.get(key));
+            result.putAll(dao.getAllProperties());
         }
 
-        Collection<String> cookieNames = Cookies.getCookieNames();
-        for (String cookieName : cookieNames)
-        {
-            properties.put(cookieName, Cookies.getCookie(cookieName));
-        }
-
-        return properties;
+        return result;
     }
 
     @Override
@@ -122,13 +127,4 @@ public class ConfigurationServiceImpl implements ConfigurationService
             put(prop.getKey(), prop.getValue());
         }
     }
-
-    private final native String getFromProperties(final String key) /*-{
-        return $wnd.window.GlobalProperties[key].toString();
-        //TODO check for null values
-    }-*/;
-
-    private final native JsMap getFromProperties() /*-{
-        return $wnd.window.GlobalProperties;
-    }-*/;
 }
