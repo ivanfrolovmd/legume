@@ -1,5 +1,6 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:b="urn:import:com.github.gwtbootstrap.client.ui"
+             xmlns:f="urn:import:org.vectomatic.file"
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
     <ui:style>
         .formTextBox {
@@ -9,6 +10,10 @@
         .alignCentered {
             text-align: center;
         }
+
+        .well span {
+            margin-right: 5px;
+        }
     </ui:style>
     <b:Modal title="Configuration" ui:field="modal" dynamicSafe="true" keyboard="true" width="600px">
         <b:TabPanel tabPosition="above">
@@ -17,22 +22,22 @@
                 <b:WellForm>
                     <b:ControlGroup>
                         <b:ControlLabel>Page size</b:ControlLabel>
-                        <b:IntegerBox/>
+                        <b:IntegerBox ui:field="pageSize"/>
                     </b:ControlGroup>
                     <b:ControlGroup>
                         <b:ControlLabel>Elasticsearch timeout</b:ControlLabel>
-                        <b:IntegerBox/>
+                        <b:IntegerBox ui:field="timeout" />
                     </b:ControlGroup>
                     <b:ControlGroup>
                         <b:ControlLabel>Scroll threshold</b:ControlLabel>
-                        <b:DoubleBox/>
+                        <b:DoubleBox ui:field="scrollThreshold"/>
                     </b:ControlGroup>
                 </b:WellForm>
             </b:TabPane>
             <b:TabPane heading="Connections">
                 <g:Label>You can set shortcuts for connections to elasticsearch used most frequently. All of them are stored locally in the browser.</g:Label>
-                <b:Well ui:field="connectionsWell"/>
-                <b:WellForm>
+                <b:Well ui:field="connectionsWell" addStyleNames="{style.well}"/>
+                <b:WellForm >
                     <b:ControlGroup>
                         <b:ControlLabel>Server name</b:ControlLabel>
                         <b:TextBox placeholder="e.g. UAT, PROD" ui:field="serverName" addStyleNames="{style.formTextBox}" />
@@ -43,7 +48,7 @@
                     </b:ControlGroup>
                     <b:ControlGroup>
                         <b:ControlLabel></b:ControlLabel>
-                        <b:Button icon="PLUS">Add</b:Button>
+                        <b:Button icon="PLUS" ui:field="addConnection">Add</b:Button>
                     </b:ControlGroup>
                 </b:WellForm>
             </b:TabPane>
@@ -51,15 +56,15 @@
                 <g:Label>Good description goes here</g:Label> <!--TODO wording -->
                 <g:FlowPanel addStyleNames="{style.alignCentered}">
                     <b:ButtonGroup>
-                        <b:Button size="LARGE" icon="SIGNOUT">Export settings</b:Button>
-                        <b:Button size="LARGE" icon="SIGNIN">Import settings</b:Button>
+                        <b:Button size="LARGE" icon="SIGNOUT" ui:field="exportButton">Export settings</b:Button>
+                        <b:Button size="LARGE" icon="SIGNIN" ui:field="importButton">Import settings</b:Button>
                     </b:ButtonGroup>
+                    <f:FileUploadExt ui:field="uploadFile" visible="false"/>
                 </g:FlowPanel>
             </b:TabPane>
         </b:TabPanel>
         <b:ModalFooter>
-            <b:Button icon="OK" type="PRIMARY" ui:field="okButton">Apply</b:Button>
-            <b:Button ui:field="cancelButton">Cancel</b:Button>
+            <b:Button icon="OK" type="PRIMARY" ui:field="okButton">Refresh</b:Button>
         </b:ModalFooter>
     </b:Modal>
 </ui:UiBinder>

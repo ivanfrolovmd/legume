@@ -32,7 +32,7 @@ import md.frolov.legume.client.events.UpdateSearchQueryHandler;
 import md.frolov.legume.client.gin.WidgetInjector;
 import md.frolov.legume.client.model.Search;
 import md.frolov.legume.client.service.ConfigurationService;
-import md.frolov.legume.client.ui.modals.ConfigurationModal;
+import md.frolov.legume.client.ui.modals.ConfigurationDialog;
 
 /** @author Ivan Frolov (ifrolov@tacitknowledge.com) */
 public class HeaderComponent extends Composite implements UpdateSearchQueryHandler
@@ -106,7 +106,7 @@ public class HeaderComponent extends Composite implements UpdateSearchQueryHandl
     @UiHandler("configureButton")
     public void onConfigureClick(final ClickEvent event)
     {
-        new ConfigurationModal().show();
+        new ConfigurationDialog().show();
     }
 
     @UiHandler("importButton")
@@ -141,10 +141,7 @@ public class HeaderComponent extends Composite implements UpdateSearchQueryHandl
     @UiHandler("exportButton")
     public void onExportButtonClick(final ClickEvent event)
     {
-        StringBuilder sb = new StringBuilder();
-        sb.append("data:application/text;charset=utf-8,");
-        sb.append(configurationService.exportConfig());
-        exportButton.setHref(sb.toString());
+        exportButton.setHref(configurationService.exportConfig());
         DOM.setElementAttribute((Element) exportButton.getElement().getFirstChildElement(), "download", "settings.json");
     }
 }

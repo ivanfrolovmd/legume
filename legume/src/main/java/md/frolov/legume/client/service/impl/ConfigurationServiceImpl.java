@@ -113,9 +113,13 @@ public class ConfigurationServiceImpl implements ConfigurationService
     @Override
     public String exportConfig()
     {
+        StringBuilder sb = new StringBuilder();
+        sb.append("data:application/text;charset=utf-8,");
+
         GlobalConf conf = ModelFactory.INSTANCE.globalConf().as();
         conf.setProperties(getPropertyMap());
-        return AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(conf)).getPayload();
+        sb.append(AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(conf)).getPayload());
+        return sb.toString();
     }
 
     @Override
