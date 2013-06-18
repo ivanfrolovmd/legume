@@ -8,9 +8,8 @@ import java.util.logging.Logger;
 import com.github.gwtbootstrap.client.ui.Accordion;
 import com.github.gwtbootstrap.client.ui.AccordionGroup;
 import com.github.gwtbootstrap.client.ui.Icon;
-import com.github.gwtbootstrap.client.ui.constants.IconSize;
-import com.github.gwtbootstrap.client.ui.constants.IconType;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.DOM;
@@ -30,6 +29,9 @@ public class FieldsComponent extends Composite
     interface FieldsComponentUiBinder extends UiBinder<Widget, FieldsComponent>
     {
     }
+    interface Css extends CssResource {
+        String verticalLine();
+    }
 
     private static final Logger LOG = Logger.getLogger("FieldsComponent");
     private static FieldsComponentUiBinder binder = GWT.create(FieldsComponentUiBinder.class);
@@ -38,6 +40,9 @@ public class FieldsComponent extends Composite
 
     @UiField
     Accordion typesAccordion;
+
+    @UiField
+    Css css;
 
     public FieldsComponent()
     {
@@ -74,8 +79,8 @@ public class FieldsComponent extends Composite
     private void addType(String type, Set<MappingsResponse.Property> properties) {
         AccordionGroup accordionGroup = new AccordionGroup();
         accordionGroup.setHeading(type);
-        Icon icon = new Icon(IconType.CIRCLE);
-        icon.setIconSize(IconSize.SMALL);
+        Icon icon = new Icon();
+        icon.addStyleName(css.verticalLine());
         DOM.setStyleAttribute(icon.getElement(), "color", colorizeService.getCssColor("@type", type, 100, 40));
         accordionGroup.addCustomTrigger(icon);
 
@@ -90,7 +95,10 @@ public class FieldsComponent extends Composite
     private void addGlobalProperties() {
         AccordionGroup accordionGroup = new AccordionGroup();
         accordionGroup.setHeading("Common properties");
-        accordionGroup.setIcon(IconType.CIRCLE);
+        Icon icon = new Icon();
+        icon.addStyleName(css.verticalLine());
+        DOM.setStyleAttribute(icon.getElement(), "color", "#999");
+        accordionGroup.addCustomTrigger(icon);
 
         accordionGroup.add(new FieldDropdown("@type","@type","string"));
         accordionGroup.add(new FieldDropdown("@tags","@tags","string"));

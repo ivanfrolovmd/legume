@@ -15,14 +15,19 @@
             margin-left: 0;
             margin-right: 0;
         }
+        @external .accordion-toggle;
+        .accordion .accordion-group .accordion-heading .accordion-toggle {
+            padding: 0;
+        }
+        @external .accordion-inner;
+        .accordion .accordion-inner {
+            border: none;
+            padding: 0 30px;
+        }
 
         .accordion a, .accordion a:hover {
             color: #333;
             text-decoration: none;
-        }
-
-        .accordion a i {
-            margin-right: 3px; /* More space between text and icon */
         }
 
         @external .accordion-body;
@@ -31,7 +36,15 @@
             overflow: visible;
         }
     </ui:style>
+    <ui:style type="md.frolov.legume.client.ui.components.FieldsComponent.Css" field="css">
+        .verticalLine:before {
+            font-family: 'OpenSansBold';
+            content: "\2503";
+            font-style: normal;
+        }
+    </ui:style>
     <g:FlowPanel>
+        <b:Heading size="4">Types and fields</b:Heading>
         <b:Accordion ui:field="typesAccordion" addStyleNames="{style.accordion}"/>
     </g:FlowPanel>
 </ui:UiBinder>
