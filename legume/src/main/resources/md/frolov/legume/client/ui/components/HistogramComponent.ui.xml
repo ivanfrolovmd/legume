@@ -1,8 +1,18 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:p="urn:import:com.googlecode.gflot.client"
              xmlns:b="urn:import:com.github.gwtbootstrap.client.ui"
+             xmlns:b2="urn:import:com.github.gwtbootstrap.datetimepicker.client.ui"
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
     <ui:style>
+        .flotBox {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 20px;
+            right: 230px;
+        }
+
         .container {
             background-color: #fff;
             border-bottom: 1px solid #e5e5e5;
@@ -17,60 +27,160 @@
             height: 100px;
             width: 100%;
         }
+
         .centered {
             display: table-cell;
             vertical-align: middle;
         }
+
         .centered>div {
             margin: 0 auto;
             text-align: center;
         }
+
         @external .bar;
         .grey .bar {
             background-color: #ccc;
         }
 
         .controls {
-            top:10px;
+            top: 10px;
             right: 70px;
             left: 70px;
             position: absolute;
             pointer-events: none;
         }
+
         .controls>div {
             pointer-events: all;
             float: right;
             opacity: 0.2;
         }
+
         .controls>div:hover {
             opacity: 1;
+        }
+
+        .dateControls {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 800px;
+            right: -600px;
+            background-color: white;
+            transition: right 0.5s ease; /* TODO compatibility */
+        }
+        .dateSummary {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            width: 200px;
+            padding: 5px 10px;
+        }
+        .dateDetails {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 200px;
+            right: 0;
+            padding: 5px 10px;
+        }
+
+        .strong {
+            font-family: 'OpenSansBold';
+        }
+
+        .form {
+            margin: 10px 0;
+        }
+        .form label {
+            margin: 0 8px;
+        }
+        .withMargins {
+            margin: 0 8px;
+        }
+    </ui:style>
+    <ui:style type="md.frolov.legume.client.ui.components.HistogramComponent.Css" field="css">
+        .dateControlsVisible {
+            box-shadow: 0 0 6px rgba(0,0,0,.15); /* TODO compatibility */
+            right: 0;
         }
     </ui:style>
     <g:ResizeLayoutPanel styleName="{style.container}" ui:field="resizePanel">
         <g:FlowPanel>
-            <p:SimplePlot ui:field="plot" width="800px" height="95px" styleName="{style.plot}" visible="false"/>
-            <g:FlowPanel styleName="{style.controls}" ui:field="controls">
-                <b:ButtonGroup>
-                    <b:Button size="MINI" icon="ZOOM_IN" ui:field="zoomIn"/>
-                    <b:Button size="MINI" icon="ZOOM_OUT" ui:field="zoomOut"/>
-                    <b:Button size="MINI" icon="DOWNLOAD" ui:field="downloadImage"/>
-                    <b:Button size="MINI" icon="MAGNET" toggle="true" title="Track position" ui:field="trackPosition" active="true"/>
-                    <b:Button size="MINI" icon="CHEVRON_LEFT" />
-                    <b:Button size="MINI" icon="CHEVRON_RIGHT" />
-                    <b:Button size="MINI" ui:field="chooseDate">Choose date</b:Button>
-                </b:ButtonGroup>
-            </g:FlowPanel>
-            <g:FlowPanel ui:field="loading" styleName="{style.centeredWrapper}">
-                <g:FlowPanel styleName="{style.centered}">
-                    <b:ProgressBar percent="100" type="ANIMATED" width="200px" height="5px" addStyleNames="{style.grey}"/>
+            <g:FlowPanel styleName="{style.flotBox}">
+                <!-- Plot and plot controls -->
+                <p:SimplePlot ui:field="plot" width="800px" height="95px" styleName="{style.plot}" visible="false"/>
+                <g:FlowPanel styleName="{style.controls}" ui:field="controls">
+                    <b:ButtonGroup>
+                        <b:Button size="MINI" icon="ZOOM_IN" ui:field="zoomIn"/>
+                        <b:Button size="MINI" icon="ZOOM_OUT" ui:field="zoomOut"/>
+                        <b:Button size="MINI" icon="DOWNLOAD" ui:field="downloadImage"/>
+                        <b:Button size="MINI" icon="MAGNET" toggle="true" title="Track position" ui:field="trackPosition" active="true"/>
+                        <b:Button size="MINI" icon="CHEVRON_LEFT"/>
+                        <b:Button size="MINI" icon="CHEVRON_RIGHT"/>
+                        <b:Button size="MINI" ui:field="chooseDate">Choose date</b:Button>
+                    </b:ButtonGroup>
+                </g:FlowPanel>
+                <g:FlowPanel ui:field="loading" styleName="{style.centeredWrapper}">
+                    <g:FlowPanel styleName="{style.centered}">
+                        <b:ProgressBar percent="100" type="ANIMATED" width="200px" height="5px" addStyleNames="{style.grey}"/>
+                    </g:FlowPanel>
+                </g:FlowPanel>
+                <g:FlowPanel visible="false" ui:field="error" styleName="{style.centeredWrapper}">
+                    <g:FlowPanel styleName="{style.centered}">
+                        <b:ButtonGroup width="100%">
+                            <b:Button icon="REFRESH">Try again</b:Button>
+                            <b:Button icon="ZOOM_IN" title="Zoom in to reduce fetch size">Zoom in</b:Button>
+                        </b:ButtonGroup>
+                    </g:FlowPanel>
                 </g:FlowPanel>
             </g:FlowPanel>
-            <g:FlowPanel visible="false" ui:field="error" styleName="{style.centeredWrapper}">
-                <g:FlowPanel styleName="{style.centered}">
-                    <b:ButtonGroup width="100%">
-                        <b:Button icon="REFRESH">Try again</b:Button>
-                        <b:Button icon="ZOOM_IN" title="Zoom in to reduce fetch size">Zoom in</b:Button>
-                    </b:ButtonGroup>
+            <g:FlowPanel styleName="{style.dateControls}" ui:field="dateControlsPanel">
+                <g:FlowPanel styleName="{style.dateSummary}">
+                    <!-- Date controls-->
+                    <g:FlowPanel>
+                        <g:InlineLabel>Hits:</g:InlineLabel>
+                        <g:InlineLabel styleName="{style.strong}" ui:field="hitsLabel"/>
+                    </g:FlowPanel>
+                    <g:FlowPanel>
+                        <g:InlineLabel>From:</g:InlineLabel>
+                        <g:InlineLabel styleName="{style.strong}" ui:field="fromDateLabel"/>
+                    </g:FlowPanel>
+                    <g:FlowPanel>
+                        <g:InlineLabel>To:</g:InlineLabel>
+                        <g:InlineLabel styleName="{style.strong}" ui:field="toDateLabel"/>
+                    </g:FlowPanel>
+                    <b:Button size="SMALL" ui:field="chooseDateButton">Choose date</b:Button>
+                    <b:Button size="SMALL" ui:field="hideDateButton" visible="false">Hide</b:Button>
+                </g:FlowPanel>
+                <g:FlowPanel styleName="{style.dateDetails}">
+                    <b:Form type="INLINE" addStyleNames="{style.form}">
+                        <b:ControlLabel>Last</b:ControlLabel>
+                        <b:ButtonGroup>
+                            <b:Button size="SMALL" ui:field="last15m">15m</b:Button>
+                            <b:Button size="SMALL" ui:field="last30m">30m</b:Button>
+                            <b:Button size="SMALL" ui:field="last1h">1h</b:Button>
+                            <b:Button size="SMALL" ui:field="last2h">2h</b:Button>
+                            <b:Button size="SMALL" ui:field="last4h">4h</b:Button>
+                            <b:Button size="SMALL" ui:field="last6h">6h</b:Button>
+                            <b:Button size="SMALL" ui:field="last12h">12h</b:Button>
+                            <b:Button size="SMALL" ui:field="last24h">24h</b:Button>
+                            <b:Button size="SMALL" ui:field="last2d">2d</b:Button>
+                            <b:Button size="SMALL" ui:field="last3d">3d</b:Button>
+                            <b:Button size="SMALL" ui:field="last5d">5d</b:Button>
+                            <b:Button size="SMALL" ui:field="last7d">7d</b:Button>
+                            <b:Button size="SMALL" ui:field="lastAllTime">all time</b:Button>
+                        </b:ButtonGroup>
+                    </b:Form>
+                    <b:Form type="INLINE" addStyleNames="{style.form}">
+                        <b:ControlLabel for="fromBox">From: </b:ControlLabel>
+                        <b2:DateTimeBox autoClose="true" minuteStep="5" showTodayButton="true" size="2" format="dd/mm/yyyy hh:ii:ss" ui:field="fromBox"/>
+                        <b:ControlLabel for="toBox">To: </b:ControlLabel>
+                        <b2:DateTimeBox autoClose="true" minuteStep="5" showTodayButton="true" size="2" format="dd/mm/yyyy hh:ii:ss" ui:field="toBox"/>
+                        <b:Button addStyleNames="{style.withMargins}" ui:field="goButton">Go</b:Button>
+                    </b:Form>
                 </g:FlowPanel>
             </g:FlowPanel>
         </g:FlowPanel>
