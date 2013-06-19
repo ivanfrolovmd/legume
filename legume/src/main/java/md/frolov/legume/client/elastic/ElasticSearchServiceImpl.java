@@ -62,7 +62,8 @@ public class ElasticSearchServiceImpl implements ElasticSearchService, Constants
                 {
                     if (xhrResponse.getStatusCode() != 200)
                     {
-                        throw new IllegalStateException("Invalid response code: " + xhrResponse.getStatusCode());
+                        onError(xhrRequest, new IllegalStateException("Invalid response code: " + xhrResponse.getStatusCode()));
+                        return;
                     }
 
                     AutoBean<REPLY> replyAutoBean = request.getExpectedAutobeanResponse();
