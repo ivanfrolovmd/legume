@@ -69,6 +69,16 @@ public class StreamActivity extends AbstractActivity implements StreamView.Prese
         long to = search.getToDate();
         long focus = search.getFocusDate();
 
+        long now = new Date().getTime();
+        if(to==0) {
+            to = now;
+        }
+        if(to<0) {
+            to = now + to;
+        }
+        if(from<0) {
+            from = to+from;
+        }
         //determine focus date
         if (focus < from || focus > to)
         {
@@ -85,6 +95,7 @@ public class StreamActivity extends AbstractActivity implements StreamView.Prese
 
     private long determineFocusDate(final long from, final long to)
     {
+        //TODO review and refactor
         if (to == 0)
         {
             //upto now
