@@ -33,7 +33,7 @@ public interface Facet
     }
 
     interface Term {
-        String getTerm(); //TODO could it be not string?
+        String getTerm();
         long getCount();
     }
 }

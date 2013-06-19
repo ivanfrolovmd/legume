@@ -7,6 +7,7 @@ import java.util.Map;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableSortedMap;
+import com.google.common.collect.Lists;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -16,6 +17,7 @@ import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTMLTable;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.web.bindery.autobean.shared.Splittable;
 
 import md.frolov.legume.client.elastic.model.reply.LogEvent;
 import md.frolov.legume.client.ui.controls.FieldActionsDropdown;
@@ -65,12 +67,22 @@ public class LogEventExtendedComponent extends Composite
         String tags = Joiner.on(", ").join(logEvent.getTags());
         addRow("tags", "@tags", tags, timestamp);
 
-        Map<String, List<String>> fields = ImmutableSortedMap.copyOf(logEvent.getFields());
-        for (Iterator<Map.Entry<String, List<String>>> iterator = fields.entrySet().iterator(); iterator.hasNext(); )
+        Map<String, Splittable> fields = ImmutableSortedMap.copyOf(logEvent.getFields());
+        for (Iterator<Map.Entry<String, Splittable>> iterator = fields.entrySet().iterator(); iterator.hasNext(); )
         {
-            Map.Entry<String, List<String>> entry = iterator.next();
+            Map.Entry<String, Splittable> entry = iterator.next();
 
-            String value = Joiner.on(", ").join(entry.getValue());
+            Splittable theValue = entry.getValue();
+            String value;
+            if(theValue.isIndexed()) {
+                List<String> values = Lists.newArrayList();
+                for(int i=0; i<theValue.size(); i++) {
+                    values.add(theValue.get(i).asString());
+                }
+                value = Joiner.on(',').join(values);
+            } else {
+                value = theValue.asString();
+            }
             addRow(entry.getKey(), "@fields." + entry.getKey(), value, timestamp);
         }
     }
@@ -88,6 +100,9 @@ public class LogEventExtendedComponent extends Composite
 
     private String getValueStr(final Object value)
     {
+        if(value == null ) {
+            return "";
+        }
         if(value instanceof Date) {
             return ConversionUtils.INSTANCE.dateToString((Date) value);
         }

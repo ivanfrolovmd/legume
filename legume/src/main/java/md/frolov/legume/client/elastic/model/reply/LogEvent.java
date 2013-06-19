@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.web.bindery.autobean.shared.AutoBean.PropertyName;
+import com.google.web.bindery.autobean.shared.Splittable;
 
 public interface LogEvent {
     @PropertyName("@source")
@@ -14,7 +15,7 @@ public interface LogEvent {
     List<String> getTags();
 
     @PropertyName("@fields")
-    Map<String, List<String>> getFields(); // TODO what about numbers? This may be not list as well
+    Map<String, Splittable> getFields();
 
     @PropertyName("@timestamp")
     Date getTimestamp();

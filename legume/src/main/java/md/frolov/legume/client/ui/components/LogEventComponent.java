@@ -1,6 +1,5 @@
 package md.frolov.legume.client.ui.components;
 
-import java.util.List;
 import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
@@ -17,6 +16,7 @@ import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.web.bindery.autobean.shared.Splittable;
 import com.google.web.bindery.event.shared.EventBus;
 
 import md.frolov.legume.client.elastic.model.reply.LogEvent;
@@ -101,7 +101,7 @@ public class LogEventComponent extends Composite
         addColorClass("@message", logEvent.getMessage());
         addColorClass("@source_host", logEvent.getSourceHost());
 
-        for (Map.Entry<String, List<String>> entry : logEvent.getFields().entrySet())
+        for (Map.Entry<String, Splittable> entry : logEvent.getFields().entrySet())
         {
             String fieldName = "@fields." + entry.getKey();
             addColorClass(fieldName, entry.getValue());
@@ -121,16 +121,19 @@ public class LogEventComponent extends Composite
         focusPanel.addStyleName(colorizeService.getCssClassName(fieldName, value));
     }
 
-    private void addColorClass(final String fieldName, final List<String> values)
+    private void addColorClass(final String fieldName, final Splittable values)
     {
-        if (values == null || values.isEmpty())
-        {
+        if(values == null) {
             return;
         }
 
-        for (String value : values)
-        {
-            addColorClass(fieldName, value);
+        if(values.isIndexed()) {
+            for (int i = 0; i < values.size(); i++)
+            {
+                addColorClass(fieldName, values.get(i).asString());
+            }
+        } else {
+            addColorClass(fieldName, values.asString());
         }
     }
 
