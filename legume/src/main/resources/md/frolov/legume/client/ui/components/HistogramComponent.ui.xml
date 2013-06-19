@@ -113,15 +113,7 @@
                 <!-- Plot and plot controls -->
                 <p:SimplePlot ui:field="plot" width="800px" height="95px" styleName="{style.plot}" visible="false"/>
                 <g:FlowPanel styleName="{style.controls}" ui:field="controls">
-                    <b:ButtonGroup>
-                        <b:Button size="MINI" icon="ZOOM_IN" ui:field="zoomIn"/>
-                        <b:Button size="MINI" icon="ZOOM_OUT" ui:field="zoomOut"/>
-                        <b:Button size="MINI" icon="DOWNLOAD" ui:field="downloadImage"/>
-                        <b:Button size="MINI" icon="MAGNET" toggle="true" title="Track position" ui:field="trackPosition" active="true"/>
-                        <b:Button size="MINI" icon="CHEVRON_LEFT"/>
-                        <b:Button size="MINI" icon="CHEVRON_RIGHT"/>
-                        <b:Button size="MINI" ui:field="chooseDate">Choose date</b:Button>
-                    </b:ButtonGroup>
+                    <g:Label>Useful info</g:Label>
                 </g:FlowPanel>
                 <g:FlowPanel ui:field="loading" styleName="{style.centeredWrapper}">
                     <g:FlowPanel styleName="{style.centered}">
@@ -152,8 +144,14 @@
                         <g:InlineLabel>To:</g:InlineLabel>
                         <g:InlineLabel styleName="{style.strong}" ui:field="toDateLabel"/>
                     </g:FlowPanel>
-                    <b:Button size="SMALL" ui:field="chooseDateButton">Choose date</b:Button>
-                    <b:Button size="SMALL" ui:field="hideDateButton" visible="false">Hide</b:Button>
+                    <b:ButtonGroup>
+                        <b:Button size="MINI" icon="ZOOM_IN" ui:field="zoomIn"/>
+                        <b:Button size="MINI" icon="ZOOM_OUT" ui:field="zoomOut"/>
+                        <b:Button size="MINI" icon="DOWNLOAD" ui:field="downloadImage"/>
+                        <b:Button size="MINI" icon="MAGNET" toggle="true" title="Track position" ui:field="trackPosition" active="true"/>
+                        <b:Button size="MINI" ui:field="chooseDateButton">Choose date</b:Button>
+                        <b:Button size="MINI" ui:field="hideDateButton" visible="false">Hide</b:Button>
+                    </b:ButtonGroup>
                 </g:FlowPanel>
                 <g:FlowPanel styleName="{style.dateDetails}">
                     <b:Form type="INLINE" addStyleNames="{style.form}">
