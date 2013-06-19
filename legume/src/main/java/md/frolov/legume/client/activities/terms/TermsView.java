@@ -8,4 +8,12 @@ import md.frolov.legume.client.elastic.api.TermsFacetResponse;
 public interface TermsView extends IsWidget
 {
     void handleResults(final String fieldName, TermsFacetResponse response);
+    void loading();
+    void error();
+
+    void setPresenter(Presenter presenter);
+
+    interface Presenter {
+        void tryAgain();
+    }
 }

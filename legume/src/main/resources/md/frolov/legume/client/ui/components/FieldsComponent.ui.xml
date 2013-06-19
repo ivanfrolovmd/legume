@@ -15,10 +15,12 @@
             margin-left: 0;
             margin-right: 0;
         }
+
         @external .accordion-toggle;
         .accordion .accordion-group .accordion-heading .accordion-toggle {
             padding: 0;
         }
+
         @external .accordion-inner;
         .accordion .accordion-inner {
             border: none;
@@ -32,8 +34,12 @@
 
         @external .accordion-body;
         @external .in;
-        .accordion .accordion-body.in, .accordion .accordion-body.in:hover  {
+        .accordion .accordion-body.in, .accordion .accordion-body.in:hover {
             overflow: visible;
+        }
+
+        .centered {
+            text-align: center;
         }
     </ui:style>
     <ui:style type="md.frolov.legume.client.ui.components.FieldsComponent.Css" field="css">
@@ -45,6 +51,13 @@
     </ui:style>
     <g:FlowPanel>
         <b:Heading size="4">Types and fields</b:Heading>
-        <b:Accordion ui:field="typesAccordion" addStyleNames="{style.accordion}"/>
+        <g:FlowPanel ui:field="loadingPanel">
+            <b:ProgressBar percent="100" type="ANIMATED" height="5px" width="100%"/>
+        </g:FlowPanel>
+        <g:FlowPanel styleName="{style.centered}" visible="false" ui:field="errorPanel">
+            <g:Label>There request timed out.</g:Label>
+            <b:Button icon="REFRESH" ui:field="tryAgain">Try again</b:Button>
+        </g:FlowPanel>
+        <b:Accordion ui:field="typesAccordion" addStyleNames="{style.accordion}" visible="false"/>
     </g:FlowPanel>
 </ui:UiBinder>

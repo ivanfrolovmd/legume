@@ -15,7 +15,7 @@ import md.frolov.legume.client.elastic.api.TermsFacetRequest;
 import md.frolov.legume.client.elastic.api.TermsFacetResponse;
 
 /** @author Ivan Frolov (ifrolov@tacitknowledge.com) */
-public class TermsActivity extends AbstractActivity
+public class TermsActivity extends AbstractActivity implements TermsView.Presenter
 {
     private static final Logger LOG = Logger.getLogger("TermsActivity");
 
@@ -34,6 +34,7 @@ public class TermsActivity extends AbstractActivity
     public void start(final AcceptsOneWidget panel, final EventBus eventBus)
     {
         panel.setWidget(termsView);
+        termsView.setPresenter(this);
 
         TermsPlace place = (TermsPlace) placeController.getWhere();
         request = new TermsFacetRequest(place.getFieldName(), place.getSearch());
@@ -41,7 +42,7 @@ public class TermsActivity extends AbstractActivity
     }
 
     private void query() {
-        //TODO show loading in UI
+        termsView.loading();
 
         elasticSearchService.query(request, new Callback<TermsFacetRequest, TermsFacetResponse>()
         {
@@ -49,7 +50,7 @@ public class TermsActivity extends AbstractActivity
             public void onFailure(final Throwable exception)
             {
                 LOG.log(Level.SEVERE, "Can't fetch terms score", exception);
-                //TODO show in UI
+                termsView.error();
             }
 
             @Override
@@ -60,4 +61,9 @@ public class TermsActivity extends AbstractActivity
         });
     }
 
+    @Override
+    public void tryAgain()
+    {
+        query();
+    }
 }

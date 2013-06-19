@@ -2,11 +2,15 @@ package md.frolov.legume.client.activities.terms;
 
 import java.util.Map;
 
+import com.github.gwtbootstrap.client.ui.Button;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlexTable;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTMLTable;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
@@ -43,6 +47,16 @@ public class TermsViewImpl extends Composite implements TermsView
     Label otherLabel;
     @UiField
     Label missingLabel;
+    @UiField
+    FlowPanel loadingPanel;
+    @UiField
+    FlowPanel errorPanel;
+    @UiField
+    FlowPanel resultsPanel;
+    @UiField
+    Button tryAgain;
+
+    private Presenter presenter;
 
     public TermsViewImpl()
     {
@@ -50,6 +64,12 @@ public class TermsViewImpl extends Composite implements TermsView
         initWidget(binder.createAndBindUi(this));
 
         initResultsTable();
+    }
+
+    @Override
+    public void setPresenter(final Presenter presenter)
+    {
+        this.presenter = presenter;
     }
 
     private void initPlot()
@@ -120,6 +140,32 @@ public class TermsViewImpl extends Composite implements TermsView
         results.setText(row, 1, String.valueOf(response.getTotal()));
         results.setText(row, 2, "");
 
+        loadingPanel.setVisible(false);
+        errorPanel.setVisible(false);
+        resultsPanel.setVisible(true);
+
         plot.redraw();
+    }
+
+    @Override
+    public void loading()
+    {
+        loadingPanel.setVisible(true);
+        errorPanel.setVisible(false);
+        resultsPanel.setVisible(false);
+    }
+
+    @Override
+    public void error()
+    {
+        loadingPanel.setVisible(false);
+        errorPanel.setVisible(true);
+        resultsPanel.setVisible(false);
+    }
+
+    @UiHandler("tryAgain")
+    public void onTryAgainClick(final ClickEvent event)
+    {
+        presenter.tryAgain();
     }
 }

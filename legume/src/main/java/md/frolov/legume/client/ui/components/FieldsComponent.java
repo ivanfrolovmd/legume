@@ -7,13 +7,17 @@ import java.util.logging.Logger;
 
 import com.github.gwtbootstrap.client.ui.Accordion;
 import com.github.gwtbootstrap.client.ui.AccordionGroup;
+import com.github.gwtbootstrap.client.ui.Button;
 import com.github.gwtbootstrap.client.ui.Icon;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import md.frolov.legume.client.elastic.ElasticSearchService;
@@ -43,6 +47,12 @@ public class FieldsComponent extends Composite
 
     @UiField
     Css css;
+    @UiField
+    FlowPanel loadingPanel;
+    @UiField
+    FlowPanel errorPanel;
+    @UiField
+    Button tryAgain;
 
     public FieldsComponent()
     {
@@ -52,6 +62,10 @@ public class FieldsComponent extends Composite
     }
 
     private void initFields() {
+        loadingPanel.setVisible(true);
+        typesAccordion.setVisible(false);
+        errorPanel.setVisible(false);
+
         typesAccordion.clear();
 
         elasticSearchService.query(new MappingsRequest(), new Callback<MappingsRequest, MappingsResponse>()
@@ -60,6 +74,9 @@ public class FieldsComponent extends Composite
             public void onFailure(final Throwable exception)
             {
                 LOG.log(Level.SEVERE, "Exception",exception);
+                loadingPanel.setVisible(false);
+                typesAccordion.setVisible(false);
+                errorPanel.setVisible(true);
             }
 
             @Override
@@ -72,6 +89,10 @@ public class FieldsComponent extends Composite
                 {
                     addType(typeEntry.getKey(), typeEntry.getValue());
                 }
+
+                loadingPanel.setVisible(false);
+                typesAccordion.setVisible(true);
+                errorPanel.setVisible(false);
             }
         });
     }
@@ -109,5 +130,11 @@ public class FieldsComponent extends Composite
         accordionGroup.add(new FieldDropdown("@message","@message","string"));
 
         typesAccordion.add(accordionGroup);
+    }
+
+    @UiHandler("tryAgain")
+    public void onTryAgainClick(final ClickEvent event)
+    {
+        initFields();
     }
 }
