@@ -3,6 +3,7 @@
              xmlns:p="urn:import:com.googlecode.gflot.client"
              xmlns:b="urn:import:com.github.gwtbootstrap.client.ui"
              xmlns:b2="urn:import:com.github.gwtbootstrap.datetimepicker.client.ui"
+             xmlns:lc="urn:import:md.frolov.legume.client.ui"
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
     <ui:style>
         .flotBox {
@@ -109,7 +110,7 @@
     </ui:style>
     <g:ResizeLayoutPanel styleName="{style.container}" ui:field="resizePanel">
         <g:FlowPanel>
-            <g:FlowPanel styleName="{style.flotBox}">
+            <lc:EventFlowPanel ui:field="plotPanel" styleName="{style.flotBox}">
                 <!-- Plot and plot controls -->
                 <p:SimplePlot ui:field="plot" width="800px" height="95px" styleName="{style.plot}" visible="false"/>
                 <g:FlowPanel styleName="{style.controls}" ui:field="controls">
@@ -128,7 +129,7 @@
                         </b:ButtonGroup>
                     </g:FlowPanel>
                 </g:FlowPanel>
-            </g:FlowPanel>
+            </lc:EventFlowPanel>
             <g:FlowPanel styleName="{style.dateControls}" ui:field="dateControlsPanel">
                 <g:FlowPanel styleName="{style.dateSummary}">
                     <!-- Date controls-->

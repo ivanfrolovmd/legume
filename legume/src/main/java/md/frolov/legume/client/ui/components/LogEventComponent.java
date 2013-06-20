@@ -12,7 +12,6 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.Widget;
@@ -23,6 +22,7 @@ import md.frolov.legume.client.elastic.model.reply.LogEvent;
 import md.frolov.legume.client.events.LogMessageHoverEvent;
 import md.frolov.legume.client.gin.WidgetInjector;
 import md.frolov.legume.client.service.ColorizeService;
+import md.frolov.legume.client.ui.EventFlowPanel;
 
 /** @author Ivan Frolov (ifrolov@tacitknowledge.com) */
 public class LogEventComponent extends Composite
@@ -61,7 +61,7 @@ public class LogEventComponent extends Composite
     @UiField
     FlowPanel detailsContainer;
     @UiField
-    FocusPanel focusPanel;
+    EventFlowPanel focusPanel;
 
     @UiField
     Css style;
@@ -140,6 +140,9 @@ public class LogEventComponent extends Composite
     @UiHandler("focusPanel")
     public void toggleSummaryAndDetails(final ClickEvent event)
     {
+        if(event.isShiftKeyDown()) {
+            return;
+        }
         if (summary.isVisible())
         {
             detailsContainer.add(new LogEventExtendedComponent(logEvent));
@@ -154,7 +157,6 @@ public class LogEventComponent extends Composite
             detailsContainer.clear();
             focusPanel.removeStyleName(style.detailsSelected());
         }
-        focusPanel.setFocus(false);
     }
 
     @UiHandler("focusPanel")

@@ -1,5 +1,6 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:lc="urn:import:md.frolov.legume.client.ui"
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
     <ui:style type="md.frolov.legume.client.ui.components.LogEventComponent.Css" field="style">
         .box, .type {
@@ -84,7 +85,7 @@
         }
     </ui:style>
 
-    <g:FocusPanel ui:field="focusPanel">
+    <lc:EventFlowPanel ui:field="focusPanel">
         <g:FlowPanel styleName="{style.relative}">
             <g:FlowPanel ui:field="type" styleName="{style.type}" addStyleNames="{style.hlLabel}"/>
             <g:FlowPanel addStyleNames="{style.box} {style.hlBackground}" ui:field="box">
@@ -97,5 +98,5 @@
                 </g:FlowPanel>
             </g:FlowPanel>
         </g:FlowPanel>
-    </g:FocusPanel>
+    </lc:EventFlowPanel>
 </ui:UiBinder>
