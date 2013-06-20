@@ -13,7 +13,7 @@ import md.frolov.legume.client.service.StorageDao;
 public class CookieStorageDao implements StorageDao
 {
     private static final String PREFIX = "_legume_conf_";
-    private static final Date NEVER = new Date();
+    private static final Date NEVER = new Date(Long.MAX_VALUE);
 
     @Override
     public String get(final String key)

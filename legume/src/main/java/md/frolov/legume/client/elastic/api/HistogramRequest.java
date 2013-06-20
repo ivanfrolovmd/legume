@@ -1,7 +1,6 @@
 package md.frolov.legume.client.elastic.api;
 
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 import com.google.common.base.Preconditions;
@@ -47,21 +46,11 @@ public class HistogramRequest extends BaseSearchRequest<HistogramResponse>
             return histogramInterval;
         }
 
-        long from = search.getFromDate();
-        long to = search.getToDate();
-
-        if(to==0) {
-            to = new Date().getTime();
-        }
-        if(to<0) {
-            to = new Date().getTime() + to;
-        }
+        long from = search.getRealFromDate();
+        long to = search.getRealToDate();
 
         if(from == 0) {
             return HistogramInterval.h1;
-        }
-        if(from < 0) {
-            from = to + from;
         }
 
         long allTime = to - from;
@@ -90,7 +79,7 @@ public class HistogramRequest extends BaseSearchRequest<HistogramResponse>
         AndFilter and = ModelFactory.INSTANCE.andFilter().as();
         List<Filter> filters = Lists.newArrayList();
         filters.add(getQueryFilter(search.getQuery()));
-        filters.add(getDateRangeFilter(search.getFromDate(), search.getToDate()));
+        filters.add(getDateRangeFilter(search.getRealFromDate(), search.getRealToDate(), search.getToDate() == 0));
         and.setAnd(filters);
 
         facet.setFilter(and);
@@ -104,6 +93,6 @@ public class HistogramRequest extends BaseSearchRequest<HistogramResponse>
     @Override
     public HistogramResponse getResponse(final ElasticSearchReply elasticSearchReply)
     {
-        return new HistogramResponse(elasticSearchReply, search.getFromDate(), search.getToDate(), histogramInterval);
+        return new HistogramResponse(elasticSearchReply, search.getRealFromDate(), search.getRealToDate(), histogramInterval);
     }
 }

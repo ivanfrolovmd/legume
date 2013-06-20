@@ -47,7 +47,7 @@ public class TermsFacetRequest extends BaseSearchRequest<TermsFacetResponse>
         AndFilter and = factory.andFilter().as();
         List<Filter> filters = Lists.newArrayList();
         filters.add(getQueryFilter(search.getQuery()));
-        filters.add(getDateRangeFilter(search.getFromDate(), search.getToDate()));
+        filters.add(getDateRangeFilter(search.getRealFromDate(), search.getRealToDate(), search.getToDate() == 0));
         filters.add(getLimitFilter());
         and.setAnd(filters);
         facet.setFilter(and);

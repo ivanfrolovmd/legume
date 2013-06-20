@@ -219,13 +219,9 @@ public class HistogramComponent extends Composite implements UpdateSearchQueryHa
         {
             fromDateStr = "beginning";
         }
-        else if (fromDate < 0)
-        {
-            fromDateStr = "last " + fromDate / 1000 + "s"; //TODO format in human readable style
-        }
         else
         {
-            fromDateStr = DATE_LABEL_DTF.format(new Date(fromDate));
+            fromDateStr = DATE_LABEL_DTF.format(new Date(event.getSearchQuery().getRealFromDate()));
         }
 
         long toDate = event.getSearchQuery().getToDate();
@@ -234,13 +230,9 @@ public class HistogramComponent extends Composite implements UpdateSearchQueryHa
         {
             toDateStr = "now";
         }
-        else if (toDate < 0)
-        {
-            toDateStr = DATE_LABEL_DTF.format(new Date(new Date().getTime() + toDate));
-        }
         else
         {
-            toDateStr = DATE_LABEL_DTF.format(new Date(toDate));
+            toDateStr = DATE_LABEL_DTF.format(new Date(event.getSearchQuery().getRealToDate()));
         }
 
         fromDateLabel.setText(fromDateStr);
@@ -298,19 +290,12 @@ public class HistogramComponent extends Composite implements UpdateSearchQueryHa
 
         Search search = application.getCurrentSearch();
         long selectionDate = event.getDate();
-        long toDate = search.getToDate();
-        if (toDate < 0)
-        {
-            toDate = new Date().getTime() + toDate;
-        }
-        long fromDate = search.getFromDate();
-        if (fromDate < 0)
-        {
-            fromDate = toDate + fromDate;
-        }
+        long toDate = search.getRealToDate();
+        long fromDate = search.getRealFromDate();
+
         boolean update = false;
 
-        if (fromDate != 0 && selectionDate > toDate)
+        if (selectionDate > toDate)
         {
             update = true;
             long alltime = toDate - fromDate;
@@ -368,25 +353,9 @@ public class HistogramComponent extends Composite implements UpdateSearchQueryHa
     public void onZoomOut(final ClickEvent event)
     {
         Search search = application.getCurrentSearch();
-        long from = search.getFromDate();
-        long to = search.getToDate();
+        long from = search.getRealFromDate();
+        long to = search.getRealToDate();
         long now = new Date().getTime();
-        if (from == 0)
-        {
-            return;
-        }
-        if (to == 0)
-        {
-            to = now;
-        }
-        if (to < 0)
-        {
-            to = now + to;
-        }
-        if (from < 0)
-        {
-            from = from + to;
-        }
 
         long allTime = to - from;
         from = from - allTime / 2;
@@ -420,19 +389,9 @@ public class HistogramComponent extends Composite implements UpdateSearchQueryHa
     public void onChooseDateButtonClick(final ClickEvent event)
     {
         Search search = application.getCurrentSearch();
-        long from = search.getFromDate();
-        long to = search.getToDate();
-        if(to == 0) {
-            to = new Date().getTime();
-        } else if(to<0) {
-            to = new Date().getTime() + to;
-        }
-        if(from<0) {
-            from = to + from;
-        }
 
-        fromBox.setValue(new Date(from));
-        toBox.setValue(new Date(to));
+        fromBox.setValue(new Date(search.getRealFromDate()));
+        toBox.setValue(new Date(search.getRealToDate()));
 
         dateControlsPanel.addStyleName(css.dateControlsVisible());
         hideDateButton.setVisible(true);

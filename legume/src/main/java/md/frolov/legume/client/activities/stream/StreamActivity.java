@@ -1,6 +1,5 @@
 package md.frolov.legume.client.activities.stream;
 
-import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.inject.Inject;
@@ -65,51 +64,9 @@ public class StreamActivity extends AbstractActivity implements StreamView.Prese
 
     private void initQueries(Search search)
     {
-        long from = search.getFromDate();
-        long to = search.getToDate();
-        long focus = search.getFocusDate();
-
-        long now = new Date().getTime();
-        if(to==0) {
-            to = now;
-        }
-        if(to<0) {
-            to = now + to;
-        }
-        if(from<0) {
-            from = to+from;
-        }
-        //determine focus date
-        if (focus < from || focus > to)
-        {
-            focus = from;
-        }
-        if (focus == 0)
-        {
-            focus = determineFocusDate(from, to);
-        }
-
+        long focus = search.getRealFocusDate();
         downwardsQuery = new SearchRequest(new Search(search.getQuery(), focus, 0, focus), true, 0, DEFAULT_QUERY_SIZE);
         upwardsQuery = new SearchRequest(new Search(search.getQuery(), 0, focus, focus), false, 0, DEFAULT_QUERY_SIZE);
-    }
-
-    private long determineFocusDate(final long from, final long to)
-    {
-        //TODO review and refactor
-        if (to == 0)
-        {
-            //upto now
-            if (from < 0)
-            {
-                return from;
-            }
-            else
-            {
-                return new Date().getTime();
-            }
-        }
-
-        return from;
     }
 
     @Override

@@ -80,7 +80,7 @@ public class SearchRequest extends BaseSearchRequest<SearchResponse>
 
         List<Filter> filters = Lists.newArrayList();
         filters.add(getQueryFilter(search.getQuery()));
-        filters.add(getDateRangeFilter(search.getFromDate(), search.getToDate()));
+        filters.add(getDateRangeFilter(search.getRealFromDate(), search.getRealToDate(), search.getToDate() == 0));
         AndFilter and = factory.andFilter().as();
         and.setAnd(filters);
 

@@ -1,6 +1,5 @@
 package md.frolov.legume.client.elastic.api;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -43,18 +42,8 @@ public class HistogramResponse extends ESResponse<ElasticSearchReply>
             return;
         }
 
-        if(to==0) {
-            to = new Date().getTime();
-        }
-        if(to<0) {
-            to = new Date().getTime() + to;
-        }
-
         if(from==0) {
             from = entries.get(0).getTime().getTime();
-        }
-        if(from<0) {
-            from = to + from;
         }
 
         for(long t = entries.get(0).getTime().getTime(); t>from; t-=interval){

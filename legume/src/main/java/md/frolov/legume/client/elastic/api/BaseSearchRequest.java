@@ -46,32 +46,13 @@ public abstract class BaseSearchRequest<RESPONSE extends ESResponse<ElasticSearc
         }
     }
 
-    protected Filter getDateRangeFilter(long from, long to) {
-
-        final Date now = new Date();
-        final Date toDate;
-        final Date fromDate;
-
-        if(to == 0) {
-            toDate = now;
-        } else if(to<0) {
-            toDate = new Date(now.getTime() + to);
-        } else {
-            toDate = new Date(to);
-        }
-
-        if(from < 0) {
-            fromDate = new Date(toDate.getTime() + from);
-        } else {
-            fromDate = new Date(from);
-        }
-
+    protected Filter getDateRangeFilter(long from, long to, boolean upperUnbound) {
         RangeFilter filter = factory.rangeFilter().as();
         RangeFilter.RangeFilterDef filterDef = factory.rangeFilterDef().as();
         filter.setRange(Collections.singletonMap("@timestamp", filterDef));
-        filterDef.setFrom(ConversionUtils.INSTANCE.dateToString(fromDate, TimeZone.createTimeZone(0)));
-        if(toDate != now) {
-            filterDef.setTo(ConversionUtils.INSTANCE.dateToString(toDate, TimeZone.createTimeZone(0)));
+        filterDef.setFrom(ConversionUtils.INSTANCE.dateToString(new Date(from), TimeZone.createTimeZone(0)));
+        if(!upperUnbound) {
+            filterDef.setTo(ConversionUtils.INSTANCE.dateToString(new Date(to), TimeZone.createTimeZone(0)));
         } //else leave unbounded
 
         return filter;
