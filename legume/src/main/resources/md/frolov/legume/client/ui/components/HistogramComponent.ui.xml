@@ -44,22 +44,15 @@
             background-color: #ccc;
         }
 
-        .controls {
+        .hoverInfo {
             top: 10px;
-            right: 70px;
-            left: 70px;
+            right: 0;
+            width: 130px;
             position: absolute;
             pointer-events: none;
-        }
-
-        .controls>div {
-            pointer-events: all;
-            float: right;
-            opacity: 0.2;
-        }
-
-        .controls>div:hover {
-            opacity: 1;
+            text-align: right;
+            text-shadow: 1px 1px 1px white;
+            color: #666;
         }
 
         .dateControls {
@@ -113,8 +106,9 @@
             <lc:EventFlowPanel ui:field="plotPanel" styleName="{style.flotBox}">
                 <!-- Plot and plot controls -->
                 <p:SimplePlot ui:field="plot" width="800px" height="95px" styleName="{style.plot}" visible="false"/>
-                <g:FlowPanel styleName="{style.controls}" ui:field="controls">
-                    <g:Label>Useful info</g:Label>
+                <g:FlowPanel styleName="{style.hoverInfo}" ui:field="hoverInfo">
+                    <g:Label ui:field="dateHoverInfo" />
+                    <g:Label ui:field="countHoverInfo" />
                 </g:FlowPanel>
                 <g:FlowPanel ui:field="loading" styleName="{style.centeredWrapper}">
                     <g:FlowPanel styleName="{style.centered}">

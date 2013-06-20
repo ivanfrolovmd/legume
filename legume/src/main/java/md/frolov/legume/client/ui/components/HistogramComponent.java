@@ -7,6 +7,8 @@ import com.github.gwtbootstrap.client.ui.Button;
 import com.github.gwtbootstrap.datetimepicker.client.ui.DateTimeBox;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.MouseOutEvent;
+import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.NumberFormat;
@@ -28,8 +30,11 @@ import com.googlecode.gflot.client.PlotSelectionArea;
 import com.googlecode.gflot.client.Series;
 import com.googlecode.gflot.client.SeriesHandler;
 import com.googlecode.gflot.client.SimplePlot;
+import com.googlecode.gflot.client.event.PlotHoverListener;
+import com.googlecode.gflot.client.event.PlotItem;
 import com.googlecode.gflot.client.event.PlotPosition;
 import com.googlecode.gflot.client.event.PlotSelectedListener;
+import com.googlecode.gflot.client.jsni.Plot;
 import com.googlecode.gflot.client.options.*;
 import com.googlecode.gflot.client.options.side.IntegerSideOptions;
 
@@ -37,6 +42,7 @@ import md.frolov.legume.client.Application;
 import md.frolov.legume.client.activities.stream.StreamPlace;
 import md.frolov.legume.client.elastic.ElasticSearchService;
 import md.frolov.legume.client.elastic.api.Callback;
+import md.frolov.legume.client.elastic.api.HistogramInterval;
 import md.frolov.legume.client.elastic.api.HistogramRequest;
 import md.frolov.legume.client.elastic.api.HistogramResponse;
 import md.frolov.legume.client.events.LogMessageHoverEvent;
@@ -45,6 +51,7 @@ import md.frolov.legume.client.events.UpdateSearchQuery;
 import md.frolov.legume.client.events.UpdateSearchQueryHandler;
 import md.frolov.legume.client.gin.WidgetInjector;
 import md.frolov.legume.client.model.Search;
+import md.frolov.legume.client.ui.EventFlowPanel;
 import md.frolov.legume.client.util.ConversionUtils;
 
 /** @author Ivan Frolov (ifrolov@tacitknowledge.com) */
@@ -77,8 +84,6 @@ public class HistogramComponent extends Composite implements UpdateSearchQueryHa
     @UiField
     Button zoomOut;
     @UiField
-    FlowPanel controls;
-    @UiField
     Button downloadImage;
     @UiField
     Button trackPosition;
@@ -103,6 +108,14 @@ public class HistogramComponent extends Composite implements UpdateSearchQueryHa
     DateTimeBox fromBox;
     @UiField
     DateTimeBox toBox;
+    @UiField
+    FlowPanel hoverInfo;
+    @UiField
+    Label countHoverInfo;
+    @UiField
+    Label dateHoverInfo;
+    @UiField
+    EventFlowPanel plotPanel;
 
     private EventBus eventBus = WidgetInjector.INSTANCE.eventBus();
     private ElasticSearchService elasticSearchService = WidgetInjector.INSTANCE.elasticSearchService();
@@ -111,6 +124,7 @@ public class HistogramComponent extends Composite implements UpdateSearchQueryHa
     private ConversionUtils conversionUtils = ConversionUtils.INSTANCE;
 
     private boolean inprocess = false;
+    private HistogramInterval currentInterval;
 
     public HistogramComponent()
     {
@@ -130,7 +144,7 @@ public class HistogramComponent extends Composite implements UpdateSearchQueryHa
 
         //Styling
         plotOptions.setGridOptions(GridOptions.create().setBorderWidth(IntegerSideOptions.of(0, 0, 1, 0)).setBorderColor("#999")
-                .setClickable(true).setAutoHighlight(false));
+                .setClickable(true).setHoverable(true).setAutoHighlight(true));
         plotOptions.setSelectionOptions(SelectionOptions.create().setMode(SelectionOptions.SelectionMode.X).setColor("#ccc"));
         plotOptions.setGlobalSeriesOptions(GlobalSeriesOptions.create().setShadowSize(0).setLineSeriesOptions(
                 LineSeriesOptions.create().setFill(true).setSteps(true).setZero(true).setLineWidth(1)
@@ -158,6 +172,42 @@ public class HistogramComponent extends Composite implements UpdateSearchQueryHa
                 WidgetInjector.INSTANCE.placeController().goTo(new StreamPlace(search)); //TODO change this. It might be useful to zoom in/out when in 'terms' activity
             }
         });
+
+        plot.addHoverListener(new PlotHoverListener()
+        {
+            @Override
+            public void onPlotHover(final Plot plot, final PlotPosition position, final PlotItem item)
+            {
+                if (item != null && item.getDataPoint().getY() >= 0)
+                {
+                    String countStr = NUMBER_FORMAT.format(item.getDataPoint().getY()) + currentInterval.getDescription();
+                    countHoverInfo.setText(countStr);
+                }
+                else
+                {
+                    countHoverInfo.setText("");
+                }
+                if (position != null)
+                {
+                    Date theDate = new Date(position.getX().longValue());
+                    String dateStr = DATE_LABEL_DTF.format(theDate);
+                    dateHoverInfo.setText(dateStr);
+                }
+                else
+                {
+                    dateHoverInfo.setText("");
+                }
+                hoverInfo.setVisible(true);
+            }
+        }, false);
+        plot.addHandler(new MouseOutHandler()
+        {
+            @Override
+            public void onMouseOut(final MouseOutEvent event)
+            {
+                hoverInfo.setVisible(false);
+            }
+        }, MouseOutEvent.getType());
 
         /*
         plot.addClickListener(new PlotClickListener()
@@ -195,9 +245,11 @@ public class HistogramComponent extends Composite implements UpdateSearchQueryHa
                 .setTimeZone("browser").setTimeFormat(response.getInterval().getDateTimeFormat())
         ));
 
+        currentInterval = response.getInterval();
+
         loading.setVisible(false);
         plot.setVisible(true);
-        controls.setVisible(true);
+        hoverInfo.setVisible(true);
         plot.redraw(true);
 
         plot.clearCrosshair();
@@ -255,7 +307,7 @@ public class HistogramComponent extends Composite implements UpdateSearchQueryHa
 
         inprocess = true;
         plot.setVisible(false);
-        controls.setVisible(false);
+        hoverInfo.setVisible(false);
         error.setVisible(true);
         loading.setVisible(true);
         hitsLabel.setText("n/a");
@@ -307,7 +359,7 @@ public class HistogramComponent extends Composite implements UpdateSearchQueryHa
             }
             fromDate = toDate - alltime;
         }
-        else if (fromDate != 0 && selectionDate < fromDate)
+        else if (selectionDate < fromDate)
         {
             update = true;
             long alltime = toDate - fromDate;
@@ -320,7 +372,7 @@ public class HistogramComponent extends Composite implements UpdateSearchQueryHa
             Search newSearch = search.clone();
             search.setFromDate(fromDate);
             search.setToDate(toDate);
-            requestHistogram(search);
+            requestHistogram(search); //TODO new place?
         }
         else
         {
@@ -369,7 +421,7 @@ public class HistogramComponent extends Composite implements UpdateSearchQueryHa
         Search newSearch = search.clone();
         newSearch.setFromDate(from);
         newSearch.setToDate(to);
-        requestHistogram(newSearch);
+        requestHistogram(newSearch); //TODO probably a new place?
     }
 
     @UiHandler("downloadImage")
@@ -479,4 +531,11 @@ public class HistogramComponent extends Composite implements UpdateSearchQueryHa
     public void onLastAllTimeClick(ClickEvent event) {
         submitLastNmins(0);
     }
+
+    @UiHandler("plotPanel")
+    public void handleMouseOut(final MouseOutEvent event)
+    {
+        hoverInfo.setVisible(false);
+    }
+
 }
