@@ -8,7 +8,6 @@ import com.github.gwtbootstrap.datetimepicker.client.ui.DateTimeBox;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.MouseOutEvent;
-import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.NumberFormat;
@@ -30,6 +29,7 @@ import com.googlecode.gflot.client.PlotSelectionArea;
 import com.googlecode.gflot.client.Series;
 import com.googlecode.gflot.client.SeriesHandler;
 import com.googlecode.gflot.client.SimplePlot;
+import com.googlecode.gflot.client.event.PlotClickListener;
 import com.googlecode.gflot.client.event.PlotHoverListener;
 import com.googlecode.gflot.client.event.PlotItem;
 import com.googlecode.gflot.client.event.PlotPosition;
@@ -123,7 +123,9 @@ public class HistogramComponent extends Composite implements UpdateSearchQueryHa
     private PlaceController placeController = WidgetInjector.INSTANCE.placeController();
     private ConversionUtils conversionUtils = ConversionUtils.INSTANCE;
 
+    private Search currentSearch;
     private boolean inprocess = false;
+    private boolean ignoreClickEvent = false;
     private HistogramInterval currentInterval;
 
     public HistogramComponent()
@@ -165,6 +167,8 @@ public class HistogramComponent extends Composite implements UpdateSearchQueryHa
                 long from = area.getX().getFrom().longValue();
                 long to = area.getX().getTo().longValue();
 
+                ignoreClickEvent = true;
+
                 Search search = application.getCurrentSearch().clone();
                 search.setFromDate(from);
                 search.setToDate(to);
@@ -200,31 +204,23 @@ public class HistogramComponent extends Composite implements UpdateSearchQueryHa
                 hoverInfo.setVisible(true);
             }
         }, false);
-        plot.addHandler(new MouseOutHandler()
-        {
-            @Override
-            public void onMouseOut(final MouseOutEvent event)
-            {
-                hoverInfo.setVisible(false);
-            }
-        }, MouseOutEvent.getType());
 
-        /*
         plot.addClickListener(new PlotClickListener()
         {
             @Override
             public void onPlotClick(final Plot plot, final PlotPosition position, final PlotItem item)
             {
-                Range xRange = plot.getSelection().getX();
-                if (xRange.getFrom() != xRange.getTo())
-                {
+                if(ignoreClickEvent) {
+                    ignoreClickEvent = false;
                     return;
                 }
-                Date pos = new Date(position.getX().longValue());
-                Window.alert("Clicked: " + pos);
+                long focusDate = position.getX().longValue();
+
+                Search search = application.getCurrentSearch().clone();
+                search.setFocusDate(focusDate);
+                WidgetInjector.INSTANCE.placeController().goTo(new StreamPlace(search)); //TODO change this. It might be useful to zoom in/out when in 'terms' activity
             }
         }, false);
-        */
     }
 
     private void updateHistogramWithData(HistogramResponse response)
@@ -249,7 +245,6 @@ public class HistogramComponent extends Composite implements UpdateSearchQueryHa
 
         loading.setVisible(false);
         plot.setVisible(true);
-        hoverInfo.setVisible(true);
         plot.redraw(true);
 
         plot.clearCrosshair();
@@ -262,6 +257,12 @@ public class HistogramComponent extends Composite implements UpdateSearchQueryHa
     @Override
     public void onUpdateSearchQuery(final UpdateSearchQuery event)
     {
+        if(!isUpdateRequired(event.getSearchQuery())) {
+            return;
+        } else {
+            currentSearch = event.getSearchQuery();
+        }
+
         requestHistogram(event.getSearchQuery());
 
         //update labels
@@ -289,6 +290,16 @@ public class HistogramComponent extends Composite implements UpdateSearchQueryHa
 
         fromDateLabel.setText(fromDateStr);
         toDateLabel.setText(toDateStr);
+    }
+
+    private boolean isUpdateRequired(Search newSearch) {
+        if(currentSearch == null) {
+            return true;
+        }
+        return !(newSearch.getQuery().equals(currentSearch.getQuery())
+                        && newSearch.getFromDate() == currentSearch.getFromDate()
+                        && newSearch.getToDate() == currentSearch.getToDate()
+                );
     }
 
     @UiHandler("resizePanel")
