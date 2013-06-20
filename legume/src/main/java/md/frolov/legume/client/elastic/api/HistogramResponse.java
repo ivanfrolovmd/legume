@@ -11,6 +11,7 @@ import md.frolov.legume.client.elastic.model.reply.Facet;
 /** @author Ivan Frolov (ifrolov@tacitknowledge.com) */
 public class HistogramResponse extends ESResponse<ElasticSearchReply>
 {
+    private final long DAY = 24*60*60*1000;
     private final Map<Long, Long> dateValueMap;
     private final HistogramInterval interval;
 
@@ -42,12 +43,8 @@ public class HistogramResponse extends ESResponse<ElasticSearchReply>
             return;
         }
 
-        if(from==0) {
-            from = entries.get(0).getTime().getTime();
-        }
-
-        for(long t = entries.get(0).getTime().getTime(); t>from; t-=interval){
-            dateValueMap.put(t, 0l);
+        if(from > DAY){
+            dateValueMap.put(from, 0l);
         }
         for(long t=entries.get(0).getTime().getTime(); t<to; t+=interval) {
             dateValueMap.put(t, 0l);

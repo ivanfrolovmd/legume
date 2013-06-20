@@ -61,6 +61,8 @@ public class StreamViewImpl extends Composite implements StreamView, SearchResul
     Button bottomTryAgain;
     @UiField
     Button topTryAgain;
+    @UiField
+    Button bottomAutoFetch;
 
     @Inject
     @Named("scrollThreashold")
@@ -214,7 +216,22 @@ public class StreamViewImpl extends Composite implements StreamView, SearchResul
         {
             bottomNoMoreResults.setVisible(true);
             bottomLoading.setVisible(false);
+            if(bottomAutoFetch.isToggled()) {
+                startAutoFetchTimer();
+            }
         }
+    }
+
+    private void startAutoFetchTimer() {
+        Scheduler.get().scheduleFixedDelay(new Scheduler.RepeatingCommand()
+        {
+            @Override
+            public boolean execute()
+            {
+                requestMoreBottom();
+                return false; //don't repeat
+            }
+        }, 30000); //TODO externalize
     }
 
     @UiHandler("scrollContainer")
@@ -278,6 +295,14 @@ public class StreamViewImpl extends Composite implements StreamView, SearchResul
     public void onBottomTryAgain(final ClickEvent event)
     {
         requestMoreBottom();
+    }
+
+    @UiHandler("bottomAutoFetch")
+    public void handleClick(final ClickEvent event)
+    {
+        if(!bottomAutoFetch.isToggled()) {
+            startAutoFetchTimer();
+        }
     }
 
     @Override

@@ -33,17 +33,16 @@
                 <b:ProgressBar percent="100" type="ANIMATED" height="5px" addStyleNames="{style.loadingBar}" visible="false" ui:field="topLoading"/>
                 <g:FlowPanel ui:field="topNoMoreResults" styleName="{style.island}" visible="false">
                     <b:Button ui:field="topTryAgain">More</b:Button>
-                    <g:CheckBox visible="false">Fetch automatically</g:CheckBox>
-                    <!-- TODO implement auto refresh -->
                 </g:FlowPanel>
 
                 <g:FlowPanel ui:field="container" styleName="{style.container}"/>
 
                 <b:ProgressBar percent="100" type="ANIMATED" height="5px" addStyleNames="{style.loadingBar}" visible="false" ui:field="bottomLoading"/>
                 <g:FlowPanel ui:field="bottomNoMoreResults" styleName="{style.island}" visible="false">
-                    <b:Button ui:field="bottomTryAgain">More</b:Button>
-                    <g:CheckBox visible="false">Fetch automatically</g:CheckBox>
-                    <!-- TODO implement auto refresh -->
+                    <b:ButtonGroup>
+                        <b:Button ui:field="bottomTryAgain">More</b:Button>
+                        <b:Button ui:field="bottomAutoFetch" toggle="true">Auto fetch</b:Button>
+                    </b:ButtonGroup>
                 </g:FlowPanel>
             </g:FlowPanel>
 
