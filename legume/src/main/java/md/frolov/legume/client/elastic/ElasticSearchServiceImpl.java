@@ -66,18 +66,22 @@ public class ElasticSearchServiceImpl implements ElasticSearchService, Constants
                         return;
                     }
 
-                    AutoBean<REPLY> replyAutoBean = request.getExpectedAutobeanResponse();
-                    final String jsonText;
-                    Class superType = replyAutoBean.getType().getSuperclass();
-                    if(replyAutoBean.as() instanceof WrappedMap){
-                        jsonText = "{\"obj\":" + xhrResponse.getText()+"}";
-                    } else {
-                        jsonText = xhrResponse.getText();
+                    try{
+                        AutoBean<REPLY> replyAutoBean = request.getExpectedAutobeanResponse();
+                        final String jsonText;
+                        Class superType = replyAutoBean.getType().getSuperclass();
+                        if(replyAutoBean.as() instanceof WrappedMap){
+                            jsonText = "{\"obj\":" + xhrResponse.getText()+"}";
+                        } else {
+                            jsonText = xhrResponse.getText();
+                        }
+                        Splittable json = StringQuoter.split(jsonText);
+                        AutoBeanCodex.decodeInto(json, replyAutoBean);
+                        RESPONSE response = request.getResponse(replyAutoBean.as());
+                        callback.onSuccess(request, response);
+                    } catch (Exception e) {
+                        onError(xhrRequest, e);
                     }
-                    Splittable json = StringQuoter.split(jsonText);
-                    AutoBeanCodex.decodeInto(json, replyAutoBean);
-                    RESPONSE response = request.getResponse(replyAutoBean.as());
-                    callback.onSuccess(request, response);
                 }
 
                 @Override
