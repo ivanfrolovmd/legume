@@ -95,7 +95,7 @@ public class Search
 
     public Search clone()
     {
-        return new Search(query, fromDate, toDate, focusDate);
+        return new Search(query, getRealFromDate(), getRealToDate(), getRealFocusDate());
     }
 
     @Override

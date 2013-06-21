@@ -23,6 +23,14 @@
             margin: 2px auto;
         }
 
+        .loading {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+        }
+
         .centeredWrapper {
             display: table;
             height: 100px;
@@ -39,10 +47,12 @@
             text-align: center;
         }
 
-        @external .bar;
-        .grey .bar {
-            background-color: #ccc;
-        }
+            /*
+            @external .bar;
+            .grey .bar {
+                background-color: #ccc;
+            }
+            */
 
         .hoverInfo {
             top: 10px;
@@ -64,14 +74,16 @@
             background-color: white;
             transition: right 0.5s ease; /* TODO compatibility */
         }
+
         .dateSummary {
             position: absolute;
             top: 0;
             bottom: 0;
             left: 0;
-            width: 200px;
+            width: 175px;
             padding: 5px 10px;
         }
+
         .dateDetails {
             position: absolute;
             top: 0;
@@ -88,14 +100,26 @@
         .form {
             margin: 10px 0;
         }
+
         .form label {
             margin: 0 8px;
         }
+
         .withMargins {
             margin: 0 8px;
         }
+
+        .summaryLabel {
+            font-family: 'OpenSansLight';
+        }
+        .summaryValue {
+            float:right;
+        }
     </ui:style>
     <ui:style type="md.frolov.legume.client.ui.components.HistogramComponent.Css" field="css">
+        .disabled {
+            opacity: 0.5;
+        }
         .dateControlsVisible {
             box-shadow: 0 0 6px rgba(0,0,0,.15); /* TODO compatibility */
             right: 0;
@@ -110,9 +134,9 @@
                     <g:Label ui:field="dateHoverInfo" />
                     <g:Label ui:field="countHoverInfo" />
                 </g:FlowPanel>
-                <g:FlowPanel ui:field="loading" styleName="{style.centeredWrapper}">
+                <g:FlowPanel ui:field="loading" styleName="{style.centeredWrapper} {style.loading}">
                     <g:FlowPanel styleName="{style.centered}">
-                        <b:ProgressBar percent="100" type="ANIMATED" width="200px" height="5px" addStyleNames="{style.grey}"/>
+                        <b:ProgressBar percent="100" type="ANIMATED" width="200px" height="5px"/>
                     </g:FlowPanel>
                 </g:FlowPanel>
                 <g:FlowPanel visible="false" ui:field="error" styleName="{style.centeredWrapper}">
@@ -128,16 +152,16 @@
                 <g:FlowPanel styleName="{style.dateSummary}">
                     <!-- Date controls-->
                     <g:FlowPanel>
-                        <g:InlineLabel>Hits:</g:InlineLabel>
-                        <g:InlineLabel styleName="{style.strong}" ui:field="hitsLabel"/>
+                        <g:InlineLabel addStyleNames="{style.summaryLabel}">Hits:</g:InlineLabel>
+                        <g:InlineLabel styleName="{style.summaryValue}" ui:field="hitsLabel"/>
                     </g:FlowPanel>
                     <g:FlowPanel>
-                        <g:InlineLabel>From:</g:InlineLabel>
-                        <g:InlineLabel styleName="{style.strong}" ui:field="fromDateLabel"/>
+                        <g:InlineLabel addStyleNames="{style.summaryLabel}">From:</g:InlineLabel>
+                        <g:InlineLabel styleName="{style.summaryValue}" ui:field="fromDateLabel"/>
                     </g:FlowPanel>
                     <g:FlowPanel>
-                        <g:InlineLabel>To:</g:InlineLabel>
-                        <g:InlineLabel styleName="{style.strong}" ui:field="toDateLabel"/>
+                        <g:InlineLabel addStyleNames="{style.summaryLabel}">To:</g:InlineLabel>
+                        <g:InlineLabel styleName="{style.summaryValue}" ui:field="toDateLabel"/>
                     </g:FlowPanel>
                     <b:ButtonGroup>
                         <b:Button size="MINI" icon="ZOOM_IN" ui:field="zoomIn"/>

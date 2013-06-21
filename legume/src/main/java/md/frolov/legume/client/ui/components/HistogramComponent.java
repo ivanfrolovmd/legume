@@ -45,6 +45,7 @@ import md.frolov.legume.client.elastic.api.Callback;
 import md.frolov.legume.client.elastic.api.HistogramInterval;
 import md.frolov.legume.client.elastic.api.HistogramRequest;
 import md.frolov.legume.client.elastic.api.HistogramResponse;
+import md.frolov.legume.client.events.FocusOnDateEvent;
 import md.frolov.legume.client.events.LogMessageHoverEvent;
 import md.frolov.legume.client.events.LogMessageHoverEventHandler;
 import md.frolov.legume.client.events.UpdateSearchQuery;
@@ -63,6 +64,7 @@ public class HistogramComponent extends Composite implements UpdateSearchQueryHa
     {
     }
     interface Css extends CssResource {
+        String disabled();
         String dateControlsVisible();
     }
 
@@ -216,9 +218,7 @@ public class HistogramComponent extends Composite implements UpdateSearchQueryHa
                 }
                 long focusDate = position.getX().longValue();
 
-                Search search = application.getCurrentSearch().clone();
-                search.setFocusDate(focusDate);
-                WidgetInjector.INSTANCE.placeController().goTo(new StreamPlace(search)); //TODO change this. It might be useful to zoom in/out when in 'terms' activity
+                eventBus.fireEvent(new FocusOnDateEvent(focusDate));
             }
         }, false);
     }
@@ -244,6 +244,7 @@ public class HistogramComponent extends Composite implements UpdateSearchQueryHa
         currentInterval = response.getInterval();
 
         loading.setVisible(false);
+        plot.removeStyleName(css.disabled());
         plot.setVisible(true);
         plot.redraw(true);
 
@@ -317,9 +318,9 @@ public class HistogramComponent extends Composite implements UpdateSearchQueryHa
         }
 
         inprocess = true;
-        plot.setVisible(false);
+        plot.addStyleName(css.disabled());
         hoverInfo.setVisible(false);
-        error.setVisible(true);
+        error.setVisible(false);
         loading.setVisible(true);
         hitsLabel.setText("n/a");
 
@@ -331,6 +332,7 @@ public class HistogramComponent extends Composite implements UpdateSearchQueryHa
             {
                 loading.setVisible(false);
                 error.setVisible(true);
+                plot.setVisible(false);
                 inprocess = false;
             }
 
@@ -368,7 +370,9 @@ public class HistogramComponent extends Composite implements UpdateSearchQueryHa
             {
                 toDate = now;
             }
-            fromDate = toDate - alltime;
+            if(fromDate!=0) {
+                fromDate = toDate - alltime;
+            }
         }
         else if (selectionDate < fromDate)
         {
@@ -381,9 +385,9 @@ public class HistogramComponent extends Composite implements UpdateSearchQueryHa
         if (update)
         {
             Search newSearch = search.clone();
-            search.setFromDate(fromDate);
-            search.setToDate(toDate);
-            requestHistogram(search); //TODO new place?
+            newSearch.setFromDate(fromDate);
+            newSearch.setToDate(toDate);
+            placeController.goTo(new StreamPlace(newSearch)); //TODO TermsActivity would be interested too
         }
         else
         {

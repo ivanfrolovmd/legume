@@ -25,18 +25,13 @@ public class Application implements PlaceChangeEvent.Handler
         return currentSearch;
     }
 
-    public void setCurrentSearch(final Search currentSearch)
-    {
-        this.currentSearch = currentSearch;
-    }
-
     @Override
     public void onPlaceChange(final PlaceChangeEvent event)
     {
         Place place = event.getNewPlace();
         if(place instanceof SearchPlace) {
             Search oldSearch = currentSearch;
-            currentSearch = ((SearchPlace) place).getSearch();
+            currentSearch = ((SearchPlace) place).getSearch().clone();
 
             if(oldSearch==null || !oldSearch.equals(currentSearch)) {
                 eventBus.fireEvent(new UpdateSearchQuery(currentSearch));

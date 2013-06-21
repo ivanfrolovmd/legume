@@ -27,7 +27,7 @@ import md.frolov.legume.client.ui.EventFlowPanel;
 /** @author Ivan Frolov (ifrolov@tacitknowledge.com) */
 public class LogEventComponent extends Composite
 {
-    private static final DateTimeFormat DTF = DateTimeFormat.getFormat("dd/MM HH:mm:ss.sss");
+    private static final DateTimeFormat DTF = DateTimeFormat.getFormat("dd/MM HH:mm:ss.SSS");
     private static final int MAX_SUMMARY_WIDTH = 300;
 
     interface LogEventComponentUiBinder extends UiBinder<Widget, LogEventComponent>

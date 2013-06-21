@@ -7,11 +7,15 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import com.github.gwtbootstrap.client.ui.Button;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.MouseOverEvent;
+import com.google.gwt.event.dom.client.MouseOverHandler;
 import com.google.gwt.event.dom.client.ScrollEvent;
+import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -21,6 +25,7 @@ import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.EventBus;
 
+import md.frolov.legume.client.Application;
 import md.frolov.legume.client.elastic.model.reply.SearchHit;
 import md.frolov.legume.client.events.SearchFinishedEvent;
 import md.frolov.legume.client.events.SearchFinishedEventHandler;
@@ -28,7 +33,9 @@ import md.frolov.legume.client.events.SearchInProgressEvent;
 import md.frolov.legume.client.events.SearchInProgressEventHandler;
 import md.frolov.legume.client.events.SearchResultsReceivedEvent;
 import md.frolov.legume.client.events.SearchResultsReceivedEventHandler;
+import md.frolov.legume.client.model.Search;
 import md.frolov.legume.client.service.ColorizeService;
+import md.frolov.legume.client.ui.EventFlowPanel;
 import md.frolov.legume.client.ui.components.LogEventComponent;
 import md.frolov.legume.client.util.IteratorIncrementalTask;
 
@@ -70,6 +77,10 @@ public class StreamViewImpl extends Composite implements StreamView, SearchResul
 
     @Inject
     private ColorizeService colorizeService;
+    @Inject
+    private PlaceController placeController;
+    @Inject
+    private Application application;
 
     @Inject
     private EventBus eventBus;
@@ -132,7 +143,7 @@ public class StreamViewImpl extends Composite implements StreamView, SearchResul
         nothingFound.setVisible(true);
     }
 
-    private void handleFound(SearchResultsReceivedEvent event)
+    private void handleFound(final SearchResultsReceivedEvent event)
     {
         isRendering=true;
 
@@ -141,13 +152,27 @@ public class StreamViewImpl extends Composite implements StreamView, SearchResul
         final boolean upwards = event.isUpwards();
 
         Scheduler.get().scheduleIncremental(new IteratorIncrementalTask<SearchHit>(hits) {
-            private FlowPanel panel;
+            private EventFlowPanel panel;
             private int cnt = 0;
 
             @Override
             public void beforeAll()
             {
-                panel = new FlowPanel();
+                panel = new EventFlowPanel();
+                SearchHit firstHit = Iterables.getFirst(event.getSearchResponse().getHits(), null);
+                if(firstHit!=null) {
+                    final long focusDate = firstHit.getLogEvent().getTimestamp().getTime();
+                    panel.addMouseOverHandler(new MouseOverHandler()
+                    {
+                        @Override
+                        public void onMouseOver(final MouseOverEvent event)
+                        {
+                            Search search = application.getCurrentSearch().clone();
+                            search.setFocusDate(focusDate);
+                            placeController.goTo(new StreamPlace(search));
+                        }
+                    });
+                }
             }
 
             @Override
@@ -325,5 +350,10 @@ public class StreamViewImpl extends Composite implements StreamView, SearchResul
         }
     }
 
+    @Override
+    public void focusOnDate(final long focusDate)
+    {
+        //TODO scroll to where appropriate
+    }
 }
 

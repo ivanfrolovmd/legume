@@ -23,6 +23,7 @@ public abstract class SearchPlace extends Place
     public abstract PlaceTokenizer getTokenizer();
     public abstract String getTokenPrefix();
 
+    //TODO this method needs to be removed. History mapper should be used instead where called.
     public String getTargetHistoryToken() {
         return getTokenPrefix()+":"+getTokenizer().getToken(this);
     }
