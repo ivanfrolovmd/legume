@@ -27,12 +27,7 @@ import com.google.web.bindery.event.shared.EventBus;
 
 import md.frolov.legume.client.Application;
 import md.frolov.legume.client.elastic.model.reply.SearchHit;
-import md.frolov.legume.client.events.SearchFinishedEvent;
-import md.frolov.legume.client.events.SearchFinishedEventHandler;
-import md.frolov.legume.client.events.SearchInProgressEvent;
-import md.frolov.legume.client.events.SearchInProgressEventHandler;
-import md.frolov.legume.client.events.SearchResultsReceivedEvent;
-import md.frolov.legume.client.events.SearchResultsReceivedEventHandler;
+import md.frolov.legume.client.events.*;
 import md.frolov.legume.client.model.Search;
 import md.frolov.legume.client.service.ColorizeService;
 import md.frolov.legume.client.ui.EventFlowPanel;
@@ -88,6 +83,7 @@ public class StreamViewImpl extends Composite implements StreamView, SearchResul
     private Presenter presenter;
     private boolean isRendering;
     private boolean initial;
+    private boolean isScrollableUp;
 
     interface StreamViewImplUiBinder extends UiBinder<Widget, StreamViewImpl>
     {
@@ -109,6 +105,9 @@ public class StreamViewImpl extends Composite implements StreamView, SearchResul
         container.clear();
         ids.clear();
         initial = true;
+
+        eventBus.fireEvent(new ScrollableStateChangedEvent(false));
+        isScrollableUp = false;
     }
 
     @Override
@@ -264,6 +263,15 @@ public class StreamViewImpl extends Composite implements StreamView, SearchResul
     {
         int toTop = scrollContainer.getVerticalScrollPosition() - scrollContainer.getMinimumVerticalScrollPosition();
         int toBottom = scrollContainer.getMaximumVerticalScrollPosition() - scrollContainer.getVerticalScrollPosition();
+
+        if(toTop == 0 && isScrollableUp) {
+            eventBus.fireEvent(new ScrollableStateChangedEvent(false));
+            isScrollableUp = false;
+        }
+        if(toTop>0 && !isScrollableUp) {
+            eventBus.fireEvent(new ScrollableStateChangedEvent(true));
+            isScrollableUp = true;
+        }
 
         if (toTop == 0 && toBottom == 0)
         {
