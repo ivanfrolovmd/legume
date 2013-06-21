@@ -126,6 +126,7 @@ public class HistogramComponent extends Composite implements UpdateSearchQueryHa
     private ConversionUtils conversionUtils = ConversionUtils.INSTANCE;
 
     private Search currentSearch;
+    private Search queuedSearch;
     private boolean inprocess = false;
     private boolean ignoreClickEvent = false;
     private HistogramInterval currentInterval;
@@ -310,10 +311,18 @@ public class HistogramComponent extends Composite implements UpdateSearchQueryHa
         plot.redraw();
     }
 
+    private void checkQueued() {
+        if(queuedSearch != null) {
+            requestHistogram(queuedSearch);
+            queuedSearch = null;
+        }
+    }
+
     private void requestHistogram(Search search)
     {
         if (inprocess)
         {
+            queuedSearch = search;
             return;
         }
 
@@ -334,6 +343,7 @@ public class HistogramComponent extends Composite implements UpdateSearchQueryHa
                 error.setVisible(true);
                 plot.setVisible(false);
                 inprocess = false;
+                checkQueued();
             }
 
             @Override
@@ -341,6 +351,7 @@ public class HistogramComponent extends Composite implements UpdateSearchQueryHa
             {
                 updateHistogramWithData(response);
                 inprocess = false;
+                checkQueued();
             }
         });
     }
