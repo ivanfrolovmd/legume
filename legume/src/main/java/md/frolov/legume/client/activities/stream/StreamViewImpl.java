@@ -362,24 +362,28 @@ public class StreamViewImpl extends Composite implements StreamView
     @UiHandler("topErrorTryAgain")
     public void onTopErrorAgainClick(final ClickEvent event)
     {
+        topError.setVisible(false);
         requestMoreTop();
     }
 
     @UiHandler("topLoadingTryAgain")
     public void onTopLoadingAgainClick(final ClickEvent event)
     {
+        topNoMoreResults.setVisible(false);
         requestMoreTop();
     }
 
     @UiHandler("bottomErrorTryAgain")
     public void onBottomErrorTryAgain(final ClickEvent event)
     {
+        bottomError.setVisible(false);
         requestMoreBottom();
     }
 
     @UiHandler("bottomLoadingTryAgain")
     public void onBottomLoadingTryAgain(final ClickEvent event)
     {
+        bottomNoMoreResults.setVisible(false);
         requestMoreBottom();
     }
 
