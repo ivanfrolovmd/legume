@@ -2,6 +2,7 @@
              xmlns:g='urn:import:com.google.gwt.user.client.ui'
              xmlns:b="urn:import:com.github.gwtbootstrap.client.ui"
              xmlns:f="urn:import:org.vectomatic.file"
+             xmlns:l="urn:import:md.frolov.legume.client.ui.components"
         >
     <ui:style>
         .box {
@@ -55,6 +56,7 @@
 
     </ui:style>
     <g:FlowPanel styleName="{style.box}">
+        <l:ConnectionManagerComponent/>
         <g:FlowPanel styleName="{style.logoBox}">
             <g:Anchor styleName="{style.logo}" href="http://legume.md" target="_blank">Legume</g:Anchor>
         </g:FlowPanel>

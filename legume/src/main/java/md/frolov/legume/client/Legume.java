@@ -7,7 +7,6 @@ import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.place.shared.PlaceChangeEvent;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
-import com.google.gwt.user.client.ui.RootPanel;
 
 import md.frolov.legume.client.activities.stream.StreamPlace;
 import md.frolov.legume.client.gin.WidgetInjector;
@@ -31,7 +30,6 @@ public class Legume implements EntryPoint
 
         injector.activityManager().setDisplay(injector.mainView());
         RootLayoutPanel.get().add(injector.mainView());
-        RootPanel.get().add(injector.connectionManagerComponent());
 
         injector.placeHistoryHandler().register(injector.placeController(), injector.eventBus(), new StreamPlace(Search.DEFAULT)); //TODO change to homeplace
         injector.placeHistoryHandler().handleCurrentHistory();
