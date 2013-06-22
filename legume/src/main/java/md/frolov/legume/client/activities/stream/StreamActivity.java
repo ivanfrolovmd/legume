@@ -20,9 +20,7 @@ import md.frolov.legume.client.elastic.api.SearchRequest;
 import md.frolov.legume.client.elastic.api.SearchResponse;
 import md.frolov.legume.client.events.FocusOnDateEvent;
 import md.frolov.legume.client.events.FocusOnDateEventHandler;
-import md.frolov.legume.client.events.SearchFinishedEvent;
-import md.frolov.legume.client.events.SearchInProgressEvent;
-import md.frolov.legume.client.events.SearchResultsReceivedEvent;
+import md.frolov.legume.client.events.ScrollableStateChangedEvent;
 import md.frolov.legume.client.gin.WidgetInjector;
 import md.frolov.legume.client.model.Search;
 import md.frolov.legume.client.service.ConfigurationService;
@@ -60,6 +58,10 @@ public class StreamActivity extends SearchActivity implements StreamView.Present
 
     private boolean finished = false;
 
+    private boolean initialBottomFinished = false;
+    private boolean isInitialUpFinished = false;
+    private int totalFound = 0;
+
     @Override
     public void start(final AcceptsOneWidget panel, final EventBus eventBus)
     {
@@ -72,7 +74,10 @@ public class StreamActivity extends SearchActivity implements StreamView.Present
 
         initQueries(place.getSearch());
 
+        streamView.showLoading();
+
         requestMoreResults(false);
+        requestMoreResults(true);
     }
 
     private void initQueries(Search search)
@@ -88,8 +93,8 @@ public class StreamActivity extends SearchActivity implements StreamView.Present
     public void requestMoreResults(final boolean upwards)
     {
         final SearchRequest query = upwards ? upwardsQuery : downwardsQuery;
-        eventBus.fireEvent(new SearchInProgressEvent(upwards));
 
+        streamView.showLoading(upwards);
         elasticSearchService.query(query, new Callback<SearchRequest, SearchResponse>()
         {
             @Override
@@ -100,17 +105,17 @@ public class StreamActivity extends SearchActivity implements StreamView.Present
                     return;
                 }
                 LOG.log(Level.SEVERE, "Can't fetch results", exception);
-                eventBus.fireEvent(new SearchFinishedEvent(upwards));
+                checkInitialError(upwards);
             }
 
             @Override
-            public void onSuccess(final SearchRequest query, final SearchResponse response)
+            public void onSuccess(final SearchRequest request, final SearchResponse response)
             {
                 if (finished)
                 {
                     return;
                 }
-                query.setFrom(query.getFrom() + response.getHits().size());
+                request.setFrom(request.getFrom() + response.getHits().size());
                 if(response.getHits().size()>0) {
                     long date = Iterables.getLast(response.getHits()).getLogEvent().getTimestamp().getTime();
                     if(upwards) {
@@ -118,13 +123,38 @@ public class StreamActivity extends SearchActivity implements StreamView.Present
                     } else {
                         newestDate = date;
                     }
+                    totalFound += response.getHits().size();
                 }
 
                 LOG.fine("Got reply");
-                eventBus.fireEvent(new SearchResultsReceivedEvent(query, response, upwards));
-                eventBus.fireEvent(new SearchFinishedEvent(upwards));
+                streamView.handleNewHits(upwards, request, response);
             }
         });
+    }
+
+    private void checkInitialError(boolean upwards) {
+        if(initialBottomFinished && isInitialUpFinished) {
+            streamView.showError(upwards);
+        } else {
+            streamView.showError();
+        }
+    }
+
+    @Override
+    public void checkInitialRequests(boolean upwards) {
+        if(upwards) {
+            isInitialUpFinished = true;
+        } else {
+            initialBottomFinished = true;
+        }
+
+        if(initialBottomFinished && isInitialUpFinished) {
+            if(totalFound > 0) {
+                streamView.showResults();
+            } else {
+                streamView.showNothingFound();
+            }
+        }
     }
 
     @Override
@@ -143,6 +173,7 @@ public class StreamActivity extends SearchActivity implements StreamView.Present
     {
         finished = true;
         elasticSearchService.cancelAllRequests();
+        eventBus.fireEvent(new ScrollableStateChangedEvent(false));
     }
 
     @Override

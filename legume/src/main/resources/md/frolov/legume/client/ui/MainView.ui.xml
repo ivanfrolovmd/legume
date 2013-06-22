@@ -45,7 +45,7 @@
         }
         .histogram, .leftContainer {
             box-shadow: 0 0 12px rgba(0,0,0,0.15); /* TODO add compaitble CSS*/
-            transition: box-shadow 1s ease;
+            transition: box-shadow 3s ease;
         }
         .viewContainer{
             left: 250px;
@@ -54,7 +54,7 @@
     </ui:style>
     <ui:style field="css" type="md.frolov.legume.client.ui.MainView.Css">
         .hasScrolls {
-            box-shadow: 0 0 50px rgba(0,0,0,0.60);
+            box-shadow: 0 0 60px rgba(0,0,0,0.50);
         }
     </ui:style>
         <g:FlowPanel styleName="{style.fillAbsolute}">
@@ -76,9 +76,7 @@
                         </g:ScrollPanel>
                     </g:ResizeLayoutPanel>
                 </g:FlowPanel>
-                <g:FlowPanel styleName="{style.fillAbsolute} {style.viewContainer}">
-                    <g:ResizeLayoutPanel ui:field="viewContainer" width="100%" height="100%"/>
-                </g:FlowPanel>
+                <g:FlowPanel styleName="{style.fillAbsolute} {style.viewContainer}" ui:field="viewContainer"/>
             </g:FlowPanel>
         </g:FlowPanel>
 </ui:UiBinder>

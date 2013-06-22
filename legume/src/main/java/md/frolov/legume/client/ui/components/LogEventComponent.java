@@ -3,6 +3,7 @@ package md.frolov.legume.client.ui.components;
 import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.i18n.client.DateTimeFormat;
@@ -30,6 +31,7 @@ public class LogEventComponent extends Composite
     private static final DateTimeFormat DTF = DateTimeFormat.getFormat("dd/MM HH:mm:ss.SSS");
     private static final int MAX_SUMMARY_WIDTH = 300;
 
+
     interface LogEventComponentUiBinder extends UiBinder<Widget, LogEventComponent>
     {
     }
@@ -37,12 +39,14 @@ public class LogEventComponent extends Composite
     interface Css extends CssResource
     {
         String detailsSelected();
+        String flash();
     }
 
     private static LogEventComponentUiBinder binder = GWT.create(LogEventComponentUiBinder.class);
 
     private final String id;
     private final LogEvent logEvent;
+    private final long timestamp;
 
     private WidgetInjector injector = WidgetInjector.INSTANCE;
     private ColorizeService colorizeService = injector.colorizeService();
@@ -73,6 +77,7 @@ public class LogEventComponent extends Composite
         initWidget(binder.createAndBindUi(this));
         this.id = id;
         this.logEvent = logEvent;
+        this.timestamp = logEvent.getTimestamp().getTime();
 
         time.setText(DTF.format(logEvent.getTimestamp()));
         String summaryText = abbreviate(logEvent.getMessage(), MAX_SUMMARY_WIDTH);
@@ -162,6 +167,24 @@ public class LogEventComponent extends Composite
     @UiHandler("focusPanel")
     public void handleMouseOver(final MouseOverEvent event)
     {
-        eventBus.fireEvent(new LogMessageHoverEvent(logEvent.getTimestamp().getTime()));
+        eventBus.fireEvent(new LogMessageHoverEvent(timestamp));
+    }
+
+    public long getTimestamp() {
+        return timestamp;
+    }
+
+    public void flash()
+    {
+        box.addStyleName(style.flash());
+        Scheduler.get().scheduleFixedDelay(new Scheduler.RepeatingCommand()
+        {
+            @Override
+            public boolean execute()
+            {
+                box.removeStyleName(style.flash());
+                return false;
+            }
+        }, 3000);
     }
 }

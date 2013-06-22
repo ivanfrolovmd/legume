@@ -45,7 +45,9 @@ public class MainView extends Composite implements AcceptsOneWidget, ScrollableS
     @Override
     public void setWidget(IsWidget w) {
         viewContainer.clear();
-        viewContainer.add(w);
+        if(w!=null) {
+            viewContainer.add(w);
+        }
     }
 
     @Override

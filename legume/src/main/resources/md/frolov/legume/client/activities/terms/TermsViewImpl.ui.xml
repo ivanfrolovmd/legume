@@ -12,29 +12,47 @@
             background-color: white;
         }
 
+        .loadingPanel {
+            position: absolute;
+            width: 100%;;
+            top: 50%;
+            text-align: center;
+        }
+        .alignCentered {
+            margin: 0 auto;
+        }
+        .absoluteFill {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            top: 0;
+        }
     </ui:style>
-    <g:ScrollPanel>
-        <g:FlowPanel styleName="{style.box}">
-            <g:FlowPanel ui:field="loadingPanel">
-                <b:ProgressBar percent="100" type="ANIMATED" height="5px" width="100%"/>
-            </g:FlowPanel>
-            <g:FlowPanel ui:field="errorPanel" visible="false">
-                <g:Label>Request timed out.</g:Label>
-                <b:Button ui:field="tryAgain">Try again</b:Button>
-            </g:FlowPanel>
-            <g:FlowPanel visible="false" ui:field="resultsPanel">
-            <b:Row>
-                <b:Column size="6">
-                    <g:FlexTable ui:field="results" styleName="table table-bordered table-striped table-hover" addStyleNames="{style.table}"/>
-                    <g:Label ui:field="totalLabel" />
-                    <g:Label ui:field="otherLabel" />
-                    <g:Label ui:field="missingLabel" />
-                </b:Column>
-                <b:Column size="6">
-                    <p:SimplePlot ui:field="plot" width="300px" height="300px" />
-                </b:Column>
-            </b:Row>
-            </g:FlowPanel>
+    <g:FlowPanel styleName="{style.absoluteFill}">
+        <g:FlowPanel ui:field="loadingPanel" addStyleNames="{style.loadingPanel}">
+            <b:ProgressBar percent="100" type="ANIMATED" text="Loading..." width="200px" addStyleNames="{style.alignCentered}"/>
         </g:FlowPanel>
-    </g:ScrollPanel>
+        <g:FlowPanel ui:field="errorPanel" addStyleNames="{style.loadingPanel}" visible="false">
+            <g:Label>Request timed out.</g:Label>
+            <b:Button ui:field="tryAgain">Try again</b:Button>
+        </g:FlowPanel>
+        <g:ResizeLayoutPanel width="100%" height="100%">
+            <g:ScrollPanel>
+                <g:FlowPanel visible="false" ui:field="resultsPanel" styleName="{style.box}">
+                    <b:Row>
+                        <b:Column size="6">
+                            <g:FlexTable ui:field="results" styleName="table table-bordered table-striped table-hover" addStyleNames="{style.table}"/>
+                            <g:Label ui:field="totalLabel" />
+                            <g:Label ui:field="otherLabel" />
+                            <g:Label ui:field="missingLabel" />
+                        </b:Column>
+                        <b:Column size="6">
+                            <p:SimplePlot ui:field="plot" width="300px" height="300px" />
+                        </b:Column>
+                    </b:Row>
+                </g:FlowPanel>
+            </g:ScrollPanel>
+        </g:ResizeLayoutPanel>
+    </g:FlowPanel>
 </ui:UiBinder>
