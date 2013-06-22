@@ -64,18 +64,20 @@
                         <b:Button ui:field="topLoadingTryAgain">More</b:Button>
                     </g:FlowPanel>
                     <g:FlowPanel ui:field="topError" styleName="{style.island}" visible="false">
-                        <b:Button ui:field="topErrorTryAgain">More</b:Button>
+                        <g:Label>There were some errors</g:Label>
+                        <b:Button ui:field="topErrorTryAgain">Try again</b:Button>
                     </g:FlowPanel>
 
                     <g:FlowPanel ui:field="container" styleName="{style.container}"/>
 
                     <b:ProgressBar percent="100" type="ANIMATED" height="5px" addStyleNames="{style.loadingBar}" visible="false" ui:field="bottomLoading"/>
                     <g:FlowPanel ui:field="bottomError" styleName="{style.island}" visible="false">
-                        <b:Button ui:field="bottomErrorTryAgain">More</b:Button>
+                        <g:Label>There were some errors</g:Label>
+                        <b:Button ui:field="bottomErrorTryAgain">Try again</b:Button>
                     </g:FlowPanel>
                     <g:FlowPanel ui:field="bottomNoMoreResults" styleName="{style.island}" visible="false">
                         <b:ButtonGroup>
-                            <b:Button ui:field="bottomTryAgain">More</b:Button>
+                            <b:Button ui:field="bottomLoadingTryAgain">More</b:Button>
                             <b:Button ui:field="bottomAutoFetch" toggle="true">Auto fetch</b:Button>
                         </b:ButtonGroup>
                     </g:FlowPanel>

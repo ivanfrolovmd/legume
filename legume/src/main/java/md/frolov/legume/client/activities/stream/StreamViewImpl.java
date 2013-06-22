@@ -63,7 +63,7 @@ public class StreamViewImpl extends Composite implements StreamView
     @UiField
     FlowPanel bottomNoMoreResults;
     @UiField
-    Button bottomTryAgain;
+    Button bottomLoadingTryAgain;
     @UiField
     Button bottomAutoFetch;
     @UiField
@@ -153,35 +153,6 @@ public class StreamViewImpl extends Composite implements StreamView
         nothingFoundPanel.setVisible(false);
         resultsPanel.setVisible(true);
     }
-
-    /*
-    @Override
-    public void onSearchResultsReceived(final SearchResultsReceivedEvent event)
-    {
-//        resultsPanel.setVisible(false);
-//        nothingFound.setVisible(false);
-
-        if(initial) {
-            initial = false;
-            requestMoreTop();
-            requestMoreBottom();
-        }
-
-        Scheduler.get().scheduleEntry(new Scheduler.RepeatingCommand()
-        {
-            @Override
-            public boolean execute()
-            {
-                if(!isRendering) {
-                    handleFound(event);
-                    return false; // stop repeating the command
-                } else {
-                    return true; //wait until the rendering is finished
-                }
-            }
-        });
-    }
-    */
 
     @Override
     public void showLoading(final boolean upwards)
@@ -389,13 +360,25 @@ public class StreamViewImpl extends Composite implements StreamView
     }
 
     @UiHandler("topErrorTryAgain")
-    public void onTopAgainClick(final ClickEvent event)
+    public void onTopErrorAgainClick(final ClickEvent event)
     {
         requestMoreTop();
     }
 
-    @UiHandler("bottomTryAgain")
-    public void onBottomTryAgain(final ClickEvent event)
+    @UiHandler("topLoadingTryAgain")
+    public void onTopLoadingAgainClick(final ClickEvent event)
+    {
+        requestMoreTop();
+    }
+
+    @UiHandler("bottomErrorTryAgain")
+    public void onBottomErrorTryAgain(final ClickEvent event)
+    {
+        requestMoreBottom();
+    }
+
+    @UiHandler("bottomLoadingTryAgain")
+    public void onBottomLoadingTryAgain(final ClickEvent event)
     {
         requestMoreBottom();
     }
