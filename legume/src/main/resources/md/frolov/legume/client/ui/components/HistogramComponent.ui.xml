@@ -93,10 +93,6 @@
             padding: 5px 10px;
         }
 
-        .strong {
-            font-family: 'OpenSansBold';
-        }
-
         .form {
             margin: 10px 0;
         }
