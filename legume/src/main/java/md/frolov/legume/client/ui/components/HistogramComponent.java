@@ -389,8 +389,8 @@ public class HistogramComponent extends Composite implements UpdateSearchQueryHa
         {
             update = true;
             long alltime = toDate - fromDate;
-            fromDate = fromDate - alltime / 2;
-            toDate = toDate - alltime / 2;
+            fromDate = selectionDate - alltime / 2;
+            toDate = selectionDate + alltime / 2;
         }
 
         if (update)
