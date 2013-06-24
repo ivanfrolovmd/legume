@@ -406,6 +406,16 @@ public class HistogramComponent extends Composite implements UpdateSearchQueryHa
         }
     }
 
+    @UiHandler("tryAgain")
+    public void onTryAgain(final ClickEvent event) {
+        requestHistogram(currentSearch);
+    }
+
+    @UiHandler("zoomInError")
+    public void onZoomInError(final ClickEvent event) {
+        onZoomIn(event);
+    }
+
     @UiHandler("zoomIn")
     public void onZoomIn(final ClickEvent event)
     {
@@ -418,8 +428,8 @@ public class HistogramComponent extends Composite implements UpdateSearchQueryHa
         }
 
         long allTime = to - from;
-        long fromDate = from + allTime / 3;
-        long toDate = to - allTime / 3;
+        long fromDate = from + allTime / 4;
+        long toDate = to - allTime / 4;
 
         Search search = application.getCurrentSearch().clone();
         search.setFromDate(fromDate);
