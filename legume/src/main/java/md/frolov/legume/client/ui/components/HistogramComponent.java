@@ -45,18 +45,14 @@ import md.frolov.legume.client.elastic.api.Callback;
 import md.frolov.legume.client.elastic.api.HistogramInterval;
 import md.frolov.legume.client.elastic.api.HistogramRequest;
 import md.frolov.legume.client.elastic.api.HistogramResponse;
-import md.frolov.legume.client.events.FocusOnDateEvent;
-import md.frolov.legume.client.events.LogMessageHoverEvent;
-import md.frolov.legume.client.events.LogMessageHoverEventHandler;
-import md.frolov.legume.client.events.UpdateSearchQuery;
-import md.frolov.legume.client.events.UpdateSearchQueryHandler;
+import md.frolov.legume.client.events.*;
 import md.frolov.legume.client.gin.WidgetInjector;
 import md.frolov.legume.client.model.Search;
 import md.frolov.legume.client.ui.EventFlowPanel;
 import md.frolov.legume.client.util.ConversionUtils;
 
 /** @author Ivan Frolov (ifrolov@tacitknowledge.com) */
-public class HistogramComponent extends Composite implements UpdateSearchQueryHandler, LogMessageHoverEventHandler
+public class HistogramComponent extends Composite implements UpdateSearchQueryHandler, LogMessageHoverEventHandler, LogMessageOutEventHandler
 {
     private static final int MAXIMUM_STEPS = 2000; //TODO constraint to client width?
 
@@ -138,6 +134,7 @@ public class HistogramComponent extends Composite implements UpdateSearchQueryHa
 
         eventBus.addHandler(UpdateSearchQuery.TYPE, this);
         eventBus.addHandler(LogMessageHoverEvent.TYPE, this);
+        eventBus.addHandler(LogMessageOutEvent.TYPE, this);
     }
 
     private void initPlot()
@@ -404,6 +401,13 @@ public class HistogramComponent extends Composite implements UpdateSearchQueryHa
         {
             plot.lockCrosshair(PlotPosition.of(event.getDate(), 0));
         }
+    }
+
+    @Override
+    public void onLogMessageOut(final LogMessageOutEvent event)
+    {
+        plot.clearCrosshair();
+        plot.lockCrosshair();
     }
 
     @UiHandler("tryAgain")

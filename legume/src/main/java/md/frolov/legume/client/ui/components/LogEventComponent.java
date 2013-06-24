@@ -5,6 +5,7 @@ import java.util.Map;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.resources.client.CssResource;
@@ -21,6 +22,7 @@ import com.google.web.bindery.event.shared.EventBus;
 
 import md.frolov.legume.client.elastic.model.reply.LogEvent;
 import md.frolov.legume.client.events.LogMessageHoverEvent;
+import md.frolov.legume.client.events.LogMessageOutEvent;
 import md.frolov.legume.client.gin.WidgetInjector;
 import md.frolov.legume.client.service.ColorizeService;
 import md.frolov.legume.client.ui.EventFlowPanel;
@@ -168,6 +170,12 @@ public class LogEventComponent extends Composite
     public void handleMouseOver(final MouseOverEvent event)
     {
         eventBus.fireEvent(new LogMessageHoverEvent(timestamp));
+    }
+
+    @UiHandler("focusPanel")
+    public void handleMouseOut(final MouseOutEvent event)
+    {
+        eventBus.fireEvent(new LogMessageOutEvent());
     }
 
     public long getTimestamp() {
