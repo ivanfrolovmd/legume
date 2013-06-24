@@ -138,8 +138,8 @@
                 <g:FlowPanel visible="false" ui:field="error" styleName="{style.centeredWrapper}">
                     <g:FlowPanel styleName="{style.centered}">
                         <b:ButtonGroup width="100%">
-                            <b:Button icon="REFRESH">Try again</b:Button>
-                            <b:Button icon="ZOOM_IN" title="Zoom in to reduce fetch size">Zoom in</b:Button>
+                            <b:Button icon="REFRESH" ui:field="tryAgain">Try again</b:Button>
+                            <b:Button icon="ZOOM_IN" title="Zoom in to reduce fetch size" ui:field="zoomInError">Zoom in</b:Button>
                         </b:ButtonGroup>
                     </g:FlowPanel>
                 </g:FlowPanel>

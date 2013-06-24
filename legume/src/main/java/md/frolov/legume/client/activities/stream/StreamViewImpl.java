@@ -95,6 +95,9 @@ public class StreamViewImpl extends Composite implements StreamView
     private boolean isRendering;
     private boolean isScrollableUp;
 
+    private boolean topFinished;
+    private boolean bottomFinished;
+
 
     interface StreamViewImplUiBinder extends UiBinder<Widget, StreamViewImpl>
     {
@@ -161,10 +164,12 @@ public class StreamViewImpl extends Composite implements StreamView
             topLoading.setVisible(true);
             topError.setVisible(false);
             topNoMoreResults.setVisible(false);
+            topFinished = false;
         } else {
             bottomLoading.setVisible(true);
             bottomError.setVisible(false);
             bottomNoMoreResults.setVisible(false);
+            bottomFinished = false;
         }
     }
 
@@ -247,6 +252,7 @@ public class StreamViewImpl extends Composite implements StreamView
                     int scrollToBottom = scrollContainer.getMaximumVerticalScrollPosition() - scrollContainer.getVerticalScrollPosition();
                     container.insert(panel, 0);
                     topLoading.setVisible(false);
+                    topNoMoreResults.setVisible(true);
                     int scrollPosition = scrollContainer.getMaximumVerticalScrollPosition() - scrollToBottom;
                     scrollContainer.setVerticalScrollPosition(scrollPosition);
                 }
@@ -254,6 +260,7 @@ public class StreamViewImpl extends Composite implements StreamView
                 {
                     container.add(panel);
                     bottomLoading.setVisible(false);
+                    bottomNoMoreResults.setVisible(true);
                 }
 
                 isRendering = false;
@@ -278,11 +285,13 @@ public class StreamViewImpl extends Composite implements StreamView
         {
             topNoMoreResults.setVisible(true);
             topLoading.setVisible(false);
+            topFinished = true;
         }
         else
         {
             bottomNoMoreResults.setVisible(true);
             bottomLoading.setVisible(false);
+            bottomFinished = true;
             if(bottomAutoFetch.isToggled()) {
                 startAutoFetchTimer();
             }
@@ -341,7 +350,7 @@ public class StreamViewImpl extends Composite implements StreamView
 
     private void requestMoreTop()
     {
-        if (topLoading.isVisible() || topError.isVisible() || topNoMoreResults.isVisible() || isRendering)
+        if (topLoading.isVisible() || topError.isVisible() || topFinished || isRendering)
         {
             return;
         }
@@ -351,7 +360,7 @@ public class StreamViewImpl extends Composite implements StreamView
 
     private void requestMoreBottom()
     {
-        if (bottomLoading.isVisible() || bottomError.isVisible() || bottomNoMoreResults.isVisible() || isRendering)
+        if (bottomLoading.isVisible() || bottomError.isVisible() || bottomFinished || isRendering)
         {
             return;
         }
@@ -369,6 +378,7 @@ public class StreamViewImpl extends Composite implements StreamView
     @UiHandler("topLoadingTryAgain")
     public void onTopLoadingAgainClick(final ClickEvent event)
     {
+        topFinished = false;
         topNoMoreResults.setVisible(false);
         requestMoreTop();
     }
@@ -383,6 +393,7 @@ public class StreamViewImpl extends Composite implements StreamView
     @UiHandler("bottomLoadingTryAgain")
     public void onBottomLoadingTryAgain(final ClickEvent event)
     {
+        bottomFinished = false;
         bottomNoMoreResults.setVisible(false);
         requestMoreBottom();
     }

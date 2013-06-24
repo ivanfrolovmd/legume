@@ -24,9 +24,11 @@
         }
 
         .loadingBar {
-            margin: 10px 0;
+            margin: 32px 0 33px 0;
         }
-
+        .buttonBar {
+            margin: 20px 0;
+        }
 
         .loadingPanel {
             position: absolute;
@@ -46,6 +48,32 @@
         }
     </ui:style>
     <g:FlowPanel styleName="{style.absoluteFill}">
+        <g:ResizeLayoutPanel width="100%" height="100%">
+            <g:ScrollPanel ui:field="scrollContainer" styleName="{style.scrollContainer}">
+                <g:FlowPanel ui:field="resultsPanel" visible="false"> <!-- Panel with results -->
+                    <b:ProgressBar percent="100" type="ANIMATED" height="5px" addStyleNames="{style.loadingBar}" visible="false" ui:field="topLoading"/>
+                    <g:FlowPanel ui:field="topNoMoreResults" styleName="{style.buttonBar}">
+                        <b:Button ui:field="topLoadingTryAgain" block="true">More</b:Button>
+                    </g:FlowPanel>
+                    <g:FlowPanel ui:field="topError" styleName="{style.buttonBar}" visible="false">
+                        <b:Button ui:field="topErrorTryAgain" block="true">Something bad has occurred. Try again.</b:Button>
+                    </g:FlowPanel>
+
+                    <g:FlowPanel ui:field="container" styleName="{style.container}"/>
+
+                    <b:ProgressBar percent="100" type="ANIMATED" height="5px" addStyleNames="{style.loadingBar}" visible="false" ui:field="bottomLoading"/>
+                    <g:FlowPanel ui:field="bottomError" styleName="{style.buttonBar}" visible="false">
+                        <b:Button ui:field="bottomErrorTryAgain" block="true">Something bad has occurred. Try again</b:Button>
+                    </g:FlowPanel>
+                    <g:FlowPanel ui:field="bottomNoMoreResults" styleName="{style.buttonBar}">
+                        <b:ButtonGroup>
+                            <b:Button ui:field="bottomLoadingTryAgain">More</b:Button>
+                            <b:Button ui:field="bottomAutoFetch" toggle="true">Auto fetch</b:Button>
+                        </b:ButtonGroup>
+                    </g:FlowPanel>
+                </g:FlowPanel>
+            </g:ScrollPanel>
+        </g:ResizeLayoutPanel>
         <g:FlowPanel ui:field="loadingPanel" addStyleNames="{style.loadingPanel}">
             <b:ProgressBar percent="100" type="ANIMATED" text="Loading..." width="200px" addStyleNames="{style.alignCentered}"/>
         </g:FlowPanel>
@@ -56,33 +84,5 @@
         <g:FlowPanel ui:field="nothingFoundPanel" addStyleNames="{style.loadingPanel}" visible="false">
             <g:Label>Nothing found</g:Label>
         </g:FlowPanel>
-        <g:ResizeLayoutPanel width="100%" height="100%">
-            <g:ScrollPanel ui:field="scrollContainer" styleName="{style.scrollContainer}">
-                <g:FlowPanel ui:field="resultsPanel" visible="false"> <!-- Panel with results -->
-                    <b:ProgressBar percent="100" type="ANIMATED" height="5px" addStyleNames="{style.loadingBar}" visible="false" ui:field="topLoading"/>
-                    <g:FlowPanel ui:field="topNoMoreResults" styleName="{style.island}" visible="false">
-                        <b:Button ui:field="topLoadingTryAgain">More</b:Button>
-                    </g:FlowPanel>
-                    <g:FlowPanel ui:field="topError" styleName="{style.island}" visible="false">
-                        <g:Label>There were some errors</g:Label>
-                        <b:Button ui:field="topErrorTryAgain">Try again</b:Button>
-                    </g:FlowPanel>
-
-                    <g:FlowPanel ui:field="container" styleName="{style.container}"/>
-
-                    <b:ProgressBar percent="100" type="ANIMATED" height="5px" addStyleNames="{style.loadingBar}" visible="false" ui:field="bottomLoading"/>
-                    <g:FlowPanel ui:field="bottomError" styleName="{style.island}" visible="false">
-                        <g:Label>There were some errors</g:Label>
-                        <b:Button ui:field="bottomErrorTryAgain">Try again</b:Button>
-                    </g:FlowPanel>
-                    <g:FlowPanel ui:field="bottomNoMoreResults" styleName="{style.island}" visible="false">
-                        <b:ButtonGroup>
-                            <b:Button ui:field="bottomLoadingTryAgain">More</b:Button>
-                            <b:Button ui:field="bottomAutoFetch" toggle="true">Auto fetch</b:Button>
-                        </b:ButtonGroup>
-                    </g:FlowPanel>
-                </g:FlowPanel>
-            </g:ScrollPanel>
-        </g:ResizeLayoutPanel>
     </g:FlowPanel>
 </ui:UiBinder>

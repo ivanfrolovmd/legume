@@ -29,13 +29,6 @@
         }
     </ui:style>
     <g:FlowPanel styleName="{style.absoluteFill}">
-        <g:FlowPanel ui:field="loadingPanel" addStyleNames="{style.loadingPanel}">
-            <b:ProgressBar percent="100" type="ANIMATED" text="Loading..." width="200px" addStyleNames="{style.alignCentered}"/>
-        </g:FlowPanel>
-        <g:FlowPanel ui:field="errorPanel" addStyleNames="{style.loadingPanel}" visible="false">
-            <g:Label>Request timed out.</g:Label>
-            <b:Button ui:field="tryAgain">Try again</b:Button>
-        </g:FlowPanel>
         <g:ResizeLayoutPanel width="100%" height="100%">
             <g:ScrollPanel>
                 <g:FlowPanel visible="false" ui:field="resultsPanel" styleName="{style.box}">
@@ -53,5 +46,16 @@
                 </g:FlowPanel>
             </g:ScrollPanel>
         </g:ResizeLayoutPanel>
+        <g:FlowPanel ui:field="loadingPanel" addStyleNames="{style.loadingPanel}">
+            <b:ProgressBar percent="100" type="ANIMATED" text="Loading..." width="200px" addStyleNames="{style.alignCentered}"/>
+        </g:FlowPanel>
+        <g:FlowPanel ui:field="errorPanel" addStyleNames="{style.loadingPanel}" visible="false">
+            <g:Label>Request timed out.</g:Label>
+            <b:Button ui:field="tryAgain">Try again</b:Button>
+        </g:FlowPanel>
+        <!--TODO wire this panel in -->
+        <g:FlowPanel ui:field="nothingFoundPanel" addStyleNames="{style.loadingPanel}" visible="false">
+            <g:Label>Nothing found</g:Label>
+        </g:FlowPanel>
     </g:FlowPanel>
 </ui:UiBinder>
