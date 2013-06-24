@@ -77,7 +77,11 @@ public class StreamActivity extends SearchActivity implements StreamView.Present
         streamView.showLoading();
 
         requestMoreResults(false);
-        requestMoreResults(true);
+        if(place.getSearch().getToDate()==0 || place.getSearch().getFocusDate() != place.getSearch().getFromDate()) {
+            requestMoreResults(true);
+        } else {
+            isInitialUpFinished = true;
+        }
     }
 
     private void initQueries(Search search)

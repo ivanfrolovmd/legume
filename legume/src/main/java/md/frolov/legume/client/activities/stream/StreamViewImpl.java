@@ -413,7 +413,7 @@ public class StreamViewImpl extends Composite implements StreamView
         for (LogEventComponent logEvent : logEvents)
         {
             last = logEvent;
-            if(focusDate < logEvent.getTimestamp()) {
+            if(focusDate <= logEvent.getTimestamp()) {
                 break;
             }
         }
