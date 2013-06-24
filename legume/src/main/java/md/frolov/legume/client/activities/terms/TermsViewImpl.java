@@ -8,12 +8,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.FlexTable;
-import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.HTMLTable;
-import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.*;
 import com.googlecode.gflot.client.PieDataPoint;
 import com.googlecode.gflot.client.PlotModel;
 import com.googlecode.gflot.client.Series;
@@ -55,6 +50,8 @@ public class TermsViewImpl extends Composite implements TermsView
     FlowPanel resultsPanel;
     @UiField
     Button tryAgain;
+    @UiField
+    InlineLabel fieldName;
 
     private Presenter presenter;
 
@@ -100,6 +97,8 @@ public class TermsViewImpl extends Composite implements TermsView
     @Override
     public void handleResults(final String fieldName, final TermsFacetResponse response)
     {
+        this.fieldName.setText(fieldName);
+
         results.removeAllRows();
         results.setText(0,0,"Term");
         results.setText(0,1,"Count");
