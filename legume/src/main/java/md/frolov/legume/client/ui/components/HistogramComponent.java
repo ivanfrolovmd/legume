@@ -423,8 +423,9 @@ public class HistogramComponent extends Composite implements UpdateSearchQueryHa
     @UiHandler("zoomIn")
     public void onZoomIn(final ClickEvent event)
     {
-        long from = plot.getPlotOptions().getXAxisOptions().getMinimum().longValue();
-        long to = plot.getPlotOptions().getXAxisOptions().getMaximum().longValue();
+        Search search = application.getCurrentSearch();
+        long from = search.getFromDate() == 0 ? 0 : search.getRealFromDate();
+        long to = search.getRealToDate();
 
         if (to - from < 100)
         {
@@ -432,13 +433,20 @@ public class HistogramComponent extends Composite implements UpdateSearchQueryHa
         }
 
         long allTime = to - from;
-        long fromDate = from + allTime / 4;
-        long toDate = to - allTime / 4;
+        long fromDate;
+        long toDate;
+        if(from == 0) {
+            fromDate = 0;
+            toDate = to - allTime / 2;
+        } else {
+            fromDate = from + allTime / 4;
+            toDate = to - allTime / 4;
+        }
 
-        Search search = application.getCurrentSearch().clone();
-        search.setFromDate(fromDate);
-        search.setToDate(toDate);
-        requestHistogram(search);
+        Search newSearch = search.clone();
+        newSearch.setFromDate(fromDate);
+        newSearch.setToDate(toDate);
+        placeController.goTo(new StreamPlace(newSearch));
     }
 
     @UiHandler("zoomOut")
@@ -461,7 +469,7 @@ public class HistogramComponent extends Composite implements UpdateSearchQueryHa
         Search newSearch = search.clone();
         newSearch.setFromDate(from);
         newSearch.setToDate(to);
-        requestHistogram(newSearch); //TODO probably a new place?
+        placeController.goTo(new StreamPlace(newSearch)); //TODO probably a new place?
     }
 
     @UiHandler("downloadImage")
