@@ -11,7 +11,6 @@ import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.NumberFormat;
-import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -39,7 +38,6 @@ import com.googlecode.gflot.client.options.*;
 import com.googlecode.gflot.client.options.side.IntegerSideOptions;
 
 import md.frolov.legume.client.Application;
-import md.frolov.legume.client.activities.stream.StreamPlace;
 import md.frolov.legume.client.elastic.ElasticSearchService;
 import md.frolov.legume.client.elastic.api.Callback;
 import md.frolov.legume.client.elastic.api.HistogramInterval;
@@ -118,7 +116,6 @@ public class HistogramComponent extends Composite implements UpdateSearchQueryHa
     private EventBus eventBus = WidgetInjector.INSTANCE.eventBus();
     private ElasticSearchService elasticSearchService = WidgetInjector.INSTANCE.elasticSearchService();
     private Application application = WidgetInjector.INSTANCE.application();
-    private PlaceController placeController = WidgetInjector.INSTANCE.placeController();
     private ConversionUtils conversionUtils = ConversionUtils.INSTANCE;
 
     private Search currentSearch;
@@ -173,7 +170,7 @@ public class HistogramComponent extends Composite implements UpdateSearchQueryHa
                 search.setFromDate(from);
                 search.setToDate(to);
                 search.setFocusDate(from);
-                WidgetInjector.INSTANCE.placeController().goTo(new StreamPlace(search)); //TODO change this. It might be useful to zoom in/out when in 'terms' activity
+                eventBus.fireEvent(new UpdateSearchQuery(search));
             }
         });
 
@@ -395,7 +392,7 @@ public class HistogramComponent extends Composite implements UpdateSearchQueryHa
             Search newSearch = search.clone();
             newSearch.setFromDate(fromDate);
             newSearch.setToDate(toDate);
-            placeController.goTo(new StreamPlace(newSearch)); //TODO TermsActivity would be interested too
+            eventBus.fireEvent(new UpdateSearchQuery(newSearch));
         }
         else
         {
@@ -446,7 +443,7 @@ public class HistogramComponent extends Composite implements UpdateSearchQueryHa
         Search newSearch = search.clone();
         newSearch.setFromDate(fromDate);
         newSearch.setToDate(toDate);
-        placeController.goTo(new StreamPlace(newSearch));
+        eventBus.fireEvent(new UpdateSearchQuery(newSearch));
     }
 
     @UiHandler("zoomOut")
@@ -469,7 +466,7 @@ public class HistogramComponent extends Composite implements UpdateSearchQueryHa
         Search newSearch = search.clone();
         newSearch.setFromDate(from);
         newSearch.setToDate(to);
-        placeController.goTo(new StreamPlace(newSearch)); //TODO probably a new place?
+        eventBus.fireEvent(new UpdateSearchQuery(newSearch));
     }
 
     @UiHandler("downloadImage")
@@ -513,7 +510,7 @@ public class HistogramComponent extends Composite implements UpdateSearchQueryHa
         search.setFromDate(fromBox.getValue().getTime());
         search.setToDate(toBox.getValue().getTime());
 
-        placeController.goTo(new StreamPlace(search)); //TODO terms view might want not to be changed
+        eventBus.fireEvent(new UpdateSearchQuery(search));
         onHideDateButtonClick(null);
     }
 
@@ -523,7 +520,7 @@ public class HistogramComponent extends Composite implements UpdateSearchQueryHa
         search.setToDate(0);
         search.setFocusDate(0);
 
-        placeController.goTo(new StreamPlace(search));
+        eventBus.fireEvent(new UpdateSearchQuery(search));
         onHideDateButtonClick(null);
     }
 

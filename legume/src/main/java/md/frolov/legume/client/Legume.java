@@ -9,6 +9,7 @@ import com.google.gwt.place.shared.PlaceChangeEvent;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 
 import md.frolov.legume.client.activities.stream.StreamPlace;
+import md.frolov.legume.client.events.UpdateSearchQuery;
 import md.frolov.legume.client.gin.WidgetInjector;
 import md.frolov.legume.client.model.Search;
 
@@ -27,6 +28,7 @@ public class Legume implements EntryPoint
         resources.mainCss().ensureInjected();
 
         injector.eventBus().addHandler(PlaceChangeEvent.TYPE, injector.application());
+        injector.eventBus().addHandler(UpdateSearchQuery.TYPE, injector.application());
 
         injector.activityManager().setDisplay(injector.mainView());
         RootLayoutPanel.get().add(injector.mainView());

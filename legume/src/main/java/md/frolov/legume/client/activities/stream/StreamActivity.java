@@ -21,6 +21,7 @@ import md.frolov.legume.client.elastic.api.SearchResponse;
 import md.frolov.legume.client.events.FocusOnDateEvent;
 import md.frolov.legume.client.events.FocusOnDateEventHandler;
 import md.frolov.legume.client.events.ScrollableStateChangedEvent;
+import md.frolov.legume.client.events.UpdateSearchQuery;
 import md.frolov.legume.client.gin.WidgetInjector;
 import md.frolov.legume.client.model.Search;
 import md.frolov.legume.client.service.ConfigurationService;
@@ -193,7 +194,7 @@ public class StreamActivity extends SearchActivity implements StreamView.Present
         }
         Search search = application.getCurrentSearch().clone();
         search.setFocusDate(focusDate);
-        placeController.goTo(new StreamPlace(search));
+        eventBus.fireEvent(new UpdateSearchQuery(search));
     }
 
     @Override

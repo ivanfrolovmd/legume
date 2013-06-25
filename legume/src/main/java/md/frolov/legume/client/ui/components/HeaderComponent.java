@@ -86,7 +86,7 @@ public class HeaderComponent extends Composite implements UpdateSearchQueryHandl
     {
         Search query = application.getCurrentSearch().clone();
         query.setQuery(searchQuery.getText());;
-        injector.placeController().goTo(new StreamPlace(query)); //TODO change this. 'Terms' activity would like to stay there
+        eventBus.fireEvent(new UpdateSearchQuery(query));
     }
 
     @Override

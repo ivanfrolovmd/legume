@@ -213,7 +213,7 @@ public class StreamViewImpl extends Composite implements StreamView
                         {
                             Search search = application.getCurrentSearch().clone();
                             search.setFocusDate(focusDate);
-                            placeController.goTo(new StreamPlace(search));
+                            eventBus.fireEvent(new UpdateSearchQuery(search));
                         }
                     });
                 }
