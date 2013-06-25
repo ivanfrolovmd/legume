@@ -12,6 +12,7 @@ import md.frolov.legume.client.Application;
 import md.frolov.legume.client.Messages;
 import md.frolov.legume.client.elastic.ElasticSearchService;
 import md.frolov.legume.client.elastic.model.ModelFactory;
+import md.frolov.legume.client.mvp.AppPlaceHistoryMapper;
 import md.frolov.legume.client.service.ColorizeService;
 import md.frolov.legume.client.service.ConfigurationService;
 import md.frolov.legume.client.ui.MainView;
@@ -31,6 +32,7 @@ public interface WidgetInjector extends Ginjector
     ActivityManager activityManager();
     PlaceHistoryHandler placeHistoryHandler();
     PlaceController placeController();
+    AppPlaceHistoryMapper historyMapper();
 
     ConfigurationService configurationService();
 

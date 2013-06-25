@@ -4,7 +4,7 @@ import com.github.gwtbootstrap.client.ui.Dropdown;
 import com.github.gwtbootstrap.client.ui.NavLink;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.place.shared.PlaceController;
+import com.google.gwt.place.shared.PlaceHistoryMapper;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -32,7 +32,7 @@ public class FieldDropdown extends Composite
     NavLink colorize;
 
     private String fieldFullName;
-    private PlaceController placeController = WidgetInjector.INSTANCE.placeController();
+    private PlaceHistoryMapper historyMapper = WidgetInjector.INSTANCE.historyMapper();
     private Application application = WidgetInjector.INSTANCE.application();
 
     public FieldDropdown(String fullname, String name, String type)
@@ -47,7 +47,7 @@ public class FieldDropdown extends Composite
     @UiHandler("score")
     public void onScoreClick(final ClickEvent event)
     {
-        score.setTargetHistoryToken(new TermsPlace(fieldFullName, application.getCurrentSearch()).getTargetHistoryToken());
+        score.setTargetHistoryToken(historyMapper.getToken(new TermsPlace(fieldFullName, application.getCurrentSearch())));
     }
 
     @UiHandler("colorize")

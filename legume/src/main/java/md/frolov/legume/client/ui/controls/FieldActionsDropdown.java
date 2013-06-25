@@ -4,6 +4,7 @@ import com.github.gwtbootstrap.client.ui.Dropdown;
 import com.github.gwtbootstrap.client.ui.NavLink;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.place.shared.PlaceHistoryMapper;
 import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -51,6 +52,7 @@ public class FieldActionsDropdown extends Composite
     private final String valueText;
 
     private Application application = WidgetInjector.INSTANCE.application();
+    private PlaceHistoryMapper historyMapper = WidgetInjector.INSTANCE.historyMapper();
 
     public FieldActionsDropdown(String fieldName, String valueText, long focusdate)
     {
@@ -70,19 +72,19 @@ public class FieldActionsDropdown extends Composite
             search.setFocusDate(focusdate);
             String originalQueryString = search.getQuery();
 
-            score.setTargetHistoryToken(new TermsPlace(fieldName, search).getTargetHistoryToken());
+            score.setTargetHistoryToken(historyMapper.getToken(new TermsPlace(fieldName, search)));
 
             StreamPlace place = new StreamPlace(search);
 
             search.setQuery(getQueryString(originalQueryString, filter));
-            includeFilter.setTargetHistoryToken(place.getTargetHistoryToken());
+            includeFilter.setTargetHistoryToken(historyMapper.getToken(place));
             search.setQuery(getQueryString(originalQueryString, "NOT " + filter));
-            excludeFilter.setTargetHistoryToken(place.getTargetHistoryToken());
+            excludeFilter.setTargetHistoryToken(historyMapper.getToken(place));
 
             search.setQuery(filter);
-            includeOnlyFilter.setTargetHistoryToken(place.getTargetHistoryToken());
+            includeOnlyFilter.setTargetHistoryToken(historyMapper.getToken(place));
             search.setQuery(("NOT "+filter));
-            excludeOnlyFilter.setTargetHistoryToken(place.getTargetHistoryToken());
+            excludeOnlyFilter.setTargetHistoryToken(historyMapper.getToken(place));
 
         }
         else

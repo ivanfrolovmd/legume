@@ -1,7 +1,6 @@
 package md.frolov.legume.client.activities;
 
 import com.google.gwt.place.shared.Place;
-import com.google.gwt.place.shared.PlaceTokenizer;
 
 import md.frolov.legume.client.model.Search;
 
@@ -18,13 +17,5 @@ public abstract class SearchPlace extends Place
     public Search getSearch()
     {
         return search;
-    }
-
-    public abstract PlaceTokenizer getTokenizer();
-    public abstract String getTokenPrefix();
-
-    //TODO this method needs to be removed. History mapper should be used instead where called.
-    public String getTargetHistoryToken() {
-        return getTokenPrefix()+":"+getTokenizer().getToken(this);
     }
 }

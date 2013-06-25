@@ -29,18 +29,6 @@ public class TermsPlace extends SearchPlace
         return fieldName;
     }
 
-    @Override
-    public String getTokenPrefix()
-    {
-        return TOKEN_PREFIX;
-    }
-
-    @Override
-    public Tokenizer getTokenizer()
-    {
-        return TOKENIZER;
-    }
-
     @Prefix(TOKEN_PREFIX)
     public static class Tokenizer implements PlaceTokenizer<TermsPlace>
     {

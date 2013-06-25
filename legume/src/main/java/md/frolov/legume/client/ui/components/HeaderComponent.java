@@ -15,6 +15,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.place.shared.PlaceHistoryMapper;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -62,6 +63,7 @@ public class HeaderComponent extends Composite implements UpdateSearchQueryHandl
     private EventBus eventBus = WidgetInjector.INSTANCE.eventBus();
     private Application application = WidgetInjector.INSTANCE.application();
     private ConfigurationService configurationService = WidgetInjector.INSTANCE.configurationService();
+    private PlaceHistoryMapper historyMapper = WidgetInjector.INSTANCE.historyMapper();
 
     public HeaderComponent()
     {
@@ -99,7 +101,7 @@ public class HeaderComponent extends Composite implements UpdateSearchQueryHandl
     @UiHandler("openInNewWindow")
     public void onOpenInNewWindowClick(final ClickEvent event)
     {
-        String place = new StreamPlace(application.getCurrentSearch()).getTargetHistoryToken();
+        String place = historyMapper.getToken(new StreamPlace(application.getCurrentSearch()));
         openInNewWindow.setTargetHistoryToken(place);
     }
 

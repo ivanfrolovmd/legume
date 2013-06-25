@@ -20,18 +20,6 @@ public class StreamPlace extends SearchPlace
         super(search);
     }
 
-    @Override
-    public PlaceTokenizer getTokenizer()
-    {
-        return TOKENIZER;
-    }
-
-    @Override
-    public String getTokenPrefix()
-    {
-        return TOKEN_PREFIX;
-    }
-
     @Prefix(TOKEN_PREFIX)
     public static class Tokenizer implements PlaceTokenizer<StreamPlace> {
         @Override
