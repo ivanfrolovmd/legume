@@ -2,6 +2,8 @@ package md.frolov.legume.client.activities.terms;
 
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import com.github.gwtbootstrap.client.ui.Button;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -21,6 +23,7 @@ import com.googlecode.gflot.client.options.PieSeriesOptions;
 import com.googlecode.gflot.client.options.PlotOptions;
 
 import md.frolov.legume.client.elastic.api.TermsFacetResponse;
+import md.frolov.legume.client.service.ColorizeService;
 import md.frolov.legume.client.ui.controls.FieldActionsDropdown;
 
 /** @author Ivan Frolov (ifrolov@tacitknowledge.com) */
@@ -52,6 +55,9 @@ public class TermsViewImpl extends Composite implements TermsView
     Button tryAgain;
     @UiField
     InlineLabel fieldName;
+
+    @Inject
+    private ColorizeService colorizeService;
 
     private Presenter presenter;
 
@@ -117,7 +123,13 @@ public class TermsViewImpl extends Composite implements TermsView
             row++;
 
             //plot
-            SeriesHandler handler = model.addSeries(Series.create()); //TODO set color?
+            Series series;
+            if(colorizeService.isFieldColorizable(fieldName)) {
+                series = Series.of("", colorizeService.getCssColor(fieldName, entry.getKey(), 90, 60));
+            } else {
+                series = Series.create();
+            }
+            SeriesHandler handler = model.addSeries(series);
             handler.add(PieDataPoint.of(entry.getValue()));
         }
 
