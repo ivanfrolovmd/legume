@@ -1,8 +1,14 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:b="urn:import:com.github.gwtbootstrap.client.ui"
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+    <ui:style>
+        .fieldContainer a, .fieldContainer a:hover {
+            color: #333;
+            text-decoration: none;
+        }
+    </ui:style>
     <g:FlowPanel>
         <b:Heading size="4">Highlights</b:Heading>
-        <g:FlowPanel ui:field="fieldContainer" />
+        <g:FlowPanel ui:field="fieldContainer" styleName="{style.fieldContainer}"/>
     </g:FlowPanel>
 </ui:UiBinder>
