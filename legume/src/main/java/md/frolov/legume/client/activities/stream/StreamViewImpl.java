@@ -65,8 +65,6 @@ public class StreamViewImpl extends Composite implements StreamView
     @UiField
     Button bottomLoadingTryAgain;
     @UiField
-    Button bottomAutoFetch;
-    @UiField
     FlowPanel loadingPanel;
     @UiField
     FlowPanel errorPanel;
@@ -292,22 +290,7 @@ public class StreamViewImpl extends Composite implements StreamView
             bottomNoMoreResults.setVisible(true);
             bottomLoading.setVisible(false);
             bottomFinished = true;
-            if(bottomAutoFetch.isToggled()) {
-                startAutoFetchTimer();
-            }
         }
-    }
-
-    private void startAutoFetchTimer() {
-        Scheduler.get().scheduleFixedDelay(new Scheduler.RepeatingCommand()
-        {
-            @Override
-            public boolean execute()
-            {
-                requestMoreBottom();
-                return false; //don't repeat
-            }
-        }, 30000); //TODO externalize
     }
 
     @UiHandler("scrollContainer")
@@ -396,14 +379,6 @@ public class StreamViewImpl extends Composite implements StreamView
         bottomFinished = false;
         bottomNoMoreResults.setVisible(false);
         requestMoreBottom();
-    }
-
-    @UiHandler("bottomAutoFetch")
-    public void onBottomAutoFetchClick(final ClickEvent event)
-    {
-        if(!bottomAutoFetch.isToggled()) {
-            startAutoFetchTimer();
-        }
     }
 
     @UiHandler("tryAgain")

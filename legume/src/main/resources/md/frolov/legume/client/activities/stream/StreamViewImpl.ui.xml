@@ -67,10 +67,7 @@
                         <b:Button ui:field="bottomErrorTryAgain" block="true">Something bad has occurred. Try again</b:Button>
                     </g:FlowPanel>
                     <g:FlowPanel ui:field="bottomNoMoreResults" styleName="{style.buttonBar}">
-                        <b:ButtonGroup>
-                            <b:Button ui:field="bottomLoadingTryAgain">More</b:Button>
-                            <b:Button ui:field="bottomAutoFetch" toggle="true">Auto fetch</b:Button>
-                        </b:ButtonGroup>
+                        <b:Button ui:field="bottomLoadingTryAgain" block="true">More</b:Button>
                     </g:FlowPanel>
                 </g:FlowPanel>
             </g:ScrollPanel>
