@@ -33,7 +33,7 @@ public class Legume implements EntryPoint
         injector.activityManager().setDisplay(injector.mainView());
         RootLayoutPanel.get().add(injector.mainView());
 
-        injector.placeHistoryHandler().register(injector.placeController(), injector.eventBus(), new StreamPlace(Search.DEFAULT)); //TODO change to homeplace
+        injector.placeHistoryHandler().register(injector.placeController(), injector.eventBus(), new StreamPlace(Search.DEFAULT));
         injector.placeHistoryHandler().handleCurrentHistory();
 
         GWT.setUncaughtExceptionHandler(new GWT.UncaughtExceptionHandler()
