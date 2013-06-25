@@ -12,7 +12,6 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
 
 import md.frolov.legume.client.Constants;
@@ -22,7 +21,7 @@ import md.frolov.legume.client.model.ConnectionsConf;
 import md.frolov.legume.client.service.ConfigurationService;
 
 /** @author Ivan Frolov (ifrolov@tacitknowledge.com) */
-public class AddNewConnectionModal extends Composite implements Constants
+public class AddNewConnectionModal implements Constants
 {
 
     interface AddNewConnectionModalUiBinder extends UiBinder<Widget, AddNewConnectionModal>
@@ -45,7 +44,7 @@ public class AddNewConnectionModal extends Composite implements Constants
 
     public AddNewConnectionModal()
     {
-        initWidget(binder.createAndBindUi(this));
+        binder.createAndBindUi(this);
     }
 
     @UiHandler("addButton")
