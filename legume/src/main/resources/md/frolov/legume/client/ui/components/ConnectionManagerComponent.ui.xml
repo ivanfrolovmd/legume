@@ -24,16 +24,5 @@
             <b:NavLink icon="PLUS" ui:field="addNew">Add new</b:NavLink>
             <b:NavLink icon="COG" targetHistoryToken="config:" ui:field="editConfs">Edit Configurations</b:NavLink>
         </b:Dropdown>
-        <b:Modal title="Add new connection" ui:field="addModal">
-            <b:Form>
-                <b:ControlLabel>Service name</b:ControlLabel>
-                <b:TextBox ui:field="serviceName" placeholder="e.g. UAT, PROD" width="515px"/>
-                <b:ControlLabel>Service address</b:ControlLabel>
-                <b:TextBox ui:field="serviceAddress" placeholder="http://demo.logstash.net:9200" width="515px"/>
-            </b:Form>
-            <b:ModalFooter>
-                <b:Button icon="PLUS" type="PRIMARY" ui:field="addButton">Add</b:Button>
-            </b:ModalFooter>
-        </b:Modal>
     </g:FlowPanel>
 </ui:UiBinder>

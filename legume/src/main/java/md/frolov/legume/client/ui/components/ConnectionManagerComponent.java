@@ -2,20 +2,15 @@ package md.frolov.legume.client.ui.components;
 
 import java.util.Map;
 
-import com.github.gwtbootstrap.client.ui.Button;
 import com.github.gwtbootstrap.client.ui.Divider;
 import com.github.gwtbootstrap.client.ui.Dropdown;
-import com.github.gwtbootstrap.client.ui.Modal;
 import com.github.gwtbootstrap.client.ui.NavLink;
-import com.github.gwtbootstrap.client.ui.TextBox;
 import com.github.gwtbootstrap.client.ui.constants.IconPosition;
 import com.github.gwtbootstrap.client.ui.constants.IconType;
-import com.google.common.collect.Maps;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -24,14 +19,14 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
 
 import md.frolov.legume.client.Constants;
-import md.frolov.legume.client.model.ConnectionsConf;
 import md.frolov.legume.client.elastic.ElasticSearchService;
 import md.frolov.legume.client.elastic.api.Callback;
 import md.frolov.legume.client.elastic.api.PingRequest;
 import md.frolov.legume.client.elastic.api.PingResponse;
-import md.frolov.legume.client.elastic.model.ModelFactory;
 import md.frolov.legume.client.gin.WidgetInjector;
+import md.frolov.legume.client.model.ConnectionsConf;
 import md.frolov.legume.client.service.ConfigurationService;
+import md.frolov.legume.client.ui.modals.AddNewConnectionModal;
 
 /** @author Ivan Frolov (ifrolov@tacitknowledge.com) */
 public class ConnectionManagerComponent extends Composite implements Constants
@@ -48,19 +43,9 @@ public class ConnectionManagerComponent extends Composite implements Constants
     NavLink editConfs;
     @UiField
     NavLink addNew;
-    @UiField
-    Modal addModal;
-    @UiField
-    Button addButton;
-    @UiField
-    TextBox serviceName;
-    @UiField
-    TextBox serviceAddress;
 
     private ElasticSearchService elasticSearchService = WidgetInjector.INSTANCE.elasticSearchService();
     private ConfigurationService configurationService = WidgetInjector.INSTANCE.configurationService();
-    private ModelFactory modelFactory = WidgetInjector.INSTANCE.modelFactory();
-    private PlaceController placeController = WidgetInjector.INSTANCE.placeController();
 
     public ConnectionManagerComponent()
     {
@@ -148,29 +133,6 @@ public class ConnectionManagerComponent extends Composite implements Constants
     @UiHandler("addNew")
     public void onShowAddModal(final ClickEvent event)
     {
-        serviceName.setText("");
-        serviceAddress.setText("");
-        addModal.show();
-    }
-
-    @UiHandler("addButton")
-    public void onAddButtonClick(final ClickEvent event)
-    {
-        ConnectionsConf conf = configurationService.getObject(ELASTICSEARCH_CONNECTIONS, ConnectionsConf.class);
-        if (conf == null)
-        {
-            conf = modelFactory.connectionsConf().as();
-        }
-        Map<String, String> connections = conf.getConnections();
-        if (connections == null)
-        {
-            connections = Maps.newTreeMap();
-        }
-        connections.put(serviceName.getText(), serviceAddress.getText());
-        conf.setConnections(connections);
-        configurationService.put(ELASTICSEARCH_CONNECTIONS, conf);
-        addModal.hide();
-
-        selectServer(serviceAddress.getText());
+        new AddNewConnectionModal().show();
     }
 }
