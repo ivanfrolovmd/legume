@@ -31,6 +31,7 @@
 
         .caption {
             font-size: 24px;
+            margin-bottom: 24px;
         }
         .strong {
             font-family: 'OpenSansBold';
