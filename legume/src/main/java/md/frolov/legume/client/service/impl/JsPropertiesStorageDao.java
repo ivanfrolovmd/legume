@@ -36,7 +36,6 @@ public class JsPropertiesStorageDao implements StorageDao
 
     private final native String getFromProperties(final String key) /*-{
         return $wnd.window.GlobalProperties[key].toString();
-        //TODO check for null values
     }-*/;
 
     private final native void setToMemory(final String key, final String value) /*-{
