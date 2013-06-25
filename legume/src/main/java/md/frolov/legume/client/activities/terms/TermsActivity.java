@@ -63,7 +63,11 @@ public class TermsActivity extends SearchActivity implements TermsView.Presenter
             @Override
             public void onSuccess(final TermsFacetRequest query, final TermsFacetResponse response)
             {
-                termsView.handleResults(query.getFieldName(), response);
+                if(response.getTerms().isEmpty()) {
+                    termsView.nothingFound();
+                } else {
+                    termsView.handleResults(query.getFieldName(), response);
+                }
             }
         });
     }

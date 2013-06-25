@@ -55,6 +55,8 @@ public class TermsViewImpl extends Composite implements TermsView
     Button tryAgain;
     @UiField
     InlineLabel fieldName;
+    @UiField
+    FlowPanel nothingFoundPanel;
 
     @Inject
     private ColorizeService colorizeService;
@@ -153,6 +155,7 @@ public class TermsViewImpl extends Composite implements TermsView
 
         loadingPanel.setVisible(false);
         errorPanel.setVisible(false);
+        nothingFoundPanel.setVisible(false);
         resultsPanel.setVisible(true);
 
         plot.redraw();
@@ -164,6 +167,7 @@ public class TermsViewImpl extends Composite implements TermsView
         loadingPanel.setVisible(true);
         errorPanel.setVisible(false);
         resultsPanel.setVisible(false);
+        nothingFoundPanel.setVisible(false);
     }
 
     @Override
@@ -172,6 +176,16 @@ public class TermsViewImpl extends Composite implements TermsView
         loadingPanel.setVisible(false);
         errorPanel.setVisible(true);
         resultsPanel.setVisible(false);
+        nothingFoundPanel.setVisible(false);
+    }
+
+    @Override
+    public void nothingFound()
+    {
+        loadingPanel.setVisible(false);
+        errorPanel.setVisible(false);
+        resultsPanel.setVisible(false);
+        nothingFoundPanel.setVisible(true);
     }
 
     @UiHandler("tryAgain")

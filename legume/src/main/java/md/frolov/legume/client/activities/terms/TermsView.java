@@ -10,6 +10,7 @@ public interface TermsView extends IsWidget
     void handleResults(final String fieldName, TermsFacetResponse response);
     void loading();
     void error();
+    void nothingFound();
 
     void setPresenter(Presenter presenter);
 
