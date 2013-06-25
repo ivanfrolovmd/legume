@@ -35,18 +35,21 @@ public class TermsPlace extends SearchPlace
         @Override
         public TermsPlace getPlace(String token)
         {
-            //TODO deal with exceptions
-            Iterable<String> parts = Splitter.on('/').limit(5).split(token);
-            Iterator<String> it = parts.iterator();
+            try {
+                Iterable<String> parts = Splitter.on('/').limit(5).split(token);
+                Iterator<String> it = parts.iterator();
 
-            Long fromDateTime = Long.valueOf(it.next());
-            Long toDateTime = Long.valueOf(it.next());
-            Long focusDateTime = Long.valueOf(it.next());
+                Long fromDateTime = Long.valueOf(it.next());
+                Long toDateTime = Long.valueOf(it.next());
+                Long focusDateTime = Long.valueOf(it.next());
 
-            String field = it.next();
-            String query = it.next();
+                String field = it.next();
+                String query = it.next();
 
-            return new TermsPlace(field, new Search(query, fromDateTime, toDateTime, focusDateTime));
+                return new TermsPlace(field, new Search(query, fromDateTime, toDateTime, focusDateTime));
+            } catch (Exception e) {
+                return null;
+            }
         }
 
         @Override

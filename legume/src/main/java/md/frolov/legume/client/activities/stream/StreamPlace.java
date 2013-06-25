@@ -24,14 +24,18 @@ public class StreamPlace extends SearchPlace
     public static class Tokenizer implements PlaceTokenizer<StreamPlace> {
         @Override
         public StreamPlace getPlace(String token) {
-            Iterator<String> parts = Splitter.on("/").limit(4).split(token).iterator();
+            try{
+                Iterator<String> parts = Splitter.on("/").limit(4).split(token).iterator();
 
-            Long fromDate = Long.valueOf(parts.next());
-            Long toDate= Long.valueOf(parts.next());
-            Long focusDate = Long.valueOf(parts.next());
-            String query = parts.next();
+                Long fromDate = Long.valueOf(parts.next());
+                Long toDate= Long.valueOf(parts.next());
+                Long focusDate = Long.valueOf(parts.next());
+                String query = parts.next();
 
-            return new StreamPlace(new Search(query, fromDate, toDate, focusDate));
+                return new StreamPlace(new Search(query, fromDate, toDate, focusDate));
+            } catch (Exception e) {
+                return null;
+            }
         }
 
         @Override
