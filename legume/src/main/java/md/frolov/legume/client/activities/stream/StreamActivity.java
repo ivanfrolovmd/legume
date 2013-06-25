@@ -74,6 +74,10 @@ public class StreamActivity extends SearchActivity implements StreamView.Present
 
         initQueries(place.getSearch());
 
+        startRequest();
+    }
+
+    private void startRequest() {
         streamView.showLoading();
 
         requestMoreResults(false);
@@ -201,5 +205,16 @@ public class StreamActivity extends SearchActivity implements StreamView.Present
         return Strings.nullToEmpty(place.getSearch().getQuery()).equals(Strings.nullToEmpty(newPlace.getSearch().getQuery()))
                 && newPlace.getSearch().getFocusDate() >= oldestDate
                 && newPlace.getSearch().getFocusDate() <= newestDate;
+    }
+
+    @Override
+    public void tryAgain()
+    {
+        isInitialUpFinished = false;
+        isInitialUpFinished = false;
+        downwardsQuery.setFrom(0);
+        upwardsQuery.setFrom(0);
+
+        startRequest();
     }
 }

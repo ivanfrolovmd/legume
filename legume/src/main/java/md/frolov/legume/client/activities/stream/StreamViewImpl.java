@@ -399,11 +399,16 @@ public class StreamViewImpl extends Composite implements StreamView
     }
 
     @UiHandler("bottomAutoFetch")
-    public void handleClick(final ClickEvent event)
+    public void onBottomAutoFetchClick(final ClickEvent event)
     {
         if(!bottomAutoFetch.isToggled()) {
             startAutoFetchTimer();
         }
+    }
+
+    @UiHandler("tryAgain")
+    public void onTryAgainClick(ClickEvent event) {
+        presenter.tryAgain();
     }
 
     @Override

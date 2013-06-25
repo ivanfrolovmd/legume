@@ -22,6 +22,8 @@ public interface StreamView extends IsWidget {
         void requestMoreResults(boolean top);
 
         void checkInitialRequests(boolean upwards);
+
+        void tryAgain();
     }
 
     void setPresenter(Presenter presenter);
