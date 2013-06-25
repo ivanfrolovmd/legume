@@ -165,14 +165,15 @@ public class ColorizeServiceImpl implements ColorizeService, Constants
 
         Integer hue = valueColorMap.get(value);
         if(hue == null) {
-            hue = generateColor(fieldName, value);
+            hue = generateColorHue(fieldName, value);
             valueColorMap.put(value, hue);
             changed = true;
         }
         return hue;
     }
 
-    private Integer generateColor(String fieldName, String value) {
+    @Override
+    public Integer generateColorHue(String fieldName, String value) {
         String string = fieldName+value;
         return Math.abs(string.hashCode())%360;
     }

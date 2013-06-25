@@ -1,15 +1,18 @@
 package md.frolov.legume.client.activities.terms;
 
 import java.util.Map;
-
 import javax.inject.Inject;
 
 import com.github.gwtbootstrap.client.ui.Button;
+import com.github.gwtbootstrap.client.ui.Icon;
+import com.github.gwtbootstrap.client.ui.constants.IconType;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.place.shared.PlaceController;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.*;
 import com.googlecode.gflot.client.PieDataPoint;
 import com.googlecode.gflot.client.PlotModel;
@@ -22,6 +25,8 @@ import com.googlecode.gflot.client.options.LegendOptions;
 import com.googlecode.gflot.client.options.PieSeriesOptions;
 import com.googlecode.gflot.client.options.PlotOptions;
 
+import md.frolov.legume.client.Application;
+import md.frolov.legume.client.activities.stream.StreamPlace;
 import md.frolov.legume.client.elastic.api.TermsFacetResponse;
 import md.frolov.legume.client.service.ColorizeService;
 import md.frolov.legume.client.ui.controls.FieldActionsDropdown;
@@ -60,6 +65,12 @@ public class TermsViewImpl extends Composite implements TermsView
 
     @Inject
     private ColorizeService colorizeService;
+
+    @Inject
+    private PlaceController placeController;
+
+    @Inject
+    private Application application;
 
     private Presenter presenter;
 
@@ -118,35 +129,40 @@ public class TermsViewImpl extends Composite implements TermsView
         int row=1;
         for (Map.Entry<String, Long> entry : response.getTerms().entrySet())
         {
-            //results rable
-            results.setText(row, 0, entry.getKey());
+            String color;
+            if(colorizeService.isFieldColorizable(fieldName)) {
+                color = colorizeService.getCssColor(fieldName, entry.getKey(), 90, 60);
+            } else {
+                color = "hsl("+colorizeService.generateColorHue(fieldName, entry.getKey())+",90%,50%)";
+            }
+
+            results.setWidget(row, 0, createLabel(entry.getKey(), color));
+
             results.setText(row, 1, entry.getValue().toString());
+
             results.setWidget(row, 2, new FieldActionsDropdown(fieldName, entry.getKey(), 0));
             row++;
 
+
             //plot
-            Series series;
-            if(colorizeService.isFieldColorizable(fieldName)) {
-                series = Series.of("", colorizeService.getCssColor(fieldName, entry.getKey(), 90, 60));
-            } else {
-                series = Series.create();
-            }
+            final Series series = Series.of("", color);
             SeriesHandler handler = model.addSeries(series);
-            handler.add(PieDataPoint.of(entry.getValue()));
+            final PieDataPoint datapoint = PieDataPoint.of(entry.getValue());
+            handler.add(datapoint);
         }
 
-        results.setText(row,0,"Other");
+        results.setWidget(row, 0, createLabel("Other", "#aaa"));
         results.setText(row,1,String.valueOf(response.getOther()));
         results.setText(row,2,"");
         row++;
-        SeriesHandler otherHandler = model.addSeries(Series.create());
+        SeriesHandler otherHandler = model.addSeries(Series.of("", "#aaa"));
         otherHandler.add(PieDataPoint.of(response.getOther()));
 
-        results.setText(row,0,"Missing");
+        results.setWidget(row, 0, createLabel("Missing", "#eee"));
         results.setText(row,1,String.valueOf(response.getMissing()));
         results.setText(row,2,"");
         row++;
-        SeriesHandler missingHandler = model.addSeries(Series.create());
+        SeriesHandler missingHandler = model.addSeries(Series.of("", "#eee"));
         missingHandler.add(PieDataPoint.of(response.getMissing()));
 
         results.setText(row,0,"Total");
@@ -159,6 +175,17 @@ public class TermsViewImpl extends Composite implements TermsView
         resultsPanel.setVisible(true);
 
         plot.redraw();
+    }
+
+    private FlowPanel createLabel(final String string, final String color)
+    {
+        FlowPanel fp = new FlowPanel();
+        Icon icon = new Icon(IconType.SIGN_BLANK);
+        DOM.setStyleAttribute(icon.getElement(), "color", color);
+        DOM.setStyleAttribute(icon.getElement(),"marginRight", "5px");
+        fp.add(icon);
+        fp.add(new InlineLabel(string));
+        return fp;
     }
 
     @Override
@@ -192,5 +219,10 @@ public class TermsViewImpl extends Composite implements TermsView
     public void onTryAgainClick(final ClickEvent event)
     {
         presenter.tryAgain();
+    }
+
+    @UiHandler("backToLogs")
+    public void onBackToLogsClick(ClickEvent event) {
+        placeController.goTo(new StreamPlace(application.getCurrentSearch().clone()));
     }
 }

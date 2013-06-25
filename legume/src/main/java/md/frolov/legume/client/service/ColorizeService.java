@@ -34,4 +34,6 @@ public interface ColorizeService
     void saveAndRefresh();
 
     Set<String> getValues(String fieldName);
+
+    Integer generateColorHue(String fieldName, String value);
 }
