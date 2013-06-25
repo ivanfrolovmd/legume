@@ -164,7 +164,7 @@
                         <b:Button size="MINI" icon="ZOOM_OUT" ui:field="zoomOut"/>
                         <b:Button size="MINI" icon="DOWNLOAD" ui:field="downloadImage"/>
                         <b:Button size="MINI" icon="MAGNET" toggle="true" title="Track position" ui:field="trackPosition" active="true"/>
-                        <b:Button size="MINI" ui:field="chooseDateButton">Choose date</b:Button>
+                        <b:Button size="MINI" ui:field="chooseDateButton" addStyleNames="dropdown-toggle">Choose date</b:Button>
                         <b:Button size="MINI" ui:field="hideDateButton" visible="false">Hide</b:Button>
                     </b:ButtonGroup>
                 </g:FlowPanel>
