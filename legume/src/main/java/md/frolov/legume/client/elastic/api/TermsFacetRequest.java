@@ -70,7 +70,6 @@ public class TermsFacetRequest extends BaseSearchRequest<TermsFacetResponse>
     }
 
     private Filter getLimitFilter() {
-        //TODO check how this influences results
         LimitFilter filter = factory.limitFilter().as();
         LimitFilter.LimitFilterDef filterDef = factory.limitFilterDef().as();
         filter.setLimit(filterDef);

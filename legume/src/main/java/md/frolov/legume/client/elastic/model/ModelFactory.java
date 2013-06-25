@@ -14,7 +14,6 @@ import md.frolov.legume.client.elastic.model.reply.PingReply;
 import md.frolov.legume.client.elastic.model.reply.SearchHits;
 import md.frolov.legume.client.model.GlobalConf;
 
-@AutoBeanFactory.Category(QueryStringCategory.class)
 public interface ModelFactory extends AutoBeanFactory {
     ModelFactory INSTANCE = GWT.create(ModelFactory.class);
 

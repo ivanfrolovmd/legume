@@ -84,6 +84,4 @@ public interface QueryString extends Query
         String getLenient();
         void setLenient(String lenient);
     }
-
-    QueryString clone();
 }
