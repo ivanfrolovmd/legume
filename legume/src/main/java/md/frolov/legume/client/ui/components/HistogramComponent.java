@@ -52,7 +52,7 @@ import md.frolov.legume.client.util.ConversionUtils;
 /** @author Ivan Frolov (ifrolov@tacitknowledge.com) */
 public class HistogramComponent extends Composite implements UpdateSearchQueryHandler, LogMessageHoverEventHandler, LogMessageOutEventHandler
 {
-    private static final int MAXIMUM_STEPS = 2000; //TODO constraint to client width?
+    private int MAXIMUM_STEPS;
 
     interface HistogramComponentUiBinder extends UiBinder<Widget, HistogramComponent>
     {
@@ -126,12 +126,25 @@ public class HistogramComponent extends Composite implements UpdateSearchQueryHa
 
     public HistogramComponent()
     {
+        initMaxSteps();
         initPlot();
         initWidget(binder.createAndBindUi(this));
 
         eventBus.addHandler(UpdateSearchQuery.TYPE, this);
         eventBus.addHandler(LogMessageHoverEvent.TYPE, this);
         eventBus.addHandler(LogMessageOutEvent.TYPE, this);
+    }
+
+    private void initMaxSteps()
+    {
+        int maxSteps = Window.getClientWidth()*2;
+        if(maxSteps<1000) {
+            maxSteps = 1000;
+        }
+        if(maxSteps>4000) {
+            maxSteps = 4000;
+        }
+        MAXIMUM_STEPS = maxSteps;
     }
 
     private void initPlot()
