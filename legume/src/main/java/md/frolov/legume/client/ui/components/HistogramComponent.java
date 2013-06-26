@@ -521,7 +521,7 @@ public class HistogramComponent extends Composite implements UpdateSearchQueryHa
     {
         Date from = fromBox.getValue();
         Date to = toBox.getValue();
-        if(from == null || to == null || from.getTime()>=to.getTime()) {
+        if(from == null || to == null || from.getTime()>=to.getTime() || from.getTime()<0 || to.getTime()<0) {
             datesControlGroup.addStyleName("error");
             return;
         }
