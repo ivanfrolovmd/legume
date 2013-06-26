@@ -1,0 +1,38 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:b="urn:import:com.github.gwtbootstrap.client.ui"
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+    <ui:style type="md.frolov.legume.client.ui.controls.ColorPicker.CSS" field="css">
+        .table {
+            margin: 5px 10px;
+            text-align: center;
+        }
+        .table a, .table a:hover {
+            color: #333;
+            text-decoration: none;
+        }
+        .cellButton {
+            width: 25px;
+            height: 25px;
+            display: table-cell;
+            text-align: center;
+            vertical-align: middle;
+        }
+        .dropDown {
+            padding: 3px 10px;
+            list-style-type: none;
+            display: inline-block;
+            border: 1px solid #d8d8d8;
+            border-bottom-width: 2px;
+            border-left-width: 3px;
+            border-radius: 3px;
+            background-color: white;
+        }
+        .dropDown a, .dropDown a:hover {
+            color: #333;
+            text-decoration: none;
+        }
+    </ui:style>
+    <b:DropdownContainer ui:field="dropdown" addStyleNames="{css.dropDown}" text="Choose color">
+        <g:FlexTable ui:field="colorTable" addStyleNames="{css.table}"/>
+    </b:DropdownContainer>
+</ui:UiBinder>
