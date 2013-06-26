@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.Map;
 
 import com.github.gwtbootstrap.client.ui.Button;
+import com.github.gwtbootstrap.client.ui.ControlGroup;
 import com.github.gwtbootstrap.datetimepicker.client.ui.DateTimeBox;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -112,6 +113,8 @@ public class HistogramComponent extends Composite implements UpdateSearchQueryHa
     Label dateHoverInfo;
     @UiField
     EventFlowPanel plotPanel;
+    @UiField
+    ControlGroup datesControlGroup;
 
     private EventBus eventBus = WidgetInjector.INSTANCE.eventBus();
     private ElasticSearchService elasticSearchService = WidgetInjector.INSTANCE.elasticSearchService();
@@ -496,6 +499,7 @@ public class HistogramComponent extends Composite implements UpdateSearchQueryHa
     {
         Search search = application.getCurrentSearch();
 
+        datesControlGroup.removeStyleName("error");
         fromBox.setValue(new Date(search.getRealFromDate()));
         toBox.setValue(new Date(search.getRealToDate()));
 
@@ -515,6 +519,15 @@ public class HistogramComponent extends Composite implements UpdateSearchQueryHa
     @UiHandler("goButton")
     public void onGoButtonClick(final ClickEvent event)
     {
+        Date from = fromBox.getValue();
+        Date to = toBox.getValue();
+        if(from == null || to == null || from.getTime()>=to.getTime()) {
+            datesControlGroup.addStyleName("error");
+            return;
+        }
+
+        datesControlGroup.removeStyleName("error");
+
         Search search = application.getCurrentSearch().clone();
         search.setFromDate(fromBox.getValue().getTime());
         search.setToDate(toBox.getValue().getTime());
