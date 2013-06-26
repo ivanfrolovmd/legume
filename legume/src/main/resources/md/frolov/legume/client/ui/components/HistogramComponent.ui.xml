@@ -94,7 +94,7 @@
         }
 
         .form {
-            margin: 10px 0;
+            margin: 2px 0;
         }
 
         .form label {
@@ -110,6 +110,17 @@
         }
         .summaryValue {
             float:right;
+        }
+
+        input.dateBox{
+            width: 220px;
+            padding: 2px 5px;
+            text-align: center;
+        }
+        .recentDateButton {
+            width: 30px;
+            padding-left: 6px;
+            padding-right: 6px;
         }
     </ui:style>
     <ui:style type="md.frolov.legume.client.ui.components.HistogramComponent.Css" field="css">
@@ -164,35 +175,35 @@
                         <b:Button size="MINI" icon="ZOOM_OUT" ui:field="zoomOut"/>
                         <b:Button size="MINI" icon="DOWNLOAD" ui:field="downloadImage"/>
                         <b:Button size="MINI" icon="MAGNET" toggle="true" title="Track position" ui:field="trackPosition" active="true"/>
-                        <b:Button size="MINI" ui:field="chooseDateButton" addStyleNames="dropdown-toggle">Choose date</b:Button>
-                        <b:Button size="MINI" ui:field="hideDateButton" visible="false">Hide</b:Button>
+                        <b:Button size="MINI" ui:field="chooseDateButton" width="75px" addStyleNames="dropdown-toggle">Choose date</b:Button>
+                        <b:Button size="MINI" ui:field="hideDateButton" width="72px" visible="false">Hide</b:Button>
                     </b:ButtonGroup>
                 </g:FlowPanel>
                 <g:FlowPanel styleName="{style.dateDetails}">
                     <b:Form type="INLINE" addStyleNames="{style.form}">
-                        <b:ControlLabel>Last</b:ControlLabel>
-                        <b:ButtonGroup>
-                            <b:Button size="SMALL" ui:field="last15m">15m</b:Button>
-                            <b:Button size="SMALL" ui:field="last30m">30m</b:Button>
-                            <b:Button size="SMALL" ui:field="last1h">1h</b:Button>
-                            <b:Button size="SMALL" ui:field="last2h">2h</b:Button>
-                            <b:Button size="SMALL" ui:field="last4h">4h</b:Button>
-                            <b:Button size="SMALL" ui:field="last6h">6h</b:Button>
-                            <b:Button size="SMALL" ui:field="last12h">12h</b:Button>
-                            <b:Button size="SMALL" ui:field="last24h">24h</b:Button>
-                            <b:Button size="SMALL" ui:field="last2d">2d</b:Button>
-                            <b:Button size="SMALL" ui:field="last3d">3d</b:Button>
-                            <b:Button size="SMALL" ui:field="last5d">5d</b:Button>
-                            <b:Button size="SMALL" ui:field="last7d">7d</b:Button>
-                            <b:Button size="SMALL" ui:field="lastAllTime">all time</b:Button>
-                        </b:ButtonGroup>
+                        <b:ControlGroup ui:field="datesControlGroup">
+                            <b2:DateTimeBox autoClose="true" minuteStep="5" showTodayButton="true" size="2" format="dd/mm/yyyy hh:ii:ss" addStyleNames="{style.dateBox}" ui:field="fromBox"/>
+                            <b:ControlLabel for="toBox">To: </b:ControlLabel>
+                            <b2:DateTimeBox autoClose="true" minuteStep="5" showTodayButton="true" size="2" format="dd/mm/yyyy hh:ii:ss" addStyleNames="{style.dateBox}" ui:field="toBox"/>
+                            <b:Button addStyleNames="{style.withMargins}" size="SMALL" ui:field="goButton">Go</b:Button>
+                        </b:ControlGroup>
                     </b:Form>
                     <b:Form type="INLINE" addStyleNames="{style.form}">
-                        <b:ControlLabel for="fromBox">From: </b:ControlLabel>
-                        <b2:DateTimeBox autoClose="true" minuteStep="5" showTodayButton="true" size="2" format="dd/mm/yyyy hh:ii:ss" ui:field="fromBox"/>
-                        <b:ControlLabel for="toBox">To: </b:ControlLabel>
-                        <b2:DateTimeBox autoClose="true" minuteStep="5" showTodayButton="true" size="2" format="dd/mm/yyyy hh:ii:ss" ui:field="toBox"/>
-                        <b:Button addStyleNames="{style.withMargins}" ui:field="goButton">Go</b:Button>
+                        <b:ButtonGroup>
+                            <b:Button size="SMALL" addStyleNames="{style.recentDateButton}" ui:field="last15m">15m</b:Button>
+                            <b:Button size="SMALL" addStyleNames="{style.recentDateButton}" ui:field="last30m">30m</b:Button>
+                            <b:Button size="SMALL" addStyleNames="{style.recentDateButton}" ui:field="last1h">1h</b:Button>
+                            <b:Button size="SMALL" addStyleNames="{style.recentDateButton}" ui:field="last2h">2h</b:Button>
+                            <b:Button size="SMALL" addStyleNames="{style.recentDateButton}" ui:field="last4h">4h</b:Button>
+                            <b:Button size="SMALL" addStyleNames="{style.recentDateButton}" ui:field="last6h">6h</b:Button>
+                            <b:Button size="SMALL" addStyleNames="{style.recentDateButton}" ui:field="last12h">12h</b:Button>
+                            <b:Button size="SMALL" addStyleNames="{style.recentDateButton}" ui:field="last24h">24h</b:Button>
+                            <b:Button size="SMALL" addStyleNames="{style.recentDateButton}" ui:field="last2d">2d</b:Button>
+                            <b:Button size="SMALL" addStyleNames="{style.recentDateButton}" ui:field="last3d">3d</b:Button>
+                            <b:Button size="SMALL" addStyleNames="{style.recentDateButton}" ui:field="last5d">5d</b:Button>
+                            <b:Button size="SMALL" addStyleNames="{style.recentDateButton}" ui:field="last7d">7d</b:Button>
+                            <b:Button size="SMALL" ui:field="lastAllTime">all time</b:Button>
+                        </b:ButtonGroup>
                     </b:Form>
                 </g:FlowPanel>
             </g:FlowPanel>

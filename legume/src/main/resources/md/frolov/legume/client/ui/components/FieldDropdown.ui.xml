@@ -8,6 +8,6 @@
     </ui:style>
     <b:Dropdown ui:field="dropDown" addStyleNames="{style.dropdown}">
         <b:NavLink icon="BAR_CHART" ui:field="score">Score</b:NavLink>
-        <b:NavLink icon="TINT" ui:field="colorize">Colorize</b:NavLink>
+        <b:NavLink icon="TINT" ui:field="colorize">Highlight with color</b:NavLink>
     </b:Dropdown>
 </ui:UiBinder>
