@@ -4,7 +4,11 @@ import java.util.Map;
 import java.util.Set;
 import javax.annotation.Nullable;
 
-import com.github.gwtbootstrap.client.ui.*;
+import com.github.gwtbootstrap.client.ui.Button;
+import com.github.gwtbootstrap.client.ui.Modal;
+import com.github.gwtbootstrap.client.ui.NavLink;
+import com.github.gwtbootstrap.client.ui.TextBox;
+import com.github.gwtbootstrap.client.ui.WellForm;
 import com.github.gwtbootstrap.client.ui.constants.IconType;
 import com.google.common.collect.Maps;
 import com.google.gwt.core.client.GWT;
@@ -15,13 +19,13 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Random;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
 
 import md.frolov.legume.client.gin.WidgetInjector;
 import md.frolov.legume.client.service.ColorizeService;
+import md.frolov.legume.client.ui.controls.ColorPicker;
 
 /** @author Ivan Frolov (ifrolov@tacitknowledge.com) */
 public class ColorizeDialog
@@ -72,7 +76,7 @@ public class ColorizeDialog
         binder.createAndBindUi(this);
 
         this.fieldName = fieldName;
-        modal.setTitle("Colorize <strong>"+fieldName+"</strong>");
+        modal.setTitle("Highlight <strong>"+fieldName+"</strong> with color");
 
         if(colorizeService.isFieldColorizable(fieldName)) {
             colorizeToggle.setActive(true);
@@ -99,40 +103,34 @@ public class ColorizeDialog
 
         colorsMap.put(val, colorHue);
 
-        final ControlGroup cg = new ControlGroup();
-        final AppendButton aButton = new AppendButton();
-        final ControlLabel label = new ControlLabel(val);
-        final IntegerBox integerBox = new IntegerBox();
-        integerBox.setValue(colorHue);
-        integerBox.setWidth("100px");
-        DOM.setStyleAttribute(integerBox.getElement(), "backgroundColor", "hsl(" + colorHue + ",70%,96%)");
-        final Button removeButton = new Button("", IconType.REMOVE);
-        cg.add(label);
-        cg.add(aButton);
-        aButton.add(integerBox);
-        aButton.add(removeButton);
+        final ColorPicker colorPicker = new ColorPicker();
+        colorPicker.setText(val);
+        colorPicker.setHue(colorHue);
 
-        integerBox.addChangeHandler(new ChangeHandler()
+        colorPicker.addChangeHandler(new ChangeHandler()
         {
             @Override
             public void onChange(final ChangeEvent event)
             {
-                int hue = integerBox.getValue();
-                DOM.setStyleAttribute(integerBox.getElement(), "backgroundColor", "hsl(" + hue + ",70%,96%)");
+                int hue = colorPicker.getHue();
                 colorsMap.put(val, hue);
             }
         });
 
-        removeButton.addClickHandler(new ClickHandler()
+        NavLink removeLink = new NavLink("Remove");
+        removeLink.setIcon(IconType.REMOVE);
+        colorPicker.addWidget(removeLink);
+        removeLink.addClickHandler(new ClickHandler()
         {
             @Override
             public void onClick(final ClickEvent event)
             {
-                form.remove(cg);
+                form.remove(colorPicker);
+                colorsMap.remove(val);
             }
         });
 
-        form.add(cg);
+        form.add(colorPicker);
     }
 
     public void show() {

@@ -9,6 +9,9 @@
         .marginRight {
             margin-right: 6px;
         }
+        .well>* {
+            margin: 5px;
+        }
     </ui:style>
     <b:Modal ui:field="modal" keyboard="true" dynamicSafe="true" width="580px">
         <b:Form>
@@ -19,7 +22,7 @@
             </b:ButtonGroup>
         </b:Form>
         <g:FlowPanel ui:field="editContainer">
-            <b:WellForm type="HORIZONTAL" title="Terms" ui:field="form">
+            <b:WellForm type="HORIZONTAL" title="Terms" addStyleNames="{style.well}" ui:field="form">
                 <g:Label ui:field="noTermsLabel">There are no terms yet. New terms will appear here automotacially as you browse through the logs.</g:Label>
                 <!--
                 <b:ControlGroup>
