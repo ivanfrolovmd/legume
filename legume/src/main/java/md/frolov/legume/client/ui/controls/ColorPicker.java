@@ -61,7 +61,7 @@ public class ColorPicker extends Composite implements HasChangeHandlers
                 Button color = new Button();
                 color.setIconSize(IconSize.DEFAULT);
                 color.setStyleName(null);
-                DOM.setStyleAttribute(color.getElement(), "backgroundColor", "hsl("+hue+",80%,98%)");
+                DOM.setStyleAttribute(color.getElement(), "backgroundColor", "hsl("+hue+",70%,98%)");
                 DOM.setStyleAttribute(color.getElement(), "border", "2px solid hsl("+hue+",100%,40%)");
                 color.addStyleName(css.cellButton());
 
@@ -111,7 +111,7 @@ public class ColorPicker extends Composite implements HasChangeHandlers
         }
 
         DOM.setStyleAttribute(dropdown.getElement(), "borderLeftColor", "hsl("+hue+",100%,40%)");
-        DOM.setStyleAttribute(dropdown.getElement(), "backgroundColor", "hsl("+hue+",80%,98%)");
+        DOM.setStyleAttribute(dropdown.getElement(), "backgroundColor", "hsl("+hue+",70%,98%)");
     }
 
     public HandlerRegistration addChangeHandler(final ChangeHandler handler) {

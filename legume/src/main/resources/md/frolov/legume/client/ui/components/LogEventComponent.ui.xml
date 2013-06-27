@@ -3,16 +3,12 @@
              xmlns:lc="urn:import:md.frolov.legume.client.ui"
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
     <ui:style type="md.frolov.legume.client.ui.components.LogEventComponent.Css" field="style">
-        .box, .type {
-            /* border */
+        .box {
             border: 1px solid #D8D8D8;
             border-bottom-width: 2px;
-        }
+            border-left-width: 3px;
+            border-radius: 3px;
 
-        .box {
-            border-left-width: 0px;
-            border-top-right-radius: 3px;
-            border-bottom-right-radius: 3px;
             margin: 2px 0 2px 4px;
 
             position: relative;
@@ -20,24 +16,11 @@
 
             color: #333;
 
-            transition: background-color 1s ease;
+            transition: background-color 1s ease, border-left-color 1s ease;
         }
 
         .detailsSelected {
             margin: 4px 0px 8px 10px;
-        }
-
-        .type {
-            /* color label to the left */
-            position: absolute;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            width: 4px;
-
-            border-top-left-radius: 3px;
-            border-bottom-left-radius: 3px;
-            border-right-width: 0px;
         }
 
         .summaryBox {
@@ -79,7 +62,7 @@
 
         @external .hlLabel;
         .hlLabel{
-            background-color: #999;
+            border-left-color: #999;
         }
         @external .hlBackground;
         .hlBackground{
@@ -92,16 +75,13 @@
     </ui:style>
 
     <lc:EventFlowPanel ui:field="focusPanel">
-        <g:FlowPanel styleName="{style.relative}">
-            <g:FlowPanel ui:field="type" styleName="{style.type}" addStyleNames="{style.hlLabel}"/>
-            <g:FlowPanel addStyleNames="{style.box} {style.hlBackground}" ui:field="box">
-                <g:HorizontalPanel ui:field="summary" styleName="{style.summaryBox}">
-                    <g:Label ui:field="time" styleName="{style.time}"/>
-                    <g:Label ui:field="message" styleName="{style.message}"/>
-                </g:HorizontalPanel>
-                <g:FlowPanel ui:field="details" styleName="{style.detailsBox}" visible="false">
-                    <g:FlowPanel ui:field="detailsContainer"/>
-                </g:FlowPanel>
+        <g:FlowPanel addStyleNames="{style.box} {style.hlLabel} {style.hlBackground}" ui:field="box">
+            <g:HorizontalPanel ui:field="summary" styleName="{style.summaryBox}">
+                <g:Label ui:field="time" styleName="{style.time}"/>
+                <g:Label ui:field="message" styleName="{style.message}"/>
+            </g:HorizontalPanel>
+            <g:FlowPanel ui:field="details" styleName="{style.detailsBox}" visible="false">
+                <g:FlowPanel ui:field="detailsContainer"/>
             </g:FlowPanel>
         </g:FlowPanel>
     </lc:EventFlowPanel>

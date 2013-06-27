@@ -57,8 +57,6 @@ public class LogEventComponent extends Composite
     @UiField
     Label time;
     @UiField
-    FlowPanel type;
-    @UiField
     Label message;
     @UiField
     Panel summary;

@@ -67,17 +67,17 @@ public class ColorizeServiceImpl implements ColorizeService, Constants
         for (String labelField : labelFields)
         {
             Map<String, Integer> colors = fieldValueColorMap.get(labelField);
-            appendFieldColors(".hlLabel", labelField, colors, 100, 40, sb);
+            appendFieldColors(".hlLabel", "border-left-color", labelField, colors, 100, 40, sb);
         }
         for (String labelField : backgroundFields)
         {
             Map<String, Integer> colors = fieldValueColorMap.get(labelField);
-            appendFieldColors(".hlBackground", labelField, colors, 70, 98, sb);
+            appendFieldColors(".hlBackground", "background-color", labelField, colors, 70, 98, sb);
         }
         return sb.toString();
     }
 
-    private void appendFieldColors(String elementType, String fieldName, Map<String, Integer> colors, int saturation, int light,
+    private void appendFieldColors(String elementType, String attribute, String fieldName, Map<String, Integer> colors, int saturation, int light,
                                    StringBuilder sb){
         if(colors == null) {
             return;
@@ -87,7 +87,7 @@ public class ColorizeServiceImpl implements ColorizeService, Constants
             String cssClassName = getCssClassName(fieldName, color.getKey());
             String cssColor = getCssColor(color.getValue(), saturation, light);
             sb.append(".").append(cssClassName).append(" ").append(elementType).append("{")
-                    .append("background-color:").append(cssColor).append("} ");
+                    .append(attribute).append(":").append(cssColor).append("} ");
         }
     }
 
