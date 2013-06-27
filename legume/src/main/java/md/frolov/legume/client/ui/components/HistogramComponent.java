@@ -272,35 +272,20 @@ public class HistogramComponent extends Composite implements UpdateSearchQueryHa
         if(!isUpdateRequired(event.getSearchQuery())) {
             return;
         } else {
-            currentSearch = event.getSearchQuery();
+            currentSearch = event.getSearchQuery().clone();
+            currentSearch.setFromDate(currentSearch.getRealFromDate());
+            currentSearch.setToDate(currentSearch.getRealToDate());
         }
 
         requestHistogram(event.getSearchQuery());
 
         //update labels
-        long fromDate = event.getSearchQuery().getFromDate();
         String fromDateStr;
-        if (fromDate == 0)
-        {
-            fromDateStr = "beginning";
-        }
-        else
-        {
-            fromDateStr = DATE_LABEL_DTF.format(new Date(event.getSearchQuery().getRealFromDate()));
-        }
-
-        long toDate = event.getSearchQuery().getToDate();
-        String toDateStr;
-        if (toDate == 0)
-        {
-            toDateStr = "now";
-        }
-        else
-        {
-            toDateStr = DATE_LABEL_DTF.format(new Date(event.getSearchQuery().getRealToDate()));
-        }
-
+        fromDateStr = DATE_LABEL_DTF.format(new Date(event.getSearchQuery().getRealFromDate()));
         fromDateLabel.setText(fromDateStr);
+
+        String toDateStr;
+        toDateStr = DATE_LABEL_DTF.format(new Date(event.getSearchQuery().getRealToDate()));
         toDateLabel.setText(toDateStr);
     }
 

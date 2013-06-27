@@ -19,7 +19,7 @@ public interface StreamView extends IsWidget {
     void showError(boolean upwards);
 
     interface Presenter {
-        void requestMoreResults(boolean top);
+        void requestMoreResults(boolean top, boolean force);
 
         void checkInitialRequests(boolean upwards);
 

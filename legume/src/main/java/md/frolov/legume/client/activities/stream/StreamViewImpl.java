@@ -315,47 +315,47 @@ public class StreamViewImpl extends Composite implements StreamView
 
         if (toTop < scrollThreashold)
         {
-            requestMoreTop();
+            requestMoreTop(false);
         }
         if (toBottom < scrollThreashold)
         {
-            requestMoreBottom();
+            requestMoreBottom(false);
         }
     }
 
     private void requestMore(boolean upwards) {
         if(upwards) {
-            requestMoreTop();
+            requestMoreTop(false);
         } else {
-            requestMoreBottom();
+            requestMoreBottom(false);
         }
     }
 
-    private void requestMoreTop()
+    private void requestMoreTop(boolean force)
     {
         if (topLoading.isVisible() || topError.isVisible() || topFinished || isRendering)
         {
             return;
         }
         LOG.info("Request top");
-        presenter.requestMoreResults(true);
+        presenter.requestMoreResults(true, force);
     }
 
-    private void requestMoreBottom()
+    private void requestMoreBottom(boolean force)
     {
         if (bottomLoading.isVisible() || bottomError.isVisible() || bottomFinished || isRendering)
         {
             return;
         }
         LOG.info("Request bottom");
-        presenter.requestMoreResults(false);
+        presenter.requestMoreResults(false, force);
     }
 
     @UiHandler("topErrorTryAgain")
     public void onTopErrorAgainClick(final ClickEvent event)
     {
         topError.setVisible(false);
-        requestMoreTop();
+        requestMoreTop(false);
     }
 
     @UiHandler("topLoadingTryAgain")
@@ -363,14 +363,14 @@ public class StreamViewImpl extends Composite implements StreamView
     {
         topFinished = false;
         topNoMoreResults.setVisible(false);
-        requestMoreTop();
+        requestMoreTop(true);
     }
 
     @UiHandler("bottomErrorTryAgain")
     public void onBottomErrorTryAgain(final ClickEvent event)
     {
         bottomError.setVisible(false);
-        requestMoreBottom();
+        requestMoreBottom(false);
     }
 
     @UiHandler("bottomLoadingTryAgain")
@@ -378,7 +378,7 @@ public class StreamViewImpl extends Composite implements StreamView
     {
         bottomFinished = false;
         bottomNoMoreResults.setVisible(false);
-        requestMoreBottom();
+        requestMoreBottom(true);
     }
 
     @UiHandler("tryAgain")

@@ -22,11 +22,12 @@ import md.frolov.legume.client.events.FocusOnDateEvent;
 import md.frolov.legume.client.events.FocusOnDateEventHandler;
 import md.frolov.legume.client.events.ScrollableStateChangedEvent;
 import md.frolov.legume.client.events.UpdateSearchQuery;
+import md.frolov.legume.client.events.UpdateSearchQueryHandler;
 import md.frolov.legume.client.gin.WidgetInjector;
 import md.frolov.legume.client.model.Search;
 import md.frolov.legume.client.service.ConfigurationService;
 
-public class StreamActivity extends SearchActivity implements StreamView.Presenter, FocusOnDateEventHandler
+public class StreamActivity extends SearchActivity implements StreamView.Presenter, FocusOnDateEventHandler, UpdateSearchQueryHandler
 {
     private static final Logger LOG = Logger.getLogger("StreamActivity");
     private static final int DEFAULT_QUERY_SIZE = WidgetInjector.INSTANCE.configurationService().getInt(Constants.PAGE_SIZE);
@@ -72,6 +73,7 @@ public class StreamActivity extends SearchActivity implements StreamView.Present
         this.eventBus = eventBus;
 
         eventBus.addHandler(FocusOnDateEvent.TYPE, this);
+        eventBus.addHandler(UpdateSearchQuery.TYPE, this);
 
         initQueries(place.getSearch());
 
@@ -81,9 +83,9 @@ public class StreamActivity extends SearchActivity implements StreamView.Present
     private void startRequest() {
         streamView.showLoading();
 
-        requestMoreResults(false);
+        requestMoreResults(false, false);
         if(place.getSearch().getToDate()==0 || place.getSearch().getFocusDate() != place.getSearch().getFromDate()) {
-            requestMoreResults(true);
+            requestMoreResults(true, false);
         } else {
             isInitialUpFinished = true;
         }
@@ -91,16 +93,24 @@ public class StreamActivity extends SearchActivity implements StreamView.Present
 
     private void initQueries(Search search)
     {
+        long from = search.getRealFromDate();
+        long to = search.getRealToDate();
         long focus = search.getRealFocusDate();
-        downwardsQuery = new SearchRequest(new Search(search.getQuery(), focus, 0, focus), true, 0, DEFAULT_QUERY_SIZE);
-        upwardsQuery = new SearchRequest(new Search(search.getQuery(), 0, focus, focus), false, 0, DEFAULT_QUERY_SIZE);
+        downwardsQuery = new SearchRequest(new Search(search.getQuery(), focus, to, focus), true, 0, DEFAULT_QUERY_SIZE);
+        upwardsQuery = new SearchRequest(new Search(search.getQuery(), from, focus, focus), false, 0, DEFAULT_QUERY_SIZE);
         oldestDate = focus;
         newestDate = focus;
     }
 
     @Override
-    public void requestMoreResults(final boolean upwards)
+    public void requestMoreResults(final boolean upwards, final boolean force)
     {
+        if(force && upwards) {
+            upwardsQuery.getSearch().setFromDate(0);
+        }
+        if(force && !upwards) {
+            downwardsQuery.getSearch().setToDate(0);
+        }
         final SearchRequest query = upwards ? upwardsQuery : downwardsQuery;
 
         streamView.showLoading(upwards);
@@ -217,5 +227,14 @@ public class StreamActivity extends SearchActivity implements StreamView.Present
         upwardsQuery.setFrom(0);
 
         startRequest();
+    }
+
+    @Override
+    public void onUpdateSearchQuery(final UpdateSearchQuery event)
+    {
+        long from = event.getSearchQuery().getRealFromDate();
+        long to = event.getSearchQuery().getRealToDate();
+        downwardsQuery.getSearch().setToDate(to);
+        upwardsQuery.getSearch().setFromDate(from);
     }
 }
