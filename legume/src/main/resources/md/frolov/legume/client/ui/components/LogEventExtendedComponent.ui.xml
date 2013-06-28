@@ -1,25 +1,61 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
     <ui:style>
+
         .table {
             margin: 0;
             white-space: pre;
         }
+        .table td {
+            height:20px;
+        }
 
+        .tableWrap {
+            margin-left: 120px;
+            margin-top: -1px;
+            overflow-x: auto;
+        }
 
-    </ui:style>
-    <ui:style type="md.frolov.legume.client.ui.components.LogEventExtendedComponent.CSS" field="css">
-        .keyColumn {
+        .keyBg {
+            position: absolute;
+            top:0;
+            bottom: 0;
+            left:0;
+            width: 100px;
             background-color: #f5f5f5;
         }
+        .filterBg {
+            position: absolute;
+            top:0;
+            bottom: 0;
+            left: 100px;
+            width: 20px;
+            background-color: #fff;
+        }
+    </ui:style>
+    <ui:style type="md.frolov.legume.client.ui.components.LogEventExtendedComponent.CSS" field="css">
         .keyLabel {
             font-family: OpenSansLight;
             white-space: nowrap;
             overflow: hidden;
             color: #999;
+            position: absolute;
+            left: 0;
+            width: 100px;
+            top: auto;
+        }
+        .filterLabel {
+            position: absolute;
+            left: 100px;
+            width: 15px;
+            top: auto;
         }
     </ui:style>
     <g:FlowPanel>
-        <g:FlexTable ui:field="container" styleName="table table-condensed" addStyleNames="{style.table}"/>
+        <g:FlowPanel styleName="{style.keyBg}"/>
+        <g:FlowPanel styleName="{style.filterBg}"/>
+        <g:FlowPanel styleName="{style.tableWrap}">
+            <g:FlexTable ui:field="container" styleName="table table-condensed" addStyleNames="{style.table}"/>
+        </g:FlowPanel>
     </g:FlowPanel>
 </ui:UiBinder>

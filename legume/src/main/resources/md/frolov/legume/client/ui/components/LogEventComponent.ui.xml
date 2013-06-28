@@ -22,13 +22,12 @@
         .detailsSelected {
             margin: 4px 0px 8px 10px;
         }
+        .detailsSelected .box {
+            overflow: visible;
+        }
 
         .summaryBox {
             margin: 2px 10px;
-        }
-
-        .detailsBox {
-            overflow-x: scroll;
         }
 
         .colorLabel {
@@ -80,7 +79,7 @@
                 <g:Label ui:field="time" styleName="{style.time}"/>
                 <g:Label ui:field="message" styleName="{style.message}"/>
             </g:HorizontalPanel>
-            <g:FlowPanel ui:field="details" styleName="{style.detailsBox}" visible="false">
+            <g:FlowPanel ui:field="details" visible="false">
                 <g:FlowPanel ui:field="detailsContainer"/>
             </g:FlowPanel>
         </g:FlowPanel>

@@ -32,8 +32,8 @@ public class LogEventExtendedComponent extends Composite
 
     interface CSS extends CssResource
     {
-        String keyColumn();
         String keyLabel();
+        String filterLabel();
     }
 
     private static LogEventExtendedComponentUiBinder binder = GWT.create(LogEventExtendedComponentUiBinder.class);
@@ -48,9 +48,8 @@ public class LogEventExtendedComponent extends Composite
         initWidget(binder.createAndBindUi(this));
 
         HTMLTable.ColumnFormatter columnFormatter = container.getColumnFormatter();
-        columnFormatter.setWidth(0, "100px");
-        columnFormatter.setStyleName(0, css.keyColumn());
-        columnFormatter.setWidth(1, "20px");
+        columnFormatter.setWidth(0, "0");
+        columnFormatter.setWidth(1, "0");
 
         fillIn(logEvent);
     }
@@ -92,9 +91,10 @@ public class LogEventExtendedComponent extends Composite
         String valueStr = getValueStr(value);
         int row = container.getRowCount();
         Label fieldNameLabel = new Label(name);
-        fieldNameLabel.setStyleName(css.keyLabel());
         container.setWidget(row, 0, fieldNameLabel);
+        container.getCellFormatter().setStyleName(row, 0, css.keyLabel());
         container.setWidget(row, 1, new FieldActionsDropdown(fieldName, valueStr, timestamp.getTime()));
+        container.getCellFormatter().setStyleName(row, 1, css.filterLabel());
         container.setText(row, 2, valueStr);
     }
 
