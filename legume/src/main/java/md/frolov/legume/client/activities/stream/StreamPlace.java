@@ -4,6 +4,7 @@ import java.util.Iterator;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
+import com.google.gwt.http.client.URL;
 import com.google.gwt.place.shared.PlaceTokenizer;
 import com.google.gwt.place.shared.Prefix;
 
@@ -30,7 +31,7 @@ public class StreamPlace extends SearchPlace
                 Long fromDate = Long.valueOf(parts.next());
                 Long toDate= Long.valueOf(parts.next());
                 Long focusDate = Long.valueOf(parts.next());
-                String query = parts.next();
+                String query = URL.decodeQueryString(parts.next());
 
                 return new StreamPlace(new Search(query, fromDate, toDate, focusDate));
             } catch (Exception e) {
@@ -45,7 +46,7 @@ public class StreamPlace extends SearchPlace
                     search.getFromDate(),
                     search.getToDate(),
                     search.getFocusDate(),
-                    search.getQuery()
+                    URL.encodeQueryString(search.getQuery())
             });
         }
 

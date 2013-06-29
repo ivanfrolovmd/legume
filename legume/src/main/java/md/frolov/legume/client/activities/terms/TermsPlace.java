@@ -4,6 +4,7 @@ import java.util.Iterator;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
+import com.google.gwt.http.client.URL;
 import com.google.gwt.place.shared.PlaceTokenizer;
 import com.google.gwt.place.shared.Prefix;
 
@@ -43,8 +44,8 @@ public class TermsPlace extends SearchPlace
                 Long toDateTime = Long.valueOf(it.next());
                 Long focusDateTime = Long.valueOf(it.next());
 
-                String field = it.next();
-                String query = it.next();
+                String field = URL.decodeQueryString(it.next());
+                String query = URL.decodeQueryString(it.next());
 
                 return new TermsPlace(field, new Search(query, fromDateTime, toDateTime, focusDateTime));
             } catch (Exception e) {
@@ -60,8 +61,8 @@ public class TermsPlace extends SearchPlace
                     search.getFromDate(),
                     search.getToDate(),
                     search.getFocusDate(),
-                    place.getFieldName(),
-                    search.getQuery()
+                    URL.encodeQueryString(place.getFieldName()),
+                    URL.encodeQueryString(search.getQuery())
             });
         }
     }
