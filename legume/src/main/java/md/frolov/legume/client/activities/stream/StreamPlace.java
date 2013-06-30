@@ -4,9 +4,9 @@ import java.util.Iterator;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
-import com.google.gwt.http.client.URL;
 import com.google.gwt.place.shared.PlaceTokenizer;
 import com.google.gwt.place.shared.Prefix;
+import com.google.gwt.user.client.History;
 
 import md.frolov.legume.client.activities.SearchPlace;
 import md.frolov.legume.client.model.Search;
@@ -14,7 +14,6 @@ import md.frolov.legume.client.model.Search;
 public class StreamPlace extends SearchPlace
 {
     private final static String TOKEN_PREFIX = "stream";
-    private final static Tokenizer TOKENIZER = new Tokenizer();
 
     public StreamPlace(final Search search)
     {
@@ -31,7 +30,7 @@ public class StreamPlace extends SearchPlace
                 Long fromDate = Long.valueOf(parts.next());
                 Long toDate= Long.valueOf(parts.next());
                 Long focusDate = Long.valueOf(parts.next());
-                String query = URL.decodeQueryString(parts.next());
+                String query = parts.next();
 
                 return new StreamPlace(new Search(query, fromDate, toDate, focusDate));
             } catch (Exception e) {
@@ -46,7 +45,7 @@ public class StreamPlace extends SearchPlace
                     search.getFromDate(),
                     search.getToDate(),
                     search.getFocusDate(),
-                    URL.encodeQueryString(search.getQuery())
+                    History.encodeHistoryToken(search.getQuery())
             });
         }
 

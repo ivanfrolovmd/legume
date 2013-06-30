@@ -4,9 +4,9 @@ import java.util.Iterator;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
-import com.google.gwt.http.client.URL;
 import com.google.gwt.place.shared.PlaceTokenizer;
 import com.google.gwt.place.shared.Prefix;
+import com.google.gwt.user.client.History;
 
 import md.frolov.legume.client.activities.SearchPlace;
 import md.frolov.legume.client.model.Search;
@@ -15,7 +15,6 @@ import md.frolov.legume.client.model.Search;
 public class TermsPlace extends SearchPlace
 {
     private static final String TOKEN_PREFIX = "terms";
-    private static final Tokenizer TOKENIZER = new Tokenizer();
 
     private final String fieldName;
 
@@ -44,8 +43,8 @@ public class TermsPlace extends SearchPlace
                 Long toDateTime = Long.valueOf(it.next());
                 Long focusDateTime = Long.valueOf(it.next());
 
-                String field = URL.decodeQueryString(it.next());
-                String query = URL.decodeQueryString(it.next());
+                String field = it.next();
+                String query = it.next();
 
                 return new TermsPlace(field, new Search(query, fromDateTime, toDateTime, focusDateTime));
             } catch (Exception e) {
@@ -61,8 +60,8 @@ public class TermsPlace extends SearchPlace
                     search.getFromDate(),
                     search.getToDate(),
                     search.getFocusDate(),
-                    URL.encodeQueryString(place.getFieldName()),
-                    URL.encodeQueryString(search.getQuery())
+                    History.encodeHistoryToken(place.getFieldName()),
+                    History.encodeHistoryToken(search.getQuery())
             });
         }
     }
