@@ -6,7 +6,6 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import com.google.gwt.place.shared.PlaceTokenizer;
 import com.google.gwt.place.shared.Prefix;
-import com.google.gwt.user.client.History;
 
 import md.frolov.legume.client.activities.SearchPlace;
 import md.frolov.legume.client.model.Search;
@@ -60,8 +59,8 @@ public class TermsPlace extends SearchPlace
                     search.getFromDate(),
                     search.getToDate(),
                     search.getFocusDate(),
-                    History.encodeHistoryToken(place.getFieldName()),
-                    History.encodeHistoryToken(search.getQuery())
+                    place.getFieldName(),
+                    search.getQuery()
             });
         }
     }
