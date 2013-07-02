@@ -1,8 +1,10 @@
 package md.frolov.legume.client.mvp;
 
+import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Provider;
 
+import com.google.common.collect.Maps;
 import com.google.gwt.activity.shared.Activity;
 import com.google.gwt.activity.shared.ActivityMapper;
 import com.google.gwt.place.shared.Place;
@@ -15,13 +17,17 @@ import md.frolov.legume.client.activities.terms.TermsActivity;
 import md.frolov.legume.client.activities.terms.TermsPlace;
 
 public class AppActivityMapper implements ActivityMapper {
-    @Inject
-    private Provider<StreamActivity> streamActivity;
-
-    @Inject
-    private Provider<TermsActivity> termsActivity;
+    private final Map<Class<? extends Place>, Provider<? extends SearchActivity>> activityMap;
 
     private SearchActivity lastActivity;
+
+    @Inject
+    public AppActivityMapper(Provider<StreamActivity> streamActivity, Provider<TermsActivity> termsActivity)
+    {
+        activityMap = Maps.newHashMap();
+        activityMap.put(StreamPlace.class, streamActivity);
+        activityMap.put(TermsPlace.class, termsActivity);
+    }
 
     @Override
     public Activity getActivity(Place place) {
@@ -29,13 +35,7 @@ public class AppActivityMapper implements ActivityMapper {
             return lastActivity;
         }
 
-        // TODO make it configurable, mappable. Get rid of ifs.
-        SearchActivity activity = null;
-        if(place instanceof StreamPlace)
-            activity = streamActivity.get();
-        if(place instanceof TermsPlace)
-            activity = termsActivity.get();
-
+        SearchActivity activity = activityMap.get(place.getClass()).get();
         lastActivity = activity;
 
         return activity;
