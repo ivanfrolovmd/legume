@@ -9,6 +9,7 @@ import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -72,19 +73,19 @@ public class FieldActionsDropdown extends Composite
             search.setFocusDate(focusdate);
             String originalQueryString = search.getQuery();
 
-            score.setTargetHistoryToken(historyMapper.getToken(new TermsPlace(fieldName, search)));
+            score.setTargetHistoryToken(History.encodeHistoryToken(historyMapper.getToken(new TermsPlace(fieldName, search))));
 
             StreamPlace place = new StreamPlace(search);
 
             search.setQuery(getQueryString(originalQueryString, filter));
-            includeFilter.setTargetHistoryToken(historyMapper.getToken(place));
+            includeFilter.setTargetHistoryToken(History.encodeHistoryToken(historyMapper.getToken(place)));
             search.setQuery(getQueryString(originalQueryString, "NOT " + filter));
-            excludeFilter.setTargetHistoryToken(historyMapper.getToken(place));
+            excludeFilter.setTargetHistoryToken(History.encodeHistoryToken(historyMapper.getToken(place)));
 
             search.setQuery(filter);
-            includeOnlyFilter.setTargetHistoryToken(historyMapper.getToken(place));
+            includeOnlyFilter.setTargetHistoryToken(History.encodeHistoryToken(historyMapper.getToken(place)));
             search.setQuery(("NOT "+filter));
-            excludeOnlyFilter.setTargetHistoryToken(historyMapper.getToken(place));
+            excludeOnlyFilter.setTargetHistoryToken(History.encodeHistoryToken(historyMapper.getToken(place)));
 
         }
         else

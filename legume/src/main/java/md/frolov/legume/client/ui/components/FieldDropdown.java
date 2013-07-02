@@ -8,6 +8,7 @@ import com.google.gwt.place.shared.PlaceHistoryMapper;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -47,7 +48,7 @@ public class FieldDropdown extends Composite
     @UiHandler("score")
     public void onScoreClick(final ClickEvent event)
     {
-        score.setTargetHistoryToken(historyMapper.getToken(new TermsPlace(fieldFullName, application.getCurrentSearch())));
+        score.setTargetHistoryToken(History.encodeHistoryToken(historyMapper.getToken(new TermsPlace(fieldFullName, application.getCurrentSearch()))));
     }
 
     @UiHandler("colorize")
