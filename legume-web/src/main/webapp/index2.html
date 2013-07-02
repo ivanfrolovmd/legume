@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Legume for logstash</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Legume for logstash/elasticsearch web interface.">
+<meta name="author" content="Ivan Frolov">
+
+<!-- Le styles -->
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<link href="css/bootstrap-responsive.min.css" rel="stylesheet">
+<style>
+    /* GLOBAL STYLES
+    -------------------------------------------------- */
+    /* Padding below the footer and lighter body text */
+
+body {
+    padding-bottom: 40px;
+    color: #5a5a5a;
+}
+.btn {
+    min-width: 80px;
+}
+
+    /* MARKETING CONTENT
+    -------------------------------------------------- */
+
+/* Main marketing message and sign up button */
+.jumbotron {
+    margin: 40px 0;
+    text-align: center;
+}
+.jumbotron h1 {
+    font-size: 100px;
+    line-height: 1;
+}
+.jumbotron h2 {
+    font-size: 50px;
+    line-height: normal;
+}
+.jumbotron .lead {
+    font-size: 24px;
+    line-height: 1.25;
+}
+.jumbotron .btn {
+    font-size: 21px;
+    padding: 14px 24px;
+}
+
+    /* Center align the text within the three columns below the carousel */
+.marketing .span4 {
+    text-align: center;
+}
+
+.marketing h2 {
+    font-weight: normal;
+}
+
+.marketing .span4 p {
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+    /* Featurettes
+    ------------------------- */
+
+.featurette-divider {
+    margin: 80px 0; /* Space out the Bootstrap <hr> more */
+}
+
+.featurette {
+    padding-top: 60px; /* Vertically center images part 1: add padding above and below text. */
+}
+
+.featurette-image {
+    margin-top: -60px; /* Vertically center images part 3: negative margin up the image the same amount of the padding to center it. */
+    border: 1px solid #ddd;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+    /* Give some space on the sides of the floated elements so text doesn't run right into it. */
+.featurette-image.pull-left {
+    margin-right: 40px;
+}
+
+.featurette-image.pull-right {
+    margin-left: 40px;
+}
+
+    /* Thin out the marketing headings */
+.featurette-heading {
+    font-size: 50px;
+    font-weight: 300;
+    line-height: 1;
+    letter-spacing: -1px;
+}
+
+    /* RESPONSIVE CSS
+    -------------------------------------------------- */
+
+@media (max-width: 979px) {
+    .featurette {
+        height: auto;
+        padding: 0;
+    }
+
+    .featurette-image.pull-left,
+    .featurette-image.pull-right {
+        display: block;
+        float: none;
+        margin: 0 auto 20px;
+    }
+}
+
+@media (max-width: 767px) {
+    .marketing .span4 + .span4 {
+        margin-top: 40px;
+    }
+
+    .featurette-heading {
+        font-size: 30px;
+    }
+
+    .featurette .lead {
+        font-size: 18px;
+        line-height: 1.5;
+    }
+
+}
+</style>
+
+<!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+<!--[if lt IE 9]>
+<script src="js/html5shiv.js"></script>
+<![endif]-->
+
+</head>
+
+<body>
+<!-- TODO wording everywhere -->
+
+<!-- Marketing messaging and featurettes
+================================================== -->
+<!-- Wrap the rest of the page in another container to center all the content. -->
+
+<div class="container marketing">
+    <!-- Jumbotron -->
+     <div class="jumbotron">
+        <h1>Legume</h1>
+        <h2 class="muted">Web Interface for Logstash &amp; Elasticsearch</h2>
+        <p class="lead">Legume is a zeroconfig web interface run entirely on the client side that allows to browse and search
+            log entries in elasticsearch indexed by logstash.</p>
+        <a class="btn btn-large btn-success" href="install.html">Setup Instructions</a>
+     </div>
+
+     <hr/>
+
+    <!-- Three columns of text below the carousel -->
+    <div class="row">
+        <div class="span4">
+            <img src="img/head-download.png">
+
+            <h2>Download</h2>
+
+            <p>Go ahead! Download the Legume application and install it in your environment.</p>
+
+            <p><a class="btn" href="https://bitbucket.org/gusto/legume/downloads">Go &raquo;</a></p>
+        </div>
+        <!-- /.span4 -->
+        <div class="span4">
+            <img src="img/head-source.png">
+
+            <h2>Source</h2>
+
+            <p>If you would like to participate in development or report a bug, you are welcome to our source repository.
+                Feel free to fork and patch.</p>
+
+            <p><a class="btn" href="https://bitbucket.org/gusto/legume">Go &raquo;</a></p>
+        </div>
+        <!-- /.span4 -->
+        <div class="span4">
+            <img src="img/head-demo.png">
+
+            <h2>Demo</h2>
+
+            <p>Try it yourself right now! No installation, no configuration. Just click and see it in action.</p>
+
+            <p><a class="btn" href="demo.html">Go &raquo;</a></p>
+        </div>
+        <!-- /.span4 -->
+    </div>
+    <!-- /.row -->
+
+    <!-- START THE FEATURETTES -->
+
+    <hr class="featurette-divider">
+
+    <div class="featurette">
+        <img class="featurette-image pull-right" src="img/screen-logs.png">
+
+        <h2 class="featurette-heading">Easy navigation <span class="muted">lets you concentrate yourself on the task.</span></h2>
+
+        <p class="lead">Each log is represented as a separate clickable block. Natural chronological order. Eternal scrolling.
+            Summarized view with timestamp and message.
+            </p>
+        <div class="clearfix"/>
+    </div>
+
+    <hr class="featurette-divider">
+
+    <div class="featurette">
+        <img class="featurette-image pull-left" src="img/screen-detailed-view.png">
+
+        <h2 class="featurette-heading">Detailed view <span class="muted">allows you to examine a log closely.</span></h2>
+
+        <p class="lead">Click on a log to see details. Log fields. Actions and filters. Copy to clipboard.</p>
+        <div class="clearfix"/>
+    </div>
+
+    <hr class="featurette-divider">
+
+    <div class="featurette">
+        <img class="featurette-image pull-right" src="img/screen-highlights.png">
+
+        <h2 class="featurette-heading">Color highlighting <span class="muted">emphasizes what you need right now.</span></h2>
+
+        <p class="lead"></p>
+        <div class="clearfix"/>
+    </div>
+
+    <hr class="featurette-divider">
+
+    <div class="featurette">
+        <img class="featurette-image pull-left" src="img/screen-timeline.png">
+
+        <h2 class="featurette-heading">Timeline <span class="muted">shows you the context.</span></h2>
+
+        <p class="lead"></p>
+        <div class="clearfix"/>
+    </div>
+
+    <hr class="featurette-divider">
+
+    <div class="featurette">
+        <img class="featurette-image pull-right" src="img/screen-dates.png">
+
+        <h2 class="featurette-heading">Date ranges <span class="muted">are easy.</span></h2>
+
+        <p class="lead"></p>
+        <div class="clearfix"/>
+    </div>
+
+    <hr class="featurette-divider">
+
+    <div class="featurette">
+        <img class="featurette-image pull-left" src="img/screen-mappings.png">
+
+        <h2 class="featurette-heading">Type-field mappings <span class="muted">are at your hand.</span></h2>
+
+        <p class="lead"></p>
+        <div class="clearfix"/>
+    </div>
+
+    <hr class="featurette-divider">
+
+    <div class="featurette">
+        <img class="featurette-image pull-right" src="img/screen-share.png">
+
+        <h2 class="featurette-heading">Share <span class="muted">the current query and date point.</span></h2>
+
+        <p class="lead"></p>
+        <div class="clearfix"/>
+    </div>
+
+    <hr class="featurette-divider">
+
+    <div class="featurette">
+        <img class="featurette-image pull-left" src="img/screen-impex.png">
+
+        <h2 class="featurette-heading">Import/export <span class="muted">settings to share with the rest of the team.</span></h2>
+
+        <p class="lead"></p>
+        <div class="clearfix"/>
+    </div>
+
+    <hr class="featurette-divider">
+
+    <!-- /END THE FEATURETTES -->
+
+    <!-- FOOTER -->
+    <footer>
+        <p class="pull-right"><a href="#">Back to top</a></p>
+        <!-- TODO License information -->
+    </footer>
+
+</div>
+<!-- /.container -->
+
+<!-- Le javascript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<!--<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script> TODO -->
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script>
+    !function ($) {
+        $(function () {
+            // carousel demo
+            $('#myCarousel').carousel()
+        })
+    }(window.jQuery)
+</script>
+<script>
+    (function (i, s, o, g, r, a, m) {
+        i['GoogleAnalyticsObject'] = r;
+        i[r] = i[r] || function () {
+            (i[r].q = i[r].q || []).push(arguments)
+        }, i[r].l = 1 * new Date();
+        a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0];
+        a.async = 1;
+        a.src = g;
+        m.parentNode.insertBefore(a, m)
+    })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+    ga('create', 'UA-41721490-1', 'legume.md');
+    ga('send', 'pageview');
+
+</script>
+</body>
+</html>
