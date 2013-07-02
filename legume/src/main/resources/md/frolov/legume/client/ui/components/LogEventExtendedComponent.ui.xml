@@ -5,14 +5,19 @@
         .table {
             margin: 0;
             white-space: pre;
+            border-collapse: separate;
         }
         .table td {
             height:20px;
+            border: none;
+            border-bottom: 1px solid #ddd;
+        }
+        .table tr:last-of-type td {
+            border: none;
         }
 
         .tableWrap {
             margin-left: 120px;
-            margin-top: -1px;
             overflow-x: auto;
         }
 
