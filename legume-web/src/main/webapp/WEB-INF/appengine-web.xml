@@ -9,6 +9,7 @@
 
         <include path="**.nocache.*" expiration="0s" />
         <include path="**.cache.*" expiration="365d" />
+        <include path="**.min.*" expiration="10m" />
         <exclude path="**.gwt.rpc" />
     </static-files>
 
