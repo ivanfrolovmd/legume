@@ -10,14 +10,14 @@
         .table td {
             height:20px;
             border: none;
-            border-bottom: 1px solid #ddd;
+            border-top: 1px solid #ddd;
         }
-        .table tr:last-of-type td {
-            border: none;
+        .table tr:first-of-type td {
+            border-top: none;
         }
 
         .tableWrap {
-            margin-left: 120px;
+            margin-left: 122px;
             overflow-x: auto;
         }
 
@@ -34,7 +34,7 @@
             top:0;
             bottom: 0;
             left: 100px;
-            width: 20px;
+            width: 24px;
             background-color: #fff;
         }
     </ui:style>
