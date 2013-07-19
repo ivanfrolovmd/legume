@@ -1,5 +1,22 @@
-# Welcome
+# Legume
 
+* [Downloads](https://bitbucket.org/gusto/legume/downloads)
+* [Source](https://bitbucket.org/gusto/legume/src)
+* [Demo](http://www.legume.md/demo.html)
+* [Setup instructions](/setup.md)
+* [More info](http://www.legume.md)
+
+##Features
+
+Text about the features
+
+### Timeline <span style="color:#666666">yo</span>
+
+![Timeline](/img/screen-timeline.png)
+
+Some words about the timeline
+
+<!--
 Welcome to your wiki! This is the default page we've installed for your convenience. Go ahead and edit it.
 
 ## Wiki features
@@ -40,3 +57,4 @@ You can check out the source of this page to see how that's done, and make sure 
 
 
 Have funz!
+-->
