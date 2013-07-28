@@ -13,7 +13,7 @@
     <parent>
         <groupId>md.frolov.legume</groupId>
         <artifactId>parent</artifactId>
-        <version>1</version>
+        <version>1.0-SNAPSHOT</version>
         <relativePath>..</relativePath>
     </parent>
 
