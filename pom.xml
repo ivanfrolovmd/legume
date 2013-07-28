@@ -15,6 +15,11 @@
         <module>legume</module>
         <module>legume-web</module>
         <module>legume-war</module>
+        <module>legume-standalone</module>
     </modules>
 
+    <scm>
+      <connection>scm:git:https://ivanfrolovmd@github.com/legume.git</connection>
+      <developerConnection>scm:git:https://ivanfrolovmd@github.com/legume.git</developerConnection>
+    </scm>
 </project>
