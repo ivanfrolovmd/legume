@@ -15,8 +15,6 @@
         <module>legume</module>
         <module>legume-web</module>
         <module>legume-war</module>
-        <module>jetty-runner</module>
-        <module>legume-war-standalone</module>
     </modules>
 
 </project>
