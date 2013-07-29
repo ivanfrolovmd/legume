@@ -7,7 +7,7 @@
     <version>1.0-SNAPSHOT</version>
     <name>Legume standalone jar</name>
     <properties>
-        <bundle.name>legume-standalone</bundle.name>
+        <bundle.name>legume-standalone-${project.version}</bundle.name>
         <jetty.version>7.2.2.v20101205</jetty.version>
     </properties>
 
